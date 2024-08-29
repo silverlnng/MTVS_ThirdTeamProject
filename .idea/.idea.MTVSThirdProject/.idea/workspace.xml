@@ -12,26 +12,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Content/YJ/BP/BP_LoginGameMode.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/YJ/BP/BP_MainGameMode.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/YJ/UI/WBP_SessionSlot.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/SessionSlotWidget.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/SessionSlotWidget.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/BP_LoginGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/BP_LoginGameMode.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/LobbyMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/LobbyMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/MainGameMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/MainGameMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/UI/WBP_LoginWidget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/UI/WBP_LoginWidget.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/LoginWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/LoginWidget.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/NetWorkGameInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/NetWorkGameInstance.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/LoginWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/LoginWidget.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/NetWorkGameInstance.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/NetWorkGameInstance.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DpaMonitoringSettings">
+    <option name="autoShow" value="false" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -56,7 +46,7 @@
   "keyToString": {
     "C++ Project.MTVSThirdProject.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feature/YJ",
+    "git-widget-placeholder": "YJ2",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -248,6 +238,18 @@
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
       </configuration_15>
+      <configuration_16>
+        <option name="CONFIGURATION" value="" />
+        <option name="PLATFORM" value="" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/MTVSThirdProject.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
+        <option name="EXE_PATH" value="$(TargetPath)" />
+        <option name="PROGRAM_PARAMETERS" value="" />
+        <option name="WORKING_DIRECTORY" value="$(ProjectDir)" />
+        <option name="PASS_PARENT_ENVS" value="1" />
+        <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
+      </configuration_16>
       <option name="DEFAULT_PROJECT_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/MTVSThirdProject.vcxproj" />
       <option name="AUTO_SELECT_PRIORITY" value="10010" />
       <method v="2">
@@ -506,6 +508,7 @@
       <workItem from="1724831030671" duration="222000" />
       <workItem from="1724831401075" duration="233000" />
       <workItem from="1724903602951" duration="10652000" />
+      <workItem from="1724941053767" duration="2246000" />
     </task>
     <servers />
   </component>

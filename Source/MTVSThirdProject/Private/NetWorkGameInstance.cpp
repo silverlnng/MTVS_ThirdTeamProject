@@ -36,12 +36,14 @@ void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, i
 	SessionSettings.bAllowJoinViaPresence = true;
 	SessionSettings.bIsLANMatch = IOnlineSubsystem::Get()->GetSubsystemName()=="NULL"? true:false;
 	// 접속하는 방법이 랜 경유 , 스팀서버 경유 두가지 있는데 랜 경유이면 null 문자열 반환, 스팀이면 steam 문자열 반환
-	//SessionSettings.bUsesPresence =true;
+	SessionSettings.bUsesPresence =true;
 	SessionSettings.bShouldAdvertise = true; //다른사람이 세션검색할경우 노출되도록 ( 검색이 가능하도록 )
 	SessionSettings.bUseLobbiesIfAvailable=true;  //로비의 사용여부
 	SessionSettings.NumPublicConnections=playerCount;
 	//SessionSettings.NumPrivateConnections //호스트가 초대를 해야만 입장가능
-
+	
+	SessionSettings.Set(FName("MatchType"), FString("FreeForAll"), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing); // 세션의 MatchType을 모두에게 열림, 온라인서비스와 핑을 통해 세션 홍보 옵션으로 설정
+	
 	//커스텀 설정값을 추가하기
 	SessionSettings.Set(FName("Room Name"),roomName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
 	SessionSettings.Set(FName("Host Name"),hostName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
@@ -68,7 +70,7 @@ void UNetWorkGameInstance::FindMySession()
 	// 세션 검색 조건을 설정하기
 	sessionSearch = MakeShareable(new FOnlineSessionSearch());
 	check(sessionSearch);
-	sessionSearch->bIsLanQuery = true;
+	sessionSearch->bIsLanQuery = IOnlineSubsystem::Get()->GetSubsystemName()=="NULL"? true:false;
 	sessionSearch->MaxSearchResults = 10;
 	sessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Type::Equals);
 
@@ -111,6 +113,7 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 
 			// 델리게이트 이벤트 실행하기
 			onCreateSlot.Broadcast(foundRoomName, foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed, i);
+			sessionInterface->JoinSession(0, mySessionName, sessionSearch->SearchResults[i]);
 		}
 
 		onFindButtonToggle.Broadcast(true);
@@ -119,6 +122,9 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 
 void UNetWorkGameInstance::JoinMySession(int32 roomNumber)
 {
+	check(sessionInterface);
+	sessionSearch = MakeShareable(new FOnlineSessionSearch());
+	check(sessionSearch);
 	sessionInterface->JoinSession(0, mySessionName, sessionSearch->SearchResults[roomNumber]);
 }
 
