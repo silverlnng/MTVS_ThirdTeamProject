@@ -33,6 +33,15 @@ void AAJH_Player::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	/*APawn* ControlledPawn = GetWorld()->GetPawn();
+	if (ControlledPawn)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Pawn is correctly controlled."));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Pawn is not controlled."));
+	}*/
 }
 
 // Called every frame
