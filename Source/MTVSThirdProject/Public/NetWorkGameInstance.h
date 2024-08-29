@@ -23,6 +23,7 @@ class MTVSTHIRDPROJECT_API UNetWorkGameInstance : public UGameInstance
 	
 public:
 	virtual void Init() override;
+	
 	IOnlineSessionPtr sessionInterface;
 	//세션에 관련된 모든 컨트롤을 하는 기본클래스
 

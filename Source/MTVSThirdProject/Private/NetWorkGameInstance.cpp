@@ -2,7 +2,7 @@
 
 
 #include "NetWorkGameInstance.h"
-
+#include "Interfaces/OnlineSessionInterface.h"
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
 #include "Online/OnlineSessionNames.h"
@@ -118,6 +118,8 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 			onCreateSlot.Broadcast(foundRoomName, foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed, i);
 
 			//sessionInterface->AddOnJoinSessionCompleteDelegate_Handle
+			
+			
 			const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 			const FOnlineSessionSearchResult* realSession = &results[i];
 			sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, *realSession);
