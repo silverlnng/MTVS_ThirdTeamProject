@@ -47,7 +47,7 @@ void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, i
 	//커스텀 설정값을 추가하기
 	SessionSettings.Set(FName("Room Name"),roomName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
 	SessionSettings.Set(FName("Host Name"),hostName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
-
+	
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	
 	sessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName,SessionSettings);
@@ -118,10 +118,6 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 			onCreateSlot.Broadcast(foundRoomName, foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed, i);
 
 			//sessionInterface->AddOnJoinSessionCompleteDelegate_Handle
-			
-			const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
-			
-			sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, sessionSearch->SearchResults[i]);
 		}
 
 		onFindButtonToggle.Broadcast(true);
@@ -133,7 +129,10 @@ void UNetWorkGameInstance::JoinMySession(int32 roomNumber)
 	check(sessionInterface);
 	sessionSearch = MakeShareable(new FOnlineSessionSearch());
 	check(sessionSearch);
-	sessionInterface->JoinSession(0, mySessionName, sessionSearch->SearchResults[roomNumber]);
+	
+	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+			
+	sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, sessionSearch->SearchResults[roomNumber]);
 }
 
 void UNetWorkGameInstance::ExitMySession()
