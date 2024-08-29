@@ -28,29 +28,29 @@ void UNetWorkGameInstance::Init()
 
 void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, int32 playerCount)
 {
-	FOnlineSessionSettings SessionSettings;	//SessionSettings구조체에 하나씩 설정값을 세팅
-	
-	SessionSettings.bIsDedicated = false; // 데디케이트 서버 사용안함
-	SessionSettings.bAllowInvites = true; //초대기능 사용
-	SessionSettings.bAllowJoinInProgress=true; // 진행중에도 들어오는것을 사용
-	SessionSettings.bAllowJoinViaPresence = true;
-	SessionSettings.bIsLANMatch = IOnlineSubsystem::Get()->GetSubsystemName()=="NULL"? true:false;
+	//FOnlineSessionSettings SessionSettings;	//SessionSettings구조체에 하나씩 설정값을 세팅
+	TSharedPtr<FOnlineSessionSettings> SessionSettings = MakeShareable(new FOnlineSessionSettings());
+	SessionSettings->bIsDedicated = false; // 데디케이트 서버 사용안함
+	SessionSettings->bAllowInvites = true; //초대기능 사용
+	SessionSettings->bAllowJoinInProgress=true; // 진행중에도 들어오는것을 사용
+	SessionSettings->bAllowJoinViaPresence = true;
+	SessionSettings->bIsLANMatch = IOnlineSubsystem::Get()->GetSubsystemName()=="NULL"? true:false;
 	// 접속하는 방법이 랜 경유 , 스팀서버 경유 두가지 있는데 랜 경유이면 null 문자열 반환, 스팀이면 steam 문자열 반환
-	SessionSettings.bUsesPresence =true;
-	SessionSettings.bShouldAdvertise = true; //다른사람이 세션검색할경우 노출되도록 ( 검색이 가능하도록 )
-	SessionSettings.bUseLobbiesIfAvailable=true;  //로비의 사용여부
-	SessionSettings.NumPublicConnections=playerCount;
+	SessionSettings->bUsesPresence =true;
+	SessionSettings->bShouldAdvertise = true; //다른사람이 세션검색할경우 노출되도록 ( 검색이 가능하도록 )
+	SessionSettings->bUseLobbiesIfAvailable=true;  //로비의 사용여부
+	SessionSettings->NumPublicConnections=playerCount;
 	//SessionSettings.NumPrivateConnections //호스트가 초대를 해야만 입장가능
 	
-	SessionSettings.Set(FName("MatchType"), FString("FreeForAll"), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing); // 세션의 MatchType을 모두에게 열림, 온라인서비스와 핑을 통해 세션 홍보 옵션으로 설정
+	SessionSettings->Set(FName("MatchType"), FString("FreeForAll"), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing); // 세션의 MatchType을 모두에게 열림, 온라인서비스와 핑을 통해 세션 홍보 옵션으로 설정
 	
 	//커스텀 설정값을 추가하기
-	SessionSettings.Set(FName("Room Name"),roomName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
-	SessionSettings.Set(FName("Host Name"),hostName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
+	SessionSettings->Set(FName("Room Name"),roomName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
+	SessionSettings->Set(FName("Host Name"),hostName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
 	
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	
-	sessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName,SessionSettings);
+	sessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName,*SessionSettings);
 	
 	//서버에  이런 세팅값으로 만들어달라는 요청 ( 호출시점 에 session이 완성된게 아님 )
 	UE_LOG(LogTemp,Warning,TEXT("Try to create Session"));
@@ -113,14 +113,17 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 
 			// 로그로 확인하기
 			UE_LOG(LogTemp, Warning, TEXT("Room Name: %s\nHost Name: %s\nPlayer Count: (%d/%d)\nPing: %d ms\n\n"), *foundRoomName, *foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed);
-
+			
 			// 델리게이트 이벤트 실행하기
 			onCreateSlot.Broadcast(foundRoomName, foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed, i);
 
 			//sessionInterface->AddOnJoinSessionCompleteDelegate_Handle
+			const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+			const FOnlineSessionSearchResult* realSession = &results[i];
+			sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, *realSession);
 		}
 
-		onFindButtonToggle.Broadcast(true);
+		//onFindButtonToggle.Broadcast(true);
 	}
 }
 
