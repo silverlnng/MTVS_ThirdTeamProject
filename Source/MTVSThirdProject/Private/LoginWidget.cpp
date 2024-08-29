@@ -29,7 +29,7 @@ void ULoginWidget::OnClickedCreateButton()
 {
 	if(gi!=nullptr)
 	{
-		gi->CreateMySession(eText_roomName->GetText().ToString(), eText_hostName->GetText().ToString(), 10);
+		gi->CreateMySession(eText_roomName->GetText().ToString(), eText_hostName->GetText().ToString(), 7);
 	}
 }
 

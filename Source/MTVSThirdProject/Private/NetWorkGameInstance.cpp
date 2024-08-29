@@ -36,9 +36,9 @@ void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, i
 	SessionSettings.bAllowJoinViaPresence = true;
 	SessionSettings.bIsLANMatch = IOnlineSubsystem::Get()->GetSubsystemName()=="NULL"? true:false;
 	// 접속하는 방법이 랜 경유 , 스팀서버 경유 두가지 있는데 랜 경유이면 null 문자열 반환, 스팀이면 steam 문자열 반환
-	SessionSettings.bUsesPresence =true;
+	//SessionSettings.bUsesPresence =true;
 	SessionSettings.bShouldAdvertise = true; //다른사람이 세션검색할경우 노출되도록 ( 검색이 가능하도록 )
-	SessionSettings.bUseLobbiesIfAvailable=false;  //로비의 사용여부
+	SessionSettings.bUseLobbiesIfAvailable=true;  //로비의 사용여부
 	SessionSettings.NumPublicConnections=playerCount;
 	//SessionSettings.NumPrivateConnections //호스트가 초대를 해야만 입장가능
 
@@ -72,8 +72,10 @@ void UNetWorkGameInstance::FindMySession()
 	sessionSearch->MaxSearchResults = 10;
 	sessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Type::Equals);
 
+
 	// 서버에 세션 검색을 요청하기
 	sessionInterface->FindSessions(0, sessionSearch.ToSharedRef());
+	
 }
 
 void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
@@ -88,6 +90,7 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 	{
 		int32 sessionNum = results.Num();
 		UE_LOG(LogTemp, Warning, TEXT("Session Count: %d"), results.Num());
+
 		onNewSearchComplete.Broadcast();
 
 		//for (const FOnlineSessionSearchResult& result : results)
