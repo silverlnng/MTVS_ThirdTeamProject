@@ -36,9 +36,9 @@ void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, i
 	SessionSettings.bAllowJoinViaPresence = true;
 	SessionSettings.bIsLANMatch = IOnlineSubsystem::Get()->GetSubsystemName()=="NULL"? true:false;
 	// 접속하는 방법이 랜 경유 , 스팀서버 경유 두가지 있는데 랜 경유이면 null 문자열 반환, 스팀이면 steam 문자열 반환
-	
+	SessionSettings.bUsesPresence =true;
 	SessionSettings.bShouldAdvertise = true; //다른사람이 세션검색할경우 노출되도록 ( 검색이 가능하도록 )
-	SessionSettings.bUseLobbiesIfAvailable=true;  //로비의 사용여부
+	SessionSettings.bUseLobbiesIfAvailable=false;  //로비의 사용여부
 	SessionSettings.NumPublicConnections=playerCount;
 	//SessionSettings.NumPrivateConnections //호스트가 초대를 해야만 입장가능
 
@@ -46,7 +46,7 @@ void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, i
 	SessionSettings.Set(FName("Room Name"),roomName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
 	SessionSettings.Set(FName("Host Name"),hostName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
 	
-	sessionInterface->CreateSession(0,mySessionName,SessionSettings);
+	sessionInterface->CreateSession(0, mySessionName,SessionSettings);
 	//서버에  이런 세팅값으로 만들어달라는 요청 ( 호출시점 에 session이 완성된게 아님 )
 	UE_LOG(LogTemp,Warning,TEXT("Try to create Session"));
 	UE_LOG(LogTemp,Warning,TEXT("current platform : %s"),*IOnlineSubsystem::Get()->GetSubsystemName().ToString());
