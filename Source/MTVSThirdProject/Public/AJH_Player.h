@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "../../../../Plugins/EnhancedInput/Source/EnhancedInput/Public/InputActionValue.h"
 #include "AJH_Player.generated.h"
 
 UCLASS()
@@ -25,5 +26,10 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UPROPERTY(EditDefaultsOnly)
+	class USpringArmComponent* springArmComp;
+	UPROPERTY(EditDefaultsOnly)
+	class UCameraComponent* cameraComp;
 
 };
