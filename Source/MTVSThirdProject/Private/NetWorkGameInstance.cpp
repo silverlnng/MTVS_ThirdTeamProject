@@ -5,6 +5,7 @@
 
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
+#include "Online/OnlineSessionNames.h"
 
 void UNetWorkGameInstance::Init()
 {
@@ -51,23 +52,6 @@ void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, i
 	UE_LOG(LogTemp,Warning,TEXT("current platform : %s"),*IOnlineSubsystem::Get()->GetSubsystemName().ToString());
 }
 
-void UNetWorkGameInstance::FindMySession()
-{
-	
-}
-
-void UNetWorkGameInstance::JoinMySession(int32 roomNumber)
-{
-}
-
-void UNetWorkGameInstance::ExitMySession()
-{
-}
-
-void UNetWorkGameInstance::SetSessionName(FString name)
-{
-}
-
 void UNetWorkGameInstance::OnCreatedSession(FName sessionName, bool bWasSuccessful)
 {
 	UE_LOG(LogTemp,Warning,TEXT("Session Name: %s") , *sessionName.ToString());
@@ -76,21 +60,126 @@ void UNetWorkGameInstance::OnCreatedSession(FName sessionName, bool bWasSuccessf
 	//멀티플레이를 할 맵으로 이동한다. 맵의 경로 작성해주기
 	///Script/Engine.World'/Game/Maps/BattleMap.BattleMap' 에서 상대 경로 만 넣어주면 됨
 	GetWorld()->ServerTravel("/Game/YJ/MainGameMap?Listen",true);
-
-	// /Script/Engine.World'/Game/YJ/LobbyMap.LobbyMap'
-	// /Script/Engine.World'/Game/YJ/MainGameMap.MainGameMap'
-	
 	//지금현재 리슨서버이기때문에  ?listen 으로 설정 
+}
+
+void UNetWorkGameInstance::FindMySession()
+{
+	// 세션 검색 조건을 설정하기
+	sessionSearch = MakeShareable(new FOnlineSessionSearch());
+	check(sessionSearch);
+	sessionSearch->bIsLanQuery = true;
+	sessionSearch->MaxSearchResults = 10;
+	sessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Type::Equals);
+
+	// 서버에 세션 검색을 요청하기
+	sessionInterface->FindSessions(0, sessionSearch.ToSharedRef());
 }
 
 void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 {
+	check(sessionSearch);
+	
+	TArray<FOnlineSessionSearchResult> results = sessionSearch->SearchResults;
+
+	UE_LOG(LogTemp, Warning, TEXT("Find Results: %s"), bwasSuccessful ? *FString("Success!") : *FString("Failed..."));
+
+	if (bwasSuccessful)
+	{
+		int32 sessionNum = results.Num();
+		UE_LOG(LogTemp, Warning, TEXT("Session Count: %d"), results.Num());
+		onNewSearchComplete.Broadcast();
+
+		//for (const FOnlineSessionSearchResult& result : results)
+		for (int32 i = 0; i < results.Num(); i++)
+		{
+			FString foundRoomName;
+			results[i].Session.SessionSettings.Get(FName("Room Name"), foundRoomName);
+			FString foundHostName;
+			results[i].Session.SessionSettings.Get(FName("Host Name"), foundHostName);
+
+			int32 maxPlayerCount = results[i].Session.SessionSettings.NumPublicConnections;
+			int32 currentPlayerCount = maxPlayerCount - results[i].Session.NumOpenPublicConnections;
+
+			int32 pingSpeed = results[i].PingInMs;
+
+			// 로그로 확인하기
+			UE_LOG(LogTemp, Warning, TEXT("Room Name: %s\nHost Name: %s\nPlayer Count: (%d/%d)\nPing: %d ms\n\n"), *foundRoomName, *foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed);
+
+			// 델리게이트 이벤트 실행하기
+			onCreateSlot.Broadcast(foundRoomName, foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed, i);
+		}
+
+		onFindButtonToggle.Broadcast(true);
+	}
+}
+
+void UNetWorkGameInstance::JoinMySession(int32 roomNumber)
+{
+	sessionInterface->JoinSession(0, mySessionName, sessionSearch->SearchResults[roomNumber]);
+}
+
+void UNetWorkGameInstance::ExitMySession()
+{
+	sessionInterface->DestroySession(mySessionName);
+}
+
+void UNetWorkGameInstance::SetSessionName(FString name)
+{
+	mySessionName = FName(*name);
 }
 
 void UNetWorkGameInstance::OnJoinedSession(FName SesssionName, EOnJoinSessionCompleteResult::Type result)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Joined Session: %s"), *SesssionName.ToString());
+
+	switch (result)
+	{
+	case EOnJoinSessionCompleteResult::Success:
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Join Success!"));
+
+			APlayerController* pc = GetWorld()->GetFirstPlayerController();
+			FString url;
+			sessionInterface->GetResolvedConnectString(SesssionName, url, NAME_GamePort);
+			UE_LOG(LogTemp, Warning, TEXT("url: %s"), *url);
+
+			pc->ClientTravel(url, ETravelType::TRAVEL_Absolute);
+
+			break;
+		}
+	case EOnJoinSessionCompleteResult::SessionIsFull:
+		UE_LOG(LogTemp, Warning, TEXT("Session is full..."));
+		break;
+	case EOnJoinSessionCompleteResult::SessionDoesNotExist:
+		UE_LOG(LogTemp, Warning, TEXT("Session Does Not Exist..."));
+		break;
+	case EOnJoinSessionCompleteResult::CouldNotRetrieveAddress:
+		UE_LOG(LogTemp, Warning, TEXT("Could Not Retrieve Address..."));
+		break;
+	case EOnJoinSessionCompleteResult::AlreadyInSession:
+		UE_LOG(LogTemp, Warning, TEXT("You are already in this session..."));
+		break;
+	case EOnJoinSessionCompleteResult::UnknownError:
+		UE_LOG(LogTemp, Warning, TEXT("Unknown Error occurred!"));
+		break;
+	default:
+		break;
+	}	
 }
 
 void UNetWorkGameInstance::OnDestroyedSesssion(FName sessionName, bool bwasSuccessful)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Destory Session: %s"), bwasSuccessful ? *FString("Success!") : *FString("Failed..."));
+
+	if (bwasSuccessful)
+	{
+		APlayerController* pc = GetWorld()->GetFirstPlayerController();
+
+		if (pc != nullptr)
+		{
+			pc->ClientTravel(FString("/Game/Maps/LobbyLevel"), ETravelType::TRAVEL_Absolute);
+			// 
+		}
+	}
 }
