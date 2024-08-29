@@ -47,8 +47,11 @@ void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, i
 	//커스텀 설정값을 추가하기
 	SessionSettings.Set(FName("Room Name"),roomName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
 	SessionSettings.Set(FName("Host Name"),hostName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
+
+	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	
-	sessionInterface->CreateSession(0, mySessionName,SessionSettings);
+	sessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName,SessionSettings);
+	
 	//서버에  이런 세팅값으로 만들어달라는 요청 ( 호출시점 에 session이 완성된게 아님 )
 	UE_LOG(LogTemp,Warning,TEXT("Try to create Session"));
 	UE_LOG(LogTemp,Warning,TEXT("current platform : %s"),*IOnlineSubsystem::Get()->GetSubsystemName().ToString());
@@ -74,9 +77,9 @@ void UNetWorkGameInstance::FindMySession()
 	sessionSearch->MaxSearchResults = 10;
 	sessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Type::Equals);
 
-
+	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	// 서버에 세션 검색을 요청하기
-	sessionInterface->FindSessions(0, sessionSearch.ToSharedRef());
+	sessionInterface->FindSessions(*LocalPlayer->GetPreferredUniqueNetId(), sessionSearch.ToSharedRef());
 	
 }
 
@@ -113,7 +116,12 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 
 			// 델리게이트 이벤트 실행하기
 			onCreateSlot.Broadcast(foundRoomName, foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed, i);
-			sessionInterface->JoinSession(0, mySessionName, sessionSearch->SearchResults[i]);
+
+			//sessionInterface->AddOnJoinSessionCompleteDelegate_Handle
+			
+			const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+			
+			sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, sessionSearch->SearchResults[i]);
 		}
 
 		onFindButtonToggle.Broadcast(true);
