@@ -10,6 +10,7 @@
 void UNetWorkGameInstance::Init()
 {
 	Super::Init();
+	
 	sessionInterface = IOnlineSubsystem::Get()->GetSessionInterface();
 	
 	if(sessionInterface != nullptr)
@@ -28,6 +29,18 @@ void UNetWorkGameInstance::Init()
 
 void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, int32 playerCount)
 {
+
+    if (!sessionInterface.IsValid())
+	{
+		return;
+	}
+
+	auto ExistingSession = sessionInterface->GetNamedSession(mySessionName);
+	if (ExistingSession != nullptr)
+	{
+		sessionInterface->DestroySession(mySessionName);
+	}
+
 	//FOnlineSessionSettings SessionSettings;	//SessionSettings구조체에 하나씩 설정값을 세팅
 	TSharedPtr<FOnlineSessionSettings> SessionSettings = MakeShareable(new FOnlineSessionSettings());
 	SessionSettings->bIsDedicated = false; // 데디케이트 서버 사용안함
@@ -38,7 +51,7 @@ void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, i
 	// 접속하는 방법이 랜 경유 , 스팀서버 경유 두가지 있는데 랜 경유이면 null 문자열 반환, 스팀이면 steam 문자열 반환
 	SessionSettings->bUsesPresence =true;
 	SessionSettings->bShouldAdvertise = true; //다른사람이 세션검색할경우 노출되도록 ( 검색이 가능하도록 )
-	//SessionSettings->bUseLobbiesIfAvailable=true;  //로비의 사용여부
+	SessionSettings->bUseLobbiesIfAvailable=true;  //로비의 사용여부
 	SessionSettings->NumPublicConnections=playerCount;
 	//SessionSettings.NumPrivateConnections //호스트가 초대를 해야만 입장가능
 	
@@ -47,6 +60,9 @@ void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, i
 	//커스텀 설정값을 추가하기
 	SessionSettings->Set(FName("Room Name"),roomName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
 	SessionSettings->Set(FName("Host Name"),hostName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
+	
+	
+	
 	
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	
@@ -70,6 +86,11 @@ void UNetWorkGameInstance::OnCreatedSession(FName sessionName, bool bWasSuccessf
 
 void UNetWorkGameInstance::FindMySession()
 {
+	if (!sessionInterface.IsValid())
+	{
+		return;
+	}
+	
 	// 세션 검색 조건을 설정하기
 	sessionSearch = MakeShareable(new FOnlineSessionSearch());
 	check(sessionSearch);
@@ -85,53 +106,49 @@ void UNetWorkGameInstance::FindMySession()
 
 void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 {
-	if(!sessionInterface.IsValid()
-	|| !bwasSuccessful)
-		return;
+	if(!sessionInterface.IsValid()) return;
 	
 	TArray<FOnlineSessionSearchResult> results = sessionSearch->SearchResults;
 
 	UE_LOG(LogTemp, Warning, TEXT("Find Results: %s"), bwasSuccessful ? *FString("Success!") : *FString("Failed..."));
 
-	if (bwasSuccessful)
+
+	int32 sessionNum = results.Num();
+	UE_LOG(LogTemp, Warning, TEXT("Session Count: %d"), results.Num());
+
+
+	for (int32 i = 0; i < results.Num(); i++)
 	{
-		int32 sessionNum = results.Num();
-		UE_LOG(LogTemp, Warning, TEXT("Session Count: %d"), results.Num());
+		FString foundRoomName;
+		results[i].Session.SessionSettings.Get(FName("Room Name"), foundRoomName);
+		FString foundHostName;
+		results[i].Session.SessionSettings.Get(FName("Host Name"), foundHostName);
 
-		onNewSearchComplete.Broadcast();
+		int32 maxPlayerCount = results[i].Session.SessionSettings.NumPublicConnections;
+		int32 currentPlayerCount = maxPlayerCount - results[i].Session.NumOpenPublicConnections;
 
-		//for (const FOnlineSessionSearchResult& result : results)
-		for (int32 i = 0; i < results.Num(); i++)
-		{
-			FString foundRoomName;
-			results[i].Session.SessionSettings.Get(FName("Room Name"), foundRoomName);
-			FString foundHostName;
-			results[i].Session.SessionSettings.Get(FName("Host Name"), foundHostName);
+		int32 pingSpeed = results[i].PingInMs;
 
-			int32 maxPlayerCount = results[i].Session.SessionSettings.NumPublicConnections;
-			int32 currentPlayerCount = maxPlayerCount - results[i].Session.NumOpenPublicConnections;
+		// 로그로 확인하기
+		UE_LOG(LogTemp, Warning, TEXT("Room Name: %s\nHost Name: %s\nPlayer Count: (%d/%d)\nPing: %d ms\n\n"),
+		       *foundRoomName, *foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed);
 
-			int32 pingSpeed = results[i].PingInMs;
+		// 델리게이트 이벤트 실행하기
+		onCreateSlot.Broadcast(foundRoomName, foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed, i);
 
-			// 로그로 확인하기
-			UE_LOG(LogTemp, Warning, TEXT("Room Name: %s\nHost Name: %s\nPlayer Count: (%d/%d)\nPing: %d ms\n\n"), *foundRoomName, *foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed);
-			
-			// 델리게이트 이벤트 실행하기
-			onCreateSlot.Broadcast(foundRoomName, foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed, i);
+		//sessionInterface->AddOnJoinSessionCompleteDelegate_Handle
 
-			//sessionInterface->AddOnJoinSessionCompleteDelegate_Handle
-			
-			
-			const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 
-			const FOnlineSessionSearchResult* realSession = &results[i];
+		const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 
-			if(!sessionInterface.IsValid()) return;
-			sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, *realSession);
-		}
+		const FOnlineSessionSearchResult* realSession = &results[i];
 
-		//onFindButtonToggle.Broadcast(true);
+		if (!sessionInterface.IsValid()) return;
+		sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, *realSession);
 	}
+
+	//onFindButtonToggle.Broadcast(true);
+	
 }
 
 void UNetWorkGameInstance::JoinMySession(int32 roomNumber)
