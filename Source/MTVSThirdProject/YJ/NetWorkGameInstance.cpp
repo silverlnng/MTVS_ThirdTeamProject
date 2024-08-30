@@ -167,13 +167,15 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 
 void UNetWorkGameInstance::JoinMySession(int32 roomNumber)
 {
-	check(sessionInterface);
-	sessionSearch = MakeShareable(new FOnlineSessionSearch());
-	check(sessionSearch);
+	if (!sessionInterface.IsValid()) return;
 	
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
-			
-	sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, sessionSearch->SearchResults[roomNumber]);
+	
+	TArray<FOnlineSessionSearchResult> results = sessionSearch->SearchResults;
+	
+	const FOnlineSessionSearchResult* realSession = &results[roomNumber];
+	
+	sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, *realSession);
 }
 
 void UNetWorkGameInstance::ExitMySession()
