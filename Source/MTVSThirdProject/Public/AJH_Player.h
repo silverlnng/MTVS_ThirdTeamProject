@@ -32,4 +32,35 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	class UCameraComponent* cameraComp;
 
+	/***********************************************
+			InputMappingContext 모음
+	***********************************************/
+	UPROPERTY(EditDefaultsOnly)
+	class UInputMappingContext* IMC_Operation;
+
+	/***********************************************
+			InputAction 변수 모음
+	***********************************************/
+	UPROPERTY(EditDefaultsOnly)
+	class UInputAction* IA_Move;
+
+	/************************************************
+			InputAction 함수 모음
+	************************************************/
+	void OnMyActionMove(const FInputActionValue& value);
+
+	/************************************************
+			마우스 이벤트 처리 함수
+	************************************************/
+	void MouseCusorEvent();
+
+	/************************************************
+			캐릭터 상호작용 범위
+	************************************************/
+	UPROPERTY(EditDefaultsOnly)
+	int32 tileX = 2;
+	UPROPERTY(EditDefaultsOnly)
+	int32 tileY = 2;
+	void PlayerInteractionSize();
+
 };
