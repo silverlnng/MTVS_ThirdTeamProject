@@ -38,7 +38,7 @@ void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, i
 	// 접속하는 방법이 랜 경유 , 스팀서버 경유 두가지 있는데 랜 경유이면 null 문자열 반환, 스팀이면 steam 문자열 반환
 	SessionSettings->bUsesPresence =true;
 	SessionSettings->bShouldAdvertise = true; //다른사람이 세션검색할경우 노출되도록 ( 검색이 가능하도록 )
-	SessionSettings->bUseLobbiesIfAvailable=true;  //로비의 사용여부
+	//SessionSettings->bUseLobbiesIfAvailable=true;  //로비의 사용여부
 	SessionSettings->NumPublicConnections=playerCount;
 	//SessionSettings.NumPrivateConnections //호스트가 초대를 해야만 입장가능
 	
@@ -123,7 +123,9 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 			
 			
 			const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+
 			const FOnlineSessionSearchResult* realSession = &results[i];
+
 			if(!sessionInterface.IsValid()) return;
 			sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, *realSession);
 		}
@@ -155,7 +157,18 @@ void UNetWorkGameInstance::SetSessionName(FString name)
 
 void UNetWorkGameInstance::OnJoinedSession(FName SesssionName, EOnJoinSessionCompleteResult::Type result)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Joined Session: %s"), *SesssionName.ToString());
+	
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		15.f,
+		FColor::Cyan,
+		FString::Printf(TEXT("Joined Session: %s"), *SesssionName.ToString())
+	);
+
+	if (!sessionInterface.IsValid())
+	{
+		return;
+	}
 
 	switch (result)
 	{
