@@ -41,9 +41,9 @@ public:
 	************************************************/
 	void OnMyActionMove(const FInputActionValue& value);
 
-	/*
+	/************************************************
 			Owner ¸ðÀ½
-	*/
+	************************************************/
 	UPROPERTY()
 	class AAJH_Player* me;
 
