@@ -85,7 +85,9 @@ void UNetWorkGameInstance::FindMySession()
 
 void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 {
-	check(sessionSearch);
+	if(!sessionInterface.IsValid()
+	|| !bwasSuccessful)
+		return;
 	
 	TArray<FOnlineSessionSearchResult> results = sessionSearch->SearchResults;
 
@@ -122,6 +124,7 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 			
 			const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 			const FOnlineSessionSearchResult* realSession = &results[i];
+			if(!sessionInterface.IsValid()) return;
 			sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, *realSession);
 		}
 
