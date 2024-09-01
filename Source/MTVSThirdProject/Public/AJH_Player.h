@@ -43,11 +43,17 @@ public:
 	***********************************************/
 	UPROPERTY(EditDefaultsOnly)
 	class UInputAction* IA_Move;
+	UPROPERTY(EditDefaultsOnly)
+	class UInputAction* IA_Interation;
+	UPROPERTY(EditDefaultsOnly)
+	class UInputAction* IA_Action;
 
 	/************************************************
 			InputAction 함수 모음
 	************************************************/
 	void OnMyActionMove(const FInputActionValue& value);
+	void OnMyActionInteration(const FInputActionValue& value);
+	void OnMyAction(const FInputActionValue& value);
 
 	/************************************************
 			마우스 이벤트 처리 함수
@@ -58,9 +64,8 @@ public:
 			캐릭터 상호작용 범위
 	************************************************/
 	UPROPERTY(EditDefaultsOnly)
-	int32 tileX = 2;
-	UPROPERTY(EditDefaultsOnly)
-	int32 tileY = 2;
-	void PlayerInteractionSize();
+	class UBoxComponent* boxComp;
+
+	float interationSize = 400;
 
 };
