@@ -68,4 +68,41 @@ public:
 
 	float interationSize = 400;
 
+	/************************************************
+			라인트레이스 변수
+	************************************************/
+	// 마우스의 위치
+	FVector worldLoc;
+	// 마우스의 방향
+	FVector worldDir;
+	// 라인 트레이스 출력
+	FHitResult outHit;
+	// 스타트 지점
+	FVector start;
+	// 엔드 지점
+	FVector end;
+	// 방어코드
+	FCollisionQueryParams param;
+	// 충돌 판단 여부
+	bool bHit;
+	/************************************************
+			라인트레이스 함수
+	************************************************/
+	void InteractionLineTraceFuntion();
+
+	/************************************************
+			정보 할당 모음
+	************************************************/
+	UPROPERTY(EditDefaultsOnly)
+	class AAJH_FarmTile* farmTile;
+
+
+	/************************************************
+			오버랩 이벤트 함수
+	************************************************/
+	UFUNCTION()
+	void OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 };

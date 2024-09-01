@@ -2,6 +2,7 @@
 
 
 #include "AJH_Player.h"
+#include "AJH_FarmTile.h"
 #include "../../../../Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputComponent.h"
 #include "../../../../Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputSubsystems.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -40,6 +41,9 @@ void AAJH_Player::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	boxComp->OnComponentBeginOverlap.AddDynamic(this, &AAJH_Player::OnMyBoxCompBeginOverlap);
+	boxComp->OnComponentEndOverlap.AddDynamic(this, &AAJH_Player::OnMyBoxCompEndOverlap);
+	
 	
 }
 
@@ -48,7 +52,7 @@ void AAJH_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	MouseCusorEvent();
+	// MouseCusorEvent();
 	
 }
 
@@ -99,23 +103,8 @@ void AAJH_Player::OnMyActionMove(const FInputActionValue& value)
 
 void AAJH_Player::OnMyActionInteration(const FInputActionValue& value)
 {
-	// 마우스의 위치
-	FVector worldLoc;
-	// 마우스의 방향
-	FVector worldDir;
-	// 스크린에 있는 마우스의 정보를 가져오는 함수
-	UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectMousePositionToWorld(worldLoc, worldDir);
-	// 라인 트레이스 출력
-	FHitResult outHit;
-	// 스타트 지점
-	FVector start = worldLoc;
-	// 엔드 지점
-	FVector end = start + worldDir * 2000;
-	// 방어코드
-	FCollisionQueryParams param;
-	param.AddIgnoredActor(this);
-	bool bHit = GetWorld()->LineTraceSingleByChannel(outHit, start, end, ECC_Visibility, param);
-	if (bHit)
+	InteractionLineTraceFuntion();
+	if (bHit && outHit.GetActor()->ActorHasTag(TEXT("FarmTile")))
 	{
 		outHit.GetActor()->GetName();
 		FString objectName = outHit.GetActor()->GetName();
@@ -125,23 +114,8 @@ void AAJH_Player::OnMyActionInteration(const FInputActionValue& value)
 
 void AAJH_Player::OnMyAction(const FInputActionValue& value)
 {
-	// 마우스의 위치
-	FVector worldLoc;
-	// 마우스의 방향
-	FVector worldDir;
-	// 스크린에 있는 마우스의 정보를 가져오는 함수
-	UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectMousePositionToWorld(worldLoc, worldDir);
-	// 라인 트레이스 출력
-	FHitResult outHit;
-	// 스타트 지점
-	FVector start = worldLoc;
-	// 엔드 지점
-	FVector end = start + worldDir * 2000;
-	// 방어코드
-	FCollisionQueryParams param;
-	param.AddIgnoredActor(this);
-	bool bHit = GetWorld()->LineTraceSingleByChannel(outHit, start, end, ECC_Visibility, param);
-	if (bHit)
+	InteractionLineTraceFuntion();
+	if (bHit && outHit.GetActor()->ActorHasTag(TEXT("FarmTile")))
 	{
 		outHit.GetActor()->GetName();
 		FString objectName = outHit.GetActor()->GetName();
@@ -151,30 +125,49 @@ void AAJH_Player::OnMyAction(const FInputActionValue& value)
 
 void AAJH_Player::MouseCusorEvent()
 {
-	// 마우스의 위치
-	FVector worldLoc;
-	// 마우스의 방향
-	FVector worldDir;
-	// 스크린에 있는 마우스의 정보를 가져오는 함수
-	UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectMousePositionToWorld(worldLoc, worldDir);
-	// 라인 트레이스 출력
-	FHitResult outHit;
-	// 스타트 지점
-	FVector start = worldLoc;
-	// 엔드 지점
-	FVector end = start + worldDir * 2000;
-	// 방어코드
-	FCollisionQueryParams param;
-	param.AddIgnoredActor(this);
-	bool bHit = GetWorld()->LineTraceSingleByChannel(outHit, start, end, ECC_Visibility, param);
+	InteractionLineTraceFuntion();
 	if (bHit)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hit!!!"), bHit);
-		
-	}
-	else
-	{
-		//DrawDebugLine(GetWorld(), start, end, FColor::Red, false, -1, 1, 2);
-	}
 
+	}
+}
+
+void AAJH_Player::InteractionLineTraceFuntion()
+{
+	// 스크린에 있는 마우스의 정보를 가져오는 함수
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectMousePositionToWorld(worldLoc, worldDir);
+	// 라인 트레이스 출력
+	start = worldLoc;
+	// 엔드 지점
+	end = start + worldDir * 2000;
+	// 방어코드
+	param;
+	param.AddIgnoredActor(this);
+	bHit = GetWorld()->LineTraceSingleByChannel(outHit, start, end, ECC_Visibility, param);
+}
+
+void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	farmTile = Cast<AAJH_FarmTile>(UGameplayStatics::GetActorOfClass(GetWorld(), AAJH_FarmTile::StaticClass()));
+	if (OtherActor->ActorHasTag(TEXT("FarmTile")))
+	{
+		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		// 콜리전 채널 변경 후 확인
+		ECollisionResponse Response = farmTile->boxComp->GetCollisionResponseToChannel(ECC_Visibility);
+		UE_LOG(LogTemp, Warning, TEXT("Collision response set to: %d"), Response);
+		OtherActor->GetName();
+		FString objectName = OtherActor->GetName();
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, objectName);
+	}
+}
+
+void AAJH_Player::OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor->ActorHasTag(TEXT("FarmTile")))
+	{
+		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+	}
 }
