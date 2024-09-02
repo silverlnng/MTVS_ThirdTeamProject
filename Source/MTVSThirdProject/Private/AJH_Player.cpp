@@ -149,8 +149,8 @@ void AAJH_Player::InteractionLineTraceFuntion()
 
 void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	farmTile = Cast<AAJH_FarmTile>(UGameplayStatics::GetActorOfClass(GetWorld(), AAJH_FarmTile::StaticClass()));
-	if (OtherActor->ActorHasTag(TEXT("FarmTile")))
+	farmTile = Cast<AAJH_FarmTile>(OtherActor);
+	if (farmTile && OtherActor->ActorHasTag(TEXT("FarmTile")))
 	{
 		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
@@ -165,7 +165,8 @@ void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedCompone
 
 void AAJH_Player::OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->ActorHasTag(TEXT("FarmTile")))
+	farmTile = Cast<AAJH_FarmTile>(OtherActor);
+	if (farmTile && OtherActor->ActorHasTag(TEXT("FarmTile")))
 	{
 		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
