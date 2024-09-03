@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "../../../../Plugins/EnhancedInput/Source/EnhancedInput/Public/InputActionValue.h"
+#include "Interfaces/IHttpRequest.h"
+#include "Interfaces/IHttpResponse.h"
 #include "AJH_Player.generated.h"
 
 UCLASS()
@@ -47,6 +49,8 @@ public:
 	class UInputAction* IA_Interation;
 	UPROPERTY(EditDefaultsOnly)
 	class UInputAction* IA_Action;
+	UPROPERTY(EditDefaultsOnly)
+	class UInputAction* IA_Tap;
 
 	/************************************************
 			InputAction 함수 모음
@@ -54,6 +58,7 @@ public:
 	void OnMyActionMove(const FInputActionValue& value);
 	void OnMyActionInteration(const FInputActionValue& value);
 	void OnMyAction(const FInputActionValue& value);
+	void OnMyActionTap();
 
 	/************************************************
 			마우스 이벤트 처리 함수
@@ -96,7 +101,6 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	class AAJH_FarmTile* farmTile;
 
-
 	/************************************************
 			오버랩 이벤트 함수
 	************************************************/
@@ -104,5 +108,22 @@ public:
 	void OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	void OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	/************************************************
+			웹 통신 함수 및 UI 정보 할당
+	************************************************/
+	UPROPERTY()
+	class UAJH_WeatherWidget* httpWeatherUI;
+
+	// BT_today 를 눌렀을 때 요청 할 함수
+	void ReqTodayWeather(FString url, FString json);
+	// 응답 받을 함수
+	void OnResTodayWeather(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully);
+
+	/************************************************
+			UI 모음
+	************************************************/
+	UPROPERTY(EditDefaultsOnly)
+	class UUserWidget* TapUI;
 
 };
