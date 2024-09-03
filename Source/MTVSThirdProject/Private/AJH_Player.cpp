@@ -9,6 +9,8 @@
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
+#include "HttpModule.h"
+#include "AJH_WeatherWidget.h"
 
 // Sets default values
 AAJH_Player::AAJH_Player()
@@ -52,7 +54,7 @@ void AAJH_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// MouseCusorEvent();
+	MouseCusorEvent();
 	
 }
 
@@ -79,6 +81,7 @@ void AAJH_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		input->BindAction(IA_Interation, ETriggerEvent::Started, this, &AAJH_Player::OnMyActionInteration);
 		input->BindAction(IA_Action, ETriggerEvent::Started, this, &AAJH_Player::OnMyAction);
 		input->BindAction(IA_Action, ETriggerEvent::Completed, this, &AAJH_Player::OnMyAction);
+		input->BindAction(IA_Tap, ETriggerEvent::Started, this, &AAJH_Player::OnMyActionTap);
 	}
 
 }
@@ -123,12 +126,17 @@ void AAJH_Player::OnMyAction(const FInputActionValue& value)
 	}
 }
 
+void AAJH_Player::OnMyActionTap()
+{
+	
+}
+
 void AAJH_Player::MouseCusorEvent()
 {
 	InteractionLineTraceFuntion();
 	if (bHit)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Hit!!!"), bHit);
+		//UE_LOG(LogTemp, Warning, TEXT("Hit!!!"), bHit);
 
 	}
 }
@@ -170,5 +178,33 @@ void AAJH_Player::OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent
 	{
 		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+	}
+}
+
+void AAJH_Player::ReqTodayWeather(FString url, FString json)
+{
+	FHttpModule& httpModule = FHttpModule::Get();
+	TSharedRef<IHttpRequest> req = httpModule.CreateRequest();
+
+	// 요청할 정보를 설정
+	req->SetURL(url);
+	req->SetVerb(TEXT("POST"));
+	req->SetHeader(TEXT("content-type"), TEXT("application/json"));
+	req->SetContentAsString(json);
+
+	// 응답 받을 함수를 연결
+	req->OnProcessRequestComplete().BindUObject(this, &AAJH_Player::OnResTodayWeather);
+	// 서버에 요청
+	req->ProcessRequest();
+}
+
+void AAJH_Player::OnResTodayWeather(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully)
+{
+	if (bConnectedSuccessfully)
+	{
+		// 성공
+		FString result = Response->GetContentAsString();
+		// 필요한 정보만 뽑아서 화면에 출력하고 싶다.
+		httpWeatherUI->SetTextLog(result);
 	}
 }
