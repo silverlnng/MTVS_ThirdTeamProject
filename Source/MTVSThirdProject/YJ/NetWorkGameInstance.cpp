@@ -17,14 +17,25 @@ void UNetWorkGameInstance::Init()
 	{
 		//서버쪽에서 Delegate으로 이벤트 값을 받을 함수를 연결
 		sessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UNetWorkGameInstance::OnCreatedSession);
+		
 		sessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this,&UNetWorkGameInstance::OnFoundSession);
+		
 		sessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this,&UNetWorkGameInstance::OnJoinedSession);
+		
 		sessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this,&UNetWorkGameInstance::OnDestroyedSesssion);
 		//oncreate , create
 		//서버에 요청하고 응답을 받는데 지연시간이 있음
 		//create하고 다만들어지면  create가 완료 되었을때 실행시킬 함수 OnCreatedSession 를 만들기
 		//OnJoinSessionCompleteDelegates : 매개변수 필요 F12 눌러서 확인하기  
 	}
+}
+
+void UNetWorkGameInstance::SetSessionName(FString name,FString ClickedroomName_,FString ClickedhostName_,int32 ClickedplayerCount_)
+{
+	mySessionName = FName(*name);
+	ClickedroomName = ClickedroomName_;
+	ClickedhostName=ClickedhostName_;
+	ClickedplayerCount =ClickedplayerCount_;
 }
 
 void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, int32 playerCount)
@@ -35,11 +46,11 @@ void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, i
 		return;
 	}
 
-	auto ExistingSession = sessionInterface->GetNamedSession(mySessionName);
+	/*auto ExistingSession = sessionInterface->GetNamedSession(mySessionName);
 	if (ExistingSession != nullptr)
 	{
 		sessionInterface->DestroySession(mySessionName);
-	}
+	}*/
 
 	//FOnlineSessionSettings SessionSettings;	//SessionSettings구조체에 하나씩 설정값을 세팅
 	TSharedPtr<FOnlineSessionSettings> SessionSettings = MakeShareable(new FOnlineSessionSettings());
@@ -52,17 +63,14 @@ void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, i
 	SessionSettings->bUsesPresence =true;
 	SessionSettings->bShouldAdvertise = true; //다른사람이 세션검색할경우 노출되도록 ( 검색이 가능하도록 )
 	SessionSettings->bUseLobbiesIfAvailable=true;  //로비의 사용여부
-	SessionSettings->NumPublicConnections=playerCount;
+	SessionSettings->NumPublicConnections=ClickedplayerCount;
 	//SessionSettings.NumPrivateConnections //호스트가 초대를 해야만 입장가능
 	
 	SessionSettings->Set(FName("MatchType"), FString("FreeForAll"), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing); // 세션의 MatchType을 모두에게 열림, 온라인서비스와 핑을 통해 세션 홍보 옵션으로 설정
 	
 	//커스텀 설정값을 추가하기
-	SessionSettings->Set(FName("Room Name"),roomName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
-	SessionSettings->Set(FName("Host Name"),hostName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
-	
-	
-	
+	SessionSettings->Set(FName("Room Name"),ClickedroomName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
+	SessionSettings->Set(FName("Host Name"),ClickedhostName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
 	
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	
@@ -80,6 +88,8 @@ void UNetWorkGameInstance::OnCreatedSession(FName sessionName, bool bWasSuccessf
 
 	//멀티플레이를 할 맵으로 이동한다. 맵의 경로 작성해주기
 	///Script/Engine.World'/Game/Maps/BattleMap.BattleMap' 에서 상대 경로 만 넣어주면 됨
+	
+	// 룸이름에 따라서 이동할 맵도 다 다르게
 	GetWorld()->ServerTravel("/Game/YJ/MainGameMap?Listen",true);
 	//지금현재 리슨서버이기때문에  ?listen 으로 설정 
 }
@@ -138,15 +148,19 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 
 		//sessionInterface->AddOnJoinSessionCompleteDelegate_Handle
 
+		if(foundRoomName == ClickedroomName ) 
+		{
+			const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 
-		const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+			const FOnlineSessionSearchResult* realSession = &results[i];
 
-		const FOnlineSessionSearchResult* realSession = &results[i];
-
-		if (!sessionInterface.IsValid()) return;
-		sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, *realSession);
+			if (!sessionInterface.IsValid()) return;
+			sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, *realSession);
+			break;
+		}
+		// 모든 for 문을 반복해서 검색했는데 없는경우 create !! 
 	}
-
+	CreateMySession(ClickedroomName,ClickedhostName,ClickedplayerCount);
 	//onFindButtonToggle.Broadcast(true);
 	
 }
@@ -167,10 +181,7 @@ void UNetWorkGameInstance::ExitMySession()
 	sessionInterface->DestroySession(mySessionName);
 }
 
-void UNetWorkGameInstance::SetSessionName(FString name)
-{
-	mySessionName = FName(*name);
-}
+
 
 void UNetWorkGameInstance::OnJoinedSession(FName SesssionName, EOnJoinSessionCompleteResult::Type result)
 {
@@ -236,4 +247,12 @@ void UNetWorkGameInstance::OnDestroyedSesssion(FName sessionName, bool bwasSucce
 			// 
 		}
 	}
+}
+
+void UNetWorkGameInstance::CreateOrFindMySession()
+{
+	// 버튼클릭해서
+	// 검색한다음 없음 만들고 , 있으면 있는방으로 들어가기
+	FindMySession();
+	
 }

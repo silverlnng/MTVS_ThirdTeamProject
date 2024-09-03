@@ -41,9 +41,20 @@ public:
 	void FindMySession();
 	void JoinMySession(int32 roomNumber);
 	void ExitMySession();
-	void SetSessionName(FString name);
+	void SetSessionName(FString name,FString ClickedroomName_,FString ClickedhostName_,int32 ClickedplayerCount_);
 	FORCEINLINE FString GetSessionName(){return mySessionName.ToString();}
 
+	void CreateOrFindMySession();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
+	FString ClickedroomName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
+	FString ClickedhostName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
+	int32 ClickedplayerCount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
+	bool bXX;
+	
 private:
 	FName mySessionName = FName("first Session");
 	TSharedPtr<class FOnlineSessionSearch> sessionSearch;	//OnlineSessionSearch 는 

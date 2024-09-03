@@ -13,6 +13,11 @@
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEditor.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEditor.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/YJ/LobbyMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/LobbyMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginWidget.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -499,6 +504,7 @@
       <workItem from="1724972011449" duration="1027000" />
       <workItem from="1725004246671" duration="858000" />
       <workItem from="1725005151439" duration="1723000" />
+      <workItem from="1725254114404" duration="6333000" />
     </task>
     <servers />
   </component>
