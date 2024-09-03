@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "YJ/HttpWidget.h"
+#include "HttpWidget.h"
 
 #include "Components/Button.h"
 
@@ -36,5 +36,13 @@ void UHttpWidget::OnMyClickGetWebImage()
 }
 
 void UHttpWidget::SetWebImage(class UTexture2D* newTexture)
+{
+}
+
+void UHttpWidget::SetTextLog(FString log)
+{
+}
+
+void UHttpWidget::SetHttpActor(class AHttpActor* actor)
 {
 }

@@ -12,12 +12,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Content/YJ/TestYJMap.umap" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/CSVManager.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/CSVManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEditor.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEditor.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/LobbyMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/LobbyMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginWidget.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/YJ/HttpActor.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/YJ/HttpWidget.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/YJ/JsonParseLib.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/YJ/HttpActor.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/YJ/HttpWidget.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/YJ/JsonParseLib.h" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,12 +35,10 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/Private/LoginGameMode.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/Private/LoginWidget.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/Private/SessionSlotWidget.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/Public/LoginGameMode.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/Public/LoginWidget.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/Public/SessionSlotWidget.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Misc/FileHelper.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/KismetSystemLibrary.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/Private/CSVManager.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/Public/CSVManager.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -242,6 +244,18 @@
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
       </configuration_15>
+      <configuration_16>
+        <option name="CONFIGURATION" value="" />
+        <option name="PLATFORM" value="" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/MTVSThirdProject.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
+        <option name="EXE_PATH" value="$(TargetPath)" />
+        <option name="PROGRAM_PARAMETERS" value="" />
+        <option name="WORKING_DIRECTORY" value="$(ProjectDir)" />
+        <option name="PASS_PARENT_ENVS" value="1" />
+        <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
+      </configuration_16>
       <option name="DEFAULT_PROJECT_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/MTVSThirdProject.vcxproj" />
       <option name="AUTO_SELECT_PRIORITY" value="10010" />
       <method v="2">
@@ -505,6 +519,7 @@
       <workItem from="1725004246671" duration="858000" />
       <workItem from="1725005151439" duration="1723000" />
       <workItem from="1725254114404" duration="6333000" />
+      <workItem from="1725348145417" duration="4592000" />
     </task>
     <servers />
   </component>

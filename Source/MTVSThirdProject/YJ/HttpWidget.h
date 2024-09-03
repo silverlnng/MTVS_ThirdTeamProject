@@ -42,6 +42,10 @@ public:
     UFUNCTION()
     void SetWebImage(class UTexture2D* newTexture);
 
+	void SetTextLog(FString log);
+
+	void SetHttpActor(class AHttpActor* actor);
+
     FString URL = "gs://unrealthirdteamproject.appspot.com"; // 파이어베이스 storage 버킷
     FString Key = "AIzaSyD2-X2ghnSSC4tW-EmoaanENN9nMoMFKuM"; // 웹 ApI 키 
 	
