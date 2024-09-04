@@ -11,6 +11,7 @@
 #include "Components/BoxComponent.h"
 #include "HttpModule.h"
 #include "AJH_WeatherWidget.h"
+#include "JS_Tree.h"
 
 // Sets default values
 AAJH_Player::AAJH_Player()
@@ -158,13 +159,14 @@ void AAJH_Player::InteractionLineTraceFuntion()
 void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	farmTile = Cast<AAJH_FarmTile>(OtherActor);
+	treeTile = Cast<AJS_Tree>(OtherActor);
 	if (farmTile && OtherActor->ActorHasTag(TEXT("FarmTile")))
 	{
 		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		// 콜리전 채널 변경 후 확인
-		ECollisionResponse Response = farmTile->boxComp->GetCollisionResponseToChannel(ECC_Visibility);
-		UE_LOG(LogTemp, Warning, TEXT("Collision response set to: %d"), Response);
+		treeTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		treeTile->treeMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		
 		OtherActor->GetName();
 		FString objectName = OtherActor->GetName();
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, objectName);
@@ -174,10 +176,13 @@ void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedCompone
 void AAJH_Player::OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	farmTile = Cast<AAJH_FarmTile>(OtherActor);
+	treeTile = Cast<AJS_Tree>(OtherActor);
 	if (farmTile && OtherActor->ActorHasTag(TEXT("FarmTile")))
 	{
 		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		treeTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		treeTile->treeMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 	}
 }
 

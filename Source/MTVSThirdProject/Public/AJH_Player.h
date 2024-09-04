@@ -100,6 +100,8 @@ public:
 	************************************************/
 	UPROPERTY(EditDefaultsOnly)
 	class AAJH_FarmTile* farmTile;
+	UPROPERTY(EditDefaultsOnly)
+	class AJS_Tree* treeTile;
 
 	/************************************************
 			오버랩 이벤트 함수
