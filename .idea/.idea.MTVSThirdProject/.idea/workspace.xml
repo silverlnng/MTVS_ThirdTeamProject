@@ -12,9 +12,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Content/YJ/UI/WBP_First.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/YJ/UI/WBP_LoginFirst.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/YJ/UI/WBP_UserName.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/LoginFirstWidget.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/LoginFirstWidget.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/YJ/BP/BP_MainGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/BP/BP_MainGameMode.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/YJ/UI/WBP_First.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/UI/WBP_First.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MTVSThirdProject.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/MTVSThirdProject.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/MTVSThirdProject.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/MTVSThirdProject.Build.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/CSVManager.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/CSVManager.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/FirstLoginWidget.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/FirstLoginWidget.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginWidget.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,8 +51,7 @@
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/Components/PawnMovementComponent.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/KismetSystemLibrary.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/Pawn.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/Private/CSVManager.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/Public/CSVManager.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Public/Components/ComboBoxString.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -509,6 +522,9 @@
       <workItem from="1725254114404" duration="6333000" />
       <workItem from="1725348145417" duration="4592000" />
       <workItem from="1725441362054" duration="4316000" />
+      <workItem from="1725511896889" duration="1490000" />
+      <workItem from="1725515489888" duration="391000" />
+      <workItem from="1725515906240" duration="6769000" />
     </task>
     <servers />
   </component>

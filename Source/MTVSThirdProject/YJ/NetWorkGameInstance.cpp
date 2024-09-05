@@ -117,17 +117,50 @@ void UNetWorkGameInstance::FindMySession()
 void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 {
 	if(!sessionInterface.IsValid()) return;
+
+	if(!sessionSearch)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("sessionSearch Null"));
+	}
+	else
+	{
+		TArray<FOnlineSessionSearchResult> results = sessionSearch->SearchResults;
+		
+		UE_LOG(LogTemp, Warning, TEXT("Session Count: %d"), results.Num());
+
+		// 어차피 방은 1개
+		// 있으면 참여 , 없으면 만들기
+		if( results.Num()>0)
+		{
+			FString foundRoomName;
+			results[0].Session.SessionSettings.Get(FName("Room Name"), foundRoomName);
+			FString foundHostName;
+			results[0].Session.SessionSettings.Get(FName("Host Name"), foundHostName);
+
+			int32 maxPlayerCount = results[0].Session.SessionSettings.NumPublicConnections;
+			int32 currentPlayerCount = maxPlayerCount - results[0].Session.NumOpenPublicConnections;
+
+			int32 pingSpeed = results[0].PingInMs;
+
+			// 로그로 확인하기
+			UE_LOG(LogTemp, Warning, TEXT("Room Name: %s\nHost Name: %s\nPlayer Count: (%d/%d)\nPing: %d ms\n\n"),
+				   *foundRoomName, *foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed);
+			const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+
+			const FOnlineSessionSearchResult* realSession = &results[0];
+
+			if (!sessionInterface.IsValid()) return;
+			sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, *realSession);
+		}
+		else
+		{
+			CreateMySession(ClickedroomName,ClickedhostName,ClickedplayerCount);
+		}
+	}
 	
-	TArray<FOnlineSessionSearchResult> results = sessionSearch->SearchResults;
-
 	UE_LOG(LogTemp, Warning, TEXT("Find Results: %s"), bwasSuccessful ? *FString("Success!") : *FString("Failed..."));
-
-
-	int32 sessionNum = results.Num();
-	UE_LOG(LogTemp, Warning, TEXT("Session Count: %d"), results.Num());
-
-
-	for (int32 i = 0; i < results.Num(); i++)
+	
+	/*for (int32 i = 0; i < results.Num(); i++)
 	{
 		FString foundRoomName;
 		results[i].Session.SessionSettings.Get(FName("Room Name"), foundRoomName);
@@ -160,9 +193,8 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 		}
 		// 모든 for 문을 반복해서 검색했는데 없는경우 create !! 
 	}
-	CreateMySession(ClickedroomName,ClickedhostName,ClickedplayerCount);
+	CreateMySession(ClickedroomName,ClickedhostName,ClickedplayerCount);*/
 	//onFindButtonToggle.Broadcast(true);
-	
 }
 
 void UNetWorkGameInstance::JoinMySession(int32 roomNumber)

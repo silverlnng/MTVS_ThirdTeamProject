@@ -18,7 +18,7 @@ void ULoginWidget::NativeConstruct()
 	if (gi != nullptr)
 	{
 		// 세션 찾기 델리게이트에 함수를 연결한다.
-		gi->onCreateSlot.AddDynamic(this, &ULoginWidget::OnSlotCreated);
+		//gi->onCreateSlot.AddDynamic(this, &ULoginWidget::OnSlotCreated);
 		/*gi->onNewSearchComplete.AddDynamic(this, &ULoginWidget::OnClearScrollBox);
 		gi->onFindButtonToggle.AddDynamic(this, &ULoginWidget::FindButtonOnOff);*/
 		btn_findSessions->OnClicked.AddDynamic(this, &ULoginWidget::OnClickedFindSessionsButton);

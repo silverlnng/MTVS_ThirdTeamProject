@@ -16,6 +16,13 @@ int32,maxPlayer,int32, pingSpeed,int32,sessionIdx);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FServerResponseDele);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFindButtonStatus,bool, bisEnabled);
 
+UENUM(BlueprintType)
+enum class ECharacterType : uint8
+{
+	Rabbit,
+	Panda
+};
+
 UCLASS()
 class MTVSTHIRDPROJECT_API UNetWorkGameInstance : public UGameInstance
 {
@@ -26,16 +33,6 @@ public:
 	
 	IOnlineSessionPtr sessionInterface;
 	//세션에 관련된 모든 컨트롤을 하는 기본클래스
-
-	UPROPERTY(EditAnywhere, BlueprintAssignable, Category="MySettings")
-	FSearchSessionDele onCreateSlot;
-
-	UPROPERTY(EditAnywhere, BlueprintAssignable, Category = "MySettings")
-	FServerResponseDele onNewSearchComplete;
-
-	UPROPERTY(EditAnywhere, BlueprintAssignable, Category = "MySettings")
-	FFindButtonStatus onFindButtonToggle;
-
 	
 	void CreateMySession(FString roomName,FString hostName, int32 playerCount);		// 요청한 결과를 받기 위한 함수
 	void FindMySession();
@@ -47,13 +44,16 @@ public:
 	void CreateOrFindMySession();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
-	FString ClickedroomName;
+	FString ClickedroomName = FString("FirstRoom");
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
-	FString ClickedhostName;
+	FString ClickedhostName= FString("FirstHost");;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
-	int32 ClickedplayerCount;
+	int32 ClickedplayerCount=10;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
-	bool bXX;
+	FString UserNickName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
+	int32 meshNum;
 	
 private:
 	FName mySessionName = FName("first Session");
