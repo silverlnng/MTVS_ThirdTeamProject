@@ -11,6 +11,10 @@
 #include "Components/BoxComponent.h"
 #include "HttpModule.h"
 #include "AJH_WeatherWidget.h"
+#include "Components/WidgetComponent.h"
+#include "MTVSThirdProject/YJ/NetWorkGameInstance.h"
+#include "MTVSThirdProject/YJ/UserNameWidget.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AAJH_Player::AAJH_Player()
@@ -36,6 +40,18 @@ AAJH_Player::AAJH_Player()
 		GetMesh()->SetSkeletalMesh(tempBodyMesh.Object);
 		GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -90), FRotator(0, -90, 0));
 	}
+
+	UserNameWidgetComp =CreateDefaultSubobject<UWidgetComponent>(TEXT("UserNameWidget"));
+	UserNameWidgetComp->SetupAttachment(GetMesh());
+	UserNameWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
+
+	ConstructorHelpers::FClassFinder<UUserNameWidget> tempUserNameWidget(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/YJ/UI/WBP_UserName.WBP_UserName_C'"));
+
+	if (tempUserNameWidget.Succeeded())
+	{
+		UserNameWidgetComp->SetWidgetClass(tempUserNameWidget.Class);
+	}
+	
 }
 
 // Called when the game starts or when spawned
@@ -46,7 +62,21 @@ void AAJH_Player::BeginPlay()
 	boxComp->OnComponentBeginOverlap.AddDynamic(this, &AAJH_Player::OnMyBoxCompBeginOverlap);
 	boxComp->OnComponentEndOverlap.AddDynamic(this, &AAJH_Player::OnMyBoxCompEndOverlap);
 	
-	
+	UserNameUI = Cast<UUserNameWidget>(UserNameWidgetComp->GetWidget());
+
+	gi =GetGameInstance<UNetWorkGameInstance>();
+
+	//ë¡œì»¬í”Œë ˆì´ì–´ë§Œ ServerChange ì‹¤í–‰
+	if(GetController() && GetController()->IsLocalController())
+	{
+		ServerChange(gi->UserNickName,gi->meshNum);
+	}
+	// ëª¨ë“ í”Œë ˆì´ì–´ê°€ changeì‹¤í–‰
+	FTimerHandle TimerHandle;
+	GetWorldTimerManager().SetTimer(TimerHandle,[this]()
+	{
+		UserNameUI->SetUserName(UserName);
+	},1.f,false);
 }
 
 // Called every frame
@@ -143,13 +173,13 @@ void AAJH_Player::MouseCusorEvent()
 
 void AAJH_Player::InteractionLineTraceFuntion()
 {
-	// ½ºÅ©¸°¿¡ ÀÖ´Â ¸¶¿ì½ºÀÇ Á¤º¸¸¦ °¡Á®¿À´Â ÇÔ¼ö
+	// ï¿½ï¿½Å©ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ì½ºï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 	UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectMousePositionToWorld(worldLoc, worldDir);
-	// ¶óÀÎ Æ®·¹ÀÌ½º Ãâ·Â
+	// ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½ï¿½ï¿½
 	start = worldLoc;
-	// ¿£µå ÁöÁ¡
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	end = start + worldDir * 2000;
-	// ¹æ¾îÄÚµå
+	// ï¿½ï¿½ï¿½ï¿½Úµï¿½
 	param;
 	param.AddIgnoredActor(this);
 	bHit = GetWorld()->LineTraceSingleByChannel(outHit, start, end, ECC_Visibility, param);
@@ -162,7 +192,7 @@ void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedCompone
 	{
 		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		// ÄÝ¸®Àü Ã¤³Î º¯°æ ÈÄ È®ÀÎ
+		// ï¿½Ý¸ï¿½ï¿½ï¿½ Ã¤ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È®ï¿½ï¿½
 		ECollisionResponse Response = farmTile->boxComp->GetCollisionResponseToChannel(ECC_Visibility);
 		UE_LOG(LogTemp, Warning, TEXT("Collision response set to: %d"), Response);
 		OtherActor->GetName();
@@ -186,15 +216,15 @@ void AAJH_Player::ReqTodayWeather(FString url, FString json)
 	FHttpModule& httpModule = FHttpModule::Get();
 	TSharedRef<IHttpRequest> req = httpModule.CreateRequest();
 
-	// ¿äÃ»ÇÒ Á¤º¸¸¦ ¼³Á¤
+	// ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	req->SetURL(url);
 	req->SetVerb(TEXT("POST"));
 	req->SetHeader(TEXT("content-type"), TEXT("application/json"));
 	req->SetContentAsString(json);
 
-	// ÀÀ´ä ¹ÞÀ» ÇÔ¼ö¸¦ ¿¬°á
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	req->OnProcessRequestComplete().BindUObject(this, &AAJH_Player::OnResTodayWeather);
-	// ¼­¹ö¿¡ ¿äÃ»
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»
 	req->ProcessRequest();
 }
 
@@ -202,9 +232,22 @@ void AAJH_Player::OnResTodayWeather(FHttpRequestPtr Request, FHttpResponsePtr Re
 {
 	if (bConnectedSuccessfully)
 	{
-		// ¼º°ø
+		// ï¿½ï¿½ï¿½ï¿½
 		FString result = Response->GetContentAsString();
-		// ÇÊ¿äÇÑ Á¤º¸¸¸ »Ì¾Æ¼­ È­¸é¿¡ Ãâ·ÂÇÏ°í ½Í´Ù.
+		// ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¾Æ¼ï¿½ È­ï¿½é¿¡ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Í´ï¿½.
 		httpWeatherUI->SetTextLog(result);
 	}
+}
+
+void AAJH_Player::ServerChange_Implementation(const FString& userName_,int32 meshNum_)
+{
+	MeshNum = meshNum_;
+	UserName = userName_;
+}
+
+void AAJH_Player::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AAJH_Player,UserName);
+	DOREPLIFETIME(AAJH_Player,MeshNum);
 }

@@ -35,13 +35,13 @@ public:
 	class UCameraComponent* cameraComp;
 
 	/***********************************************
-			InputMappingContext ¸ðÀ½
+			InputMappingContext ï¿½ï¿½ï¿½ï¿½
 	***********************************************/
 	UPROPERTY(EditDefaultsOnly)
 	class UInputMappingContext* IMC_Operation;
 
 	/***********************************************
-			InputAction º¯¼ö ¸ðÀ½
+			InputAction ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	***********************************************/
 	UPROPERTY(EditDefaultsOnly)
 	class UInputAction* IA_Move;
@@ -53,7 +53,7 @@ public:
 	class UInputAction* IA_Tap;
 
 	/************************************************
-			InputAction ÇÔ¼ö ¸ðÀ½
+			InputAction ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½
 	************************************************/
 	void OnMyActionMove(const FInputActionValue& value);
 	void OnMyActionInteration(const FInputActionValue& value);
@@ -61,12 +61,12 @@ public:
 	void OnMyActionTap();
 
 	/************************************************
-			¸¶¿ì½º ÀÌº¥Æ® Ã³¸® ÇÔ¼ö
+			ï¿½ï¿½ï¿½ì½º ï¿½Ìºï¿½Æ® Ã³ï¿½ï¿½ ï¿½Ô¼ï¿½
 	************************************************/
 	void MouseCusorEvent();
 
 	/************************************************
-			Ä³¸¯ÅÍ »óÈ£ÀÛ¿ë ¹üÀ§
+			Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½
 	************************************************/
 	UPROPERTY(EditDefaultsOnly)
 	class UBoxComponent* boxComp;
@@ -74,35 +74,35 @@ public:
 	float interationSize = 400;
 
 	/************************************************
-			¶óÀÎÆ®·¹ÀÌ½º º¯¼ö
+			ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	************************************************/
-	// ¸¶¿ì½ºÀÇ À§Ä¡
+	// ï¿½ï¿½ï¿½ì½ºï¿½ï¿½ ï¿½ï¿½Ä¡
 	FVector worldLoc;
-	// ¸¶¿ì½ºÀÇ ¹æÇâ
+	// ï¿½ï¿½ï¿½ì½ºï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	FVector worldDir;
-	// ¶óÀÎ Æ®·¹ÀÌ½º Ãâ·Â
+	// ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½ï¿½ï¿½
 	FHitResult outHit;
-	// ½ºÅ¸Æ® ÁöÁ¡
+	// ï¿½ï¿½Å¸Æ® ï¿½ï¿½ï¿½ï¿½
 	FVector start;
-	// ¿£µå ÁöÁ¡
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	FVector end;
-	// ¹æ¾îÄÚµå
+	// ï¿½ï¿½ï¿½ï¿½Úµï¿½
 	FCollisionQueryParams param;
-	// Ãæµ¹ ÆÇ´Ü ¿©ºÎ
+	// ï¿½æµ¹ ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½
 	bool bHit;
 	/************************************************
-			¶óÀÎÆ®·¹ÀÌ½º ÇÔ¼ö
+			ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½Ô¼ï¿½
 	************************************************/
 	void InteractionLineTraceFuntion();
 
 	/************************************************
-			Á¤º¸ ÇÒ´ç ¸ðÀ½
+			ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ ï¿½ï¿½ï¿½ï¿½
 	************************************************/
 	UPROPERTY(EditDefaultsOnly)
 	class AAJH_FarmTile* farmTile;
 
 	/************************************************
-			¿À¹ö·¦ ÀÌº¥Æ® ÇÔ¼ö
+			ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½Ô¼ï¿½
 	************************************************/
 	UFUNCTION()
 	void OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -110,20 +110,38 @@ public:
 	void OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	/************************************************
-			À¥ Åë½Å ÇÔ¼ö ¹× UI Á¤º¸ ÇÒ´ç
+			ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ UI ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½
 	************************************************/
 	UPROPERTY()
 	class UAJH_WeatherWidget* httpWeatherUI;
 
-	// BT_today ¸¦ ´­·¶À» ¶§ ¿äÃ» ÇÒ ÇÔ¼ö
+	// BT_today ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ã» ï¿½ï¿½ ï¿½Ô¼ï¿½
 	void ReqTodayWeather(FString url, FString json);
-	// ÀÀ´ä ¹ÞÀ» ÇÔ¼ö
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 	void OnResTodayWeather(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully);
 
 	/************************************************
-			UI ¸ðÀ½
+			UI ï¿½ï¿½ï¿½ï¿½
 	************************************************/
 	UPROPERTY(EditDefaultsOnly)
 	class UUserWidget* TapUI;
 
+	UPROPERTY(EditDefaultsOnly)
+	class UWidgetComponent* UserNameWidgetComp;
+
+	UPROPERTY(EditDefaultsOnly)
+	class UUserNameWidget* UserNameUI;
+	
+	UPROPERTY(Replicated,EditDefaultsOnly)
+	FString UserName;
+	UPROPERTY(Replicated,EditDefaultsOnly)
+	int32 MeshNum;
+	UFUNCTION(server, reliable)
+	void ServerChange(const FString& userName_, int32 meshNum_);
+
+	UPROPERTY(BlueprintReadOnly)
+	class UNetWorkGameInstance* gi;
+	
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	
 };
