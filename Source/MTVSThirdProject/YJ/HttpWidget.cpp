@@ -3,7 +3,9 @@
 
 #include "HttpWidget.h"
 
+#include "HttpActor.h"
 #include "Components/Button.h"
+#include "Components/TextBlock.h"
 
 void UHttpWidget::NativeConstruct()
 {
@@ -15,7 +17,11 @@ void UHttpWidget::NativeConstruct()
 
 void UHttpWidget::OnMyClickSend()
 {
-	
+	FString fullURL = FString::Printf(TEXT("%s"), *URL);
+
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *fullURL);
+
+	httpActor->ReqStorageInfo(fullURL);
 }
 
 void UHttpWidget::OnMyClickPost()
@@ -41,8 +47,15 @@ void UHttpWidget::SetWebImage(class UTexture2D* newTexture)
 
 void UHttpWidget::SetTextLog(FString log)
 {
+	TextLog->SetText(FText::FromString(log));
+}
+
+void UHttpWidget::SetTextLogParse(FString logParse)
+{
+	TextLogParse->SetText(FText::FromString(logParse));
 }
 
 void UHttpWidget::SetHttpActor(class AHttpActor* actor)
 {
+	httpActor = actor;	
 }

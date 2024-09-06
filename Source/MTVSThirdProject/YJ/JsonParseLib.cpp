@@ -7,10 +7,12 @@
 
 FString UJsonParseLib::JsonParse(const FString& json)
 {
+	// 여기서 json은  String
+	
 	//리더기를 만들고
 	TSharedRef<TJsonReader<TCHAR>> Reader =TJsonReaderFactory<TCHAR>::Create(json);
 
-	//파싱결과를 담을 변수 선언
+	// 파싱결과를 담을 변수 선언
 	// MakeShareable : 스마트 포인터
 	TSharedPtr<FJsonObject> result = MakeShareable(new FJsonObject());
 
@@ -19,21 +21,14 @@ FString UJsonParseLib::JsonParse(const FString& json)
 	// 리더기 , json Object
 	if(FJsonSerializer::Deserialize(Reader,result))
 	{
-		TArray<TSharedPtr<FJsonValue>> parseDataList = result->GetArrayField(TEXT("items"));
-
-		for(auto data : parseDataList)
-		{
-			// data 를 조절해서 원하는 대로 만들기
-			//  "bk_nm": "노래하는 볼돼지",
-			// "aut_nm": "김영진 글·그림",
-			FString bookName =data->AsObject()->GetStringField("bk_nm");
-			FString AuthName =data->AsObject()->GetStringField("aut_nm");
-			returnValue.Append(FString::Printf(TEXT("BookName : %s / AuthName : %s\n"), *bookName,*AuthName));
-			
-		}
+		//result->GetObjectField(TEXT("today"))
+		TSharedPtr<FJsonObject> todayObj = result->GetObjectField(TEXT("today"));
+		FString temperatureStr = todayObj->GetStringField(TEXT("temperature"));
+		FString weatherStr = todayObj->GetStringField(TEXT("weather"));
+		//TSharedPtr<FJsonValue> temperature = todayObj->GetField(TEXT("temperature"),EJson::String);
+		returnValue.Append(FString::Printf(TEXT("Today :temperature : %s\n"), *temperatureStr));
+		returnValue.Append(FString::Printf(TEXT("Today :weather : %s\n"), *weatherStr));
 	}
-
-
 	//변환
 	return returnValue;
 }

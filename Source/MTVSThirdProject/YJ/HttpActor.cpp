@@ -66,7 +66,9 @@ void AHttpActor::OnResStorageInfo(FHttpRequestPtr Request, FHttpResponsePtr Resp
 		FString result = Response->GetContentAsString();
 
 		// 필요한 정보만 뽑아서 화면에 출력하고싶다.
-		HttpUI->SetTextLog(UJsonParseLib::JsonParse(result));
+		//HttpUI->SetTextLog(UJsonParseLib::JsonParse(result));
+		HttpUI->SetTextLog(result);
+		HttpUI->SetTextLogParse(UJsonParseLib::JsonParse(result));
 	}
 	else{
 		// 실패

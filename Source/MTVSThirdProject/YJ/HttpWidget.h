@@ -44,9 +44,18 @@ public:
 
 	void SetTextLog(FString log);
 
-	void SetHttpActor(class AHttpActor* actor);
+	void SetTextLogParse(FString logParse);
 
-    FString URL = "gs://unrealthirdteamproject.appspot.com"; // 파이어베이스 storage 버킷
-    FString Key = "AIzaSyD2-X2ghnSSC4tW-EmoaanENN9nMoMFKuM"; // 웹 ApI 키 
+	void SetHttpActor(class AHttpActor* actor);
+	FString URL = "https://safe-quickly-lioness.ngrok-free.app/weather/Seoul";
+		
+    //FString URL = "gs://unrealthirdteamproject.appspot.com"; // 파이어베이스 storage 버킷
+    //FString Key = "AIzaSyD2-X2ghnSSC4tW-EmoaanENN9nMoMFKuM"; // 웹 ApI 키
+	
+	UPROPERTY(meta=(BindWidget))
+	class UTextBlock* TextLog;
+	
+	UPROPERTY(meta=(BindWidget))
+	class UTextBlock* TextLogParse;
 	
 };
