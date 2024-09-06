@@ -26,7 +26,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	/************************************************
-			À¥ Åë½Å ÇÔ¼ö
+			ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 	************************************************/
 	UPROPERTY(EDitDefaultsOnly)
 	TSubclassOf<class UUserWidget> httpUIFactory;
@@ -34,10 +34,10 @@ public:
 	UPROPERTY()
 	class UAJH_WeatherWidget* httpWeatherUI;
 	
-	// BT_today ¸¦ ´­·¶À» ¶§ ¿äÃ» ÇÒ ÇÔ¼ö
+	// BT_today ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ã» ï¿½ï¿½ ï¿½Ô¼ï¿½
 	void ReqTodayWeather(FString url);
-	// ÀÀ´ä ¹ÞÀ» ÇÔ¼ö
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 	void OnResTodayWeather(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully);
 
-
+	
 };

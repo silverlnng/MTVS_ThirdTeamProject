@@ -33,12 +33,12 @@ void UAJH_WeatherWidget::OnMyClickToday()
 
 void UAJH_WeatherWidget::OnMyClickTomorrow()
 {
-	//// ³»ÀÏÀÇ ³¯¾¾ ¿äÃ»
+	//// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»
 	//TMap<FString, FString> tomorrowData;
 	//tomorrowData.Add("type", "tomorrow");
 	//FString json = UAJH_JsonParseLib::MakeWeatherJson(tomorrowData);
 
-	//// ÇÃ·¹ÀÌ¾î Å¬·¡½ºÀÇ ReqTodayWeather ÇÔ¼ö¸¦ È£ÃâÇÏ¿© ¼­¹ö¿¡ ¿äÃ»
+	//// ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ReqTodayWeather ï¿½Ô¼ï¿½ï¿½ï¿½ È£ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»
 	//if (playerhttp)
 	//{
 	//	playerhttp->ReqTodayWeather(ServerURL);
@@ -57,4 +57,9 @@ void UAJH_WeatherWidget::SetTextLog(FString log)
 void UAJH_WeatherWidget::SetPlayerHttp(class AAJH_Player* player)
 {
 	playerhttp = player;
+}
+
+void UAJH_WeatherWidget::SetHttpActor(class AAJH_WeatherHttpActor* actor)
+{
+	weatherHttp = actor;
 }

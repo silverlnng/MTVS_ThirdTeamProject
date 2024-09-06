@@ -21,11 +21,12 @@ void AAJH_WeatherHttpActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// UI¸¦ »ý¼ºÇØ¼­ ±â¾ïÇÏ°í ½Í´Ù
+	// UIï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Í´ï¿½
 	httpWeatherUI = Cast<UAJH_WeatherWidget>(CreateWidget(GetWorld(), httpUIFactory));
 	if (httpWeatherUI)
 	{
 		httpWeatherUI->AddToViewport();
+		httpWeatherUI->SetHttpActor(this);
 	}
 	
 }
@@ -39,34 +40,53 @@ void AAJH_WeatherHttpActor::Tick(float DeltaTime)
 
 void AAJH_WeatherHttpActor::ReqTodayWeather(FString url)
 {
-	// Http¸ðµâÀ» »ý¼º
-	FHttpModule& httpModule = FHttpModule::Get();
+	// Httpï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	/*FHttpModule& httpModule = FHttpModule::Get();
 	TSharedRef<IHttpRequest> req = httpModule.CreateRequest();
 
-	// ¿äÃ»ÇÒ Á¤º¸¸¦ ¼³Á¤
+	// ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	req->SetURL(url);
 	req->SetVerb(TEXT("GET"));
 	req->SetHeader(TEXT("content-type"), TEXT("application/json"));
-	// ÀÀ´ä¹ÞÀ» ÇÔ¼ö¸¦ ¿¬°á
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	req->OnProcessRequestComplete().BindUObject(this, &AAJH_WeatherHttpActor::OnResTodayWeather);
-	// ¼­¹ö¿¡ ¿äÃ»
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»
 
 	req->ProcessRequest();
+	UE_LOG(LogTemp, Warning, TEXT("Request Sent : %s"), *url);*/
+
+	FHttpModule& httpModule = FHttpModule::Get();
+
+	TSharedRef<IHttpRequest> httpReq =httpModule.CreateRequest();
+
+	//ìš”ì²­í•  ì •ë³´ë¥¼ ì„¤ì •
+	httpReq->SetURL(url);
+	httpReq->SetVerb(TEXT("GET"));
+	httpReq->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+	httpReq->OnProcessRequestComplete().BindUObject(this,&AAJH_WeatherHttpActor::OnResTodayWeather);
+	// FHttpRequestCompleteDelegate ìœ¼ë¡œ ì™„ë£Œë˜ë©´ ì‹¤í–‰í•  í•¨ìˆ˜ë¥¼ bind (ì‘ë‹µë°›ì„ í•¨ìˆ˜ë¥¼ ì—°ê²°)
+	// ì‘ë‹µë°›ì„ í•¨ìˆ˜ë¥¼ ì—°ê²°
+
+	//ì„œë²„ì— ìš”ì²­
+	httpReq->ProcessRequest();
+
 	UE_LOG(LogTemp, Warning, TEXT("Request Sent : %s"), *url);
+	
 }
 
 void AAJH_WeatherHttpActor::OnResTodayWeather(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully)
 {
 	if (bConnectedSuccessfully)
 	{
-		// ¼º°ø
+		// ï¿½ï¿½ï¿½ï¿½
+		UE_LOG(LogTemp, Warning, TEXT("OnResNewBookInfo Success..."));
 		FString result = Response->GetContentAsString();
-
-		// ÇÊ¿äÇÑ Á¤º¸¸¸ »Ì¾Æ¼­ È­¸é¿¡ Ãâ·ÂÇÏ°í½Í´Ù.
-		httpWeatherUI->SetTextLog(UAJH_JsonParseLib::WeatherJsonParse(result));
+        httpWeatherUI->SetTextLog(result);
+		// ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¾Æ¼ï¿½ È­ï¿½é¿¡ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½Í´ï¿½.
+		//httpWeatherUI->SetTextLog(UAJH_JsonParseLib::WeatherJsonParse(result));
 	}
 	else {
-		// ½ÇÆÐ
+		// ï¿½ï¿½ï¿½ï¿½
 		UE_LOG(LogTemp, Warning, TEXT("OnResNewBookInfo Failed..."));
 	}
 }

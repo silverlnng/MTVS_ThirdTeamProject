@@ -13,11 +13,11 @@
 #include "AJH_WeatherWidget.h"
 #include "JS_Tree.h"
 #include "AJH_JsonParseLib.h"
-
+#include "Net/UnrealNetwork.h"
 #include "Components/WidgetComponent.h"
 #include "MTVSThirdProject/YJ/NetWorkGameInstance.h"
 #include "MTVSThirdProject/YJ/UserNameWidget.h"
-#include "Net/UnrealNetwork.h"
+
 
 // Sets default values
 AAJH_Player::AAJH_Player()
@@ -241,15 +241,15 @@ void AAJH_Player::ReqTodayWeather(FString url)
 	//req->ProcessRequest();
 	//UE_LOG(LogTemp, Warning, TEXT("Request Sent : %s"), *url);
 	// ��û�� ������ ����
-	req->SetURL(url);
+	/*req->SetURL(url);
 	req->SetVerb(TEXT("POST"));
 	req->SetHeader(TEXT("content-type"), TEXT("application/json"));
-	req->SetContentAsString(json);
+	req->SetContentAsString(json);*/
 
 	// ���� ���� �Լ��� ����
-	req->OnProcessRequestComplete().BindUObject(this, &AAJH_Player::OnResTodayWeather);
+	//req->OnProcessRequestComplete().BindUObject(this, &AAJH_Player::OnResTodayWeather);
 	// ������ ��û
-	req->ProcessRequest();
+	//req->ProcessRequest();
 }
 
 void AAJH_Player::OnResTodayWeather(FHttpRequestPtr HttpReq, FHttpResponsePtr HttpRes, bool bConnectedSuccessfully)
@@ -326,16 +326,16 @@ void AAJH_Player::OnResTodayWeather(FHttpRequestPtr HttpReq, FHttpResponsePtr Ht
 //		UE_LOG(LogTemp, Error, TEXT("Failed to get weather data or connection unsuccessful"));
 //	}
 //}
-	if (bConnectedSuccessfully)
+	/*if (bConnectedSuccessfully)
 	{
 		// ����
 		FString result = Response->GetContentAsString();
 		// �ʿ��� ������ �̾Ƽ� ȭ�鿡 ����ϰ� �ʹ�.
 		httpWeatherUI->SetTextLog(result);
-	}
-}
+	}*/
 
-void AAJH_Player::ServerChange_Implementation(const FString& userName_,int32 meshNum_)
+
+void AAJH_Player::ServerChange_Implementation(const FString& userName_, int32 meshNum_)
 {
 	MeshNum = meshNum_;
 	UserName = userName_;

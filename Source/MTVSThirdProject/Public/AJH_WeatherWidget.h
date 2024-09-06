@@ -31,12 +31,15 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	class AAJH_Player* playerhttp;
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly)
 	class AAJH_WeatherHttpActor* weatherHttp;
 	
 	void SetPlayerHttp(class AAJH_Player* player);
 	
 	//FString ServerURL = "http://222.103.183.137:8000/weather/Seoul";
-	FString ServerURL = "http://safe-quickly-lioness.ngrok-free.app";
-
+	FString ServerURL = "https://safe-quickly-lioness.ngrok-free.app/weather/Seoul";
+	
+	UFUNCTION(BlueprintCallable)
+	void SetHttpActor(class AAJH_WeatherHttpActor* actor);
+	
 };
