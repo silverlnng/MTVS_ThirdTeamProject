@@ -120,6 +120,7 @@ public:
 	// BT_today 를 눌렀을 때 요청 할 함수
 	void ReqTodayWeather(FString url, FString json);
 	// 응답 받을 함수
+	//UFUNCTION()
 	void OnResTodayWeather(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully);
 
 	/************************************************

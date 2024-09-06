@@ -32,6 +32,7 @@ public:
 	UPROPERTY()
 	class AAJH_Player* playerhttp;
 	
-	FString ServerURL = "http://mtvs.helloworldlabs.kr:7771/api/json";
+	FString ServerURL = "http://222.103.183.137:8000/weather/Seoul/";
+	//FString ServerURL = "http://safe-quickly-lioness.ngrok-free.app/weather/Seoul";
 
 };
