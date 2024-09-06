@@ -29,10 +29,14 @@ public:
 	class UTextBlock* T_TextLog;
 	void SetTextLog(FString log);
 
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly)
 	class AAJH_Player* playerhttp;
+	UPROPERTY()
+	class AAJH_WeatherHttpActor* weatherHttp;
 	
-	FString ServerURL = "http://222.103.183.137:8000/weather/Seoul/";
-	//FString ServerURL = "http://safe-quickly-lioness.ngrok-free.app/weather/Seoul";
+	void SetPlayerHttp(class AAJH_Player* player);
+	
+	//FString ServerURL = "http://222.103.183.137:8000/weather/Seoul";
+	FString ServerURL = "http://safe-quickly-lioness.ngrok-free.app";
 
 };

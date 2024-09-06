@@ -114,11 +114,13 @@ public:
 	/************************************************
 			웹 통신 함수 및 UI 정보 할당
 	************************************************/
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UUserWidget> weatherUI;
+	UPROPERTY(EditDefaultsOnly)
 	class UAJH_WeatherWidget* httpWeatherUI;
 
 	// BT_today 를 눌렀을 때 요청 할 함수
-	void ReqTodayWeather(FString url, FString json);
+	void ReqTodayWeather(FString url);
 	// 응답 받을 함수
 	//UFUNCTION()
 	void OnResTodayWeather(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully);

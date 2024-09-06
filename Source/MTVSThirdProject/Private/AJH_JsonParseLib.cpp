@@ -19,6 +19,7 @@ FString UAJH_JsonParseLib::WeatherJsonParse(const FString& json)
 		for (TSharedPtr<FJsonValue> data : paraseDataList)
 		{
 			FString today = data->AsObject()->GetStringField(TEXT("Today_nm"));
+			returnValue.Append(FString::Printf(TEXT("Today : %s"), *today));
 		}
 	}
 	// 반환한다

@@ -12,6 +12,7 @@
 #include "HttpModule.h"
 #include "AJH_WeatherWidget.h"
 #include "JS_Tree.h"
+#include "AJH_JsonParseLib.h"
 
 
 // Sets default values
@@ -47,7 +48,7 @@ void AAJH_Player::BeginPlay()
 	
 	boxComp->OnComponentBeginOverlap.AddDynamic(this, &AAJH_Player::OnMyBoxCompBeginOverlap);
 	boxComp->OnComponentEndOverlap.AddDynamic(this, &AAJH_Player::OnMyBoxCompEndOverlap);
-	
+	httpWeatherUI = Cast<UAJH_WeatherWidget>(UGameplayStatics::GetActorOfClass(GetWorld(), UAJH_WeatherWidget::StaticClass()));
 	
 }
 
@@ -130,7 +131,12 @@ void AAJH_Player::OnMyAction(const FInputActionValue& value)
 
 void AAJH_Player::OnMyActionTap()
 {
-	
+	httpWeatherUI = Cast<UAJH_WeatherWidget>(CreateWidget(GetWorld(), weatherUI));
+	if (httpWeatherUI)
+	{
+		httpWeatherUI->AddToViewport();
+		httpWeatherUI->SetPlayerHttp(this);
+	}
 }
 
 void AAJH_Player::MouseCusorEvent()
@@ -183,79 +189,95 @@ void AAJH_Player::OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent
 	}
 }
 
-void AAJH_Player::ReqTodayWeather(FString url, FString json)
+void AAJH_Player::ReqTodayWeather(FString url)
 {
-	FHttpModule& httpModule = FHttpModule::Get();
-	TSharedRef<IHttpRequest> req = httpModule.CreateRequest();
+	//FHttpModule& httpModule = FHttpModule::Get();
+	//TSharedRef<IHttpRequest> req = httpModule.CreateRequest();
 
-	// 요청할 정보를 설정
-	req->SetURL(url);
-	req->SetVerb("POST");
-	req->SetHeader(TEXT("content-type"), TEXT("application/json"));
-	req->SetContentAsString(json);
+	//// 요청할 정보를 설정
+	//req->SetURL(url);
+	//req->SetVerb("GET");
+	//req->SetHeader(TEXT("content-type"), TEXT("application/json"));
+	//// req->SetContentAsString(json);
 
-	// 응답 받을 함수를 연결
-	req->OnProcessRequestComplete().BindUObject(this, &AAJH_Player::OnResTodayWeather);
-	// 서버에 요청
-	req->ProcessRequest();
-	UE_LOG(LogTemp, Warning, TEXT("Request Sent"));
+	//// 응답 받을 함수를 연결
+	//req->OnProcessRequestComplete().BindUObject(this, &AAJH_Player::OnResTodayWeather);
+	//// 서버에 요청
+	//req->ProcessRequest();
+	//UE_LOG(LogTemp, Warning, TEXT("Request Sent : %s"), *url);
 }
 
 void AAJH_Player::OnResTodayWeather(FHttpRequestPtr HttpReq, FHttpResponsePtr HttpRes, bool bConnectedSuccessfully)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnResTodayWeather Start"));
-	if (bConnectedSuccessfully)
-	{
-		// 성공
-		FString result = HttpRes->GetContentAsString();
-		UE_LOG(LogTemp, Log, TEXT("Response: %s"), *result);
+	//if (bConnectedSuccessfully)
+	//{
+	//	// 성공
+	//	FString result = HttpRes->GetContentAsString();
 
-		// Json 파싱 준비
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<TCHAR>> Reader = TJsonReaderFactory<TCHAR>::Create(result);
-
-		// Json 파싱
-		if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
-		{
-			// 오늘 날씨 정보를 추출
-			TSharedPtr<FJsonObject> TodayWeather = JsonObject->GetObjectField("today");
-			float TodayTemperature = TodayWeather->GetNumberField("temperature");
-			FString TodayWeatherDesc = TodayWeather->GetStringField("weather");
-			int32 TodayHumidity = TodayWeather->GetIntegerField("humidity");
-			float TodayWindSpeed = TodayWeather->GetNumberField("wind_speed");
-
-			UE_LOG(LogTemp, Log, TEXT("Today's Weather:"));
-			UE_LOG(LogTemp, Log, TEXT("Temperature: %.2f"), TodayTemperature);
-			UE_LOG(LogTemp, Log, TEXT("Weather: %s"), *TodayWeatherDesc);
-			UE_LOG(LogTemp, Log, TEXT("Humidity: %d"), TodayHumidity);
-			UE_LOG(LogTemp, Log, TEXT("Wind Speed: %.2f"), TodayWindSpeed);
-
-			// 내일 날씨 정보를 추출 (필요에 따라)
-			TSharedPtr<FJsonObject> TomorrowWeather = JsonObject->GetObjectField("tomorrow");
-			float TomorrowTemperature = TomorrowWeather->GetNumberField("temperature");
-			FString TomorrowWeatherDesc = TomorrowWeather->GetStringField("weather");
-			int32 TomorrowHumidity = TomorrowWeather->GetIntegerField("humidity");
-			float TomorrowWindSpeed = TomorrowWeather->GetNumberField("wind_speed");
-
-			// UI에 표시할 텍스트를 구성
-			FString DisplayText = FString::Printf(TEXT("Today's Weather:\nTemperature: %.2f\nWeather: %s\nHumidity: %d\nWind Speed: %.2f"),
-				TodayTemperature, *TodayWeatherDesc, TodayHumidity, TodayWindSpeed);
-
-			if (httpWeatherUI)
-			{
-				// 필요한 정보만 뽑아서 화면에 출력하고 싶다.
-				httpWeatherUI->SetTextLog(result);
-			}
-		}
-		else
-		{
-			// JSON 파싱 실패 시 에러 처리
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Failed to parse JSON response"));
-		}
-	}
-	else
-	{
-		// 응답 실패 시 에러 처리
-		UE_LOG(LogTemp, Error, TEXT("Failed to get weather data or connection unsuccessful"));
-	}
+	//	httpWeatherUI->SetTextLog(UAJH_JsonParseLib::WeatherJsonParse(result));
+	//	UE_LOG(LogTemp, Warning, TEXT("result : %s"), *result);
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("OnResTodayWeather Faild..."));
+	//}
 }
+
+//void AAJH_Player::OnResTodayWeather(FHttpRequestPtr HttpReq, FHttpResponsePtr HttpRes, bool bConnectedSuccessfully)
+//{
+//	UE_LOG(LogTemp, Warning, TEXT("OnResTodayWeather Start"));
+//	if (bConnectedSuccessfully)
+//	{
+//		// 성공
+//		FString result = HttpRes->GetContentAsString();
+//		UE_LOG(LogTemp, Log, TEXT("Response: %s"), *result);
+//
+//		// Json 파싱 준비
+//		TSharedPtr<FJsonObject> JsonObject;
+//		TSharedRef<TJsonReader<TCHAR>> Reader = TJsonReaderFactory<TCHAR>::Create(result);
+//
+//		// Json 파싱
+//		if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
+//		{
+//			// 오늘 날씨 정보를 추출
+//			TSharedPtr<FJsonObject> TodayWeather = JsonObject->GetObjectField("today");
+//			float TodayTemperature = TodayWeather->GetNumberField("temperature");
+//			FString TodayWeatherDesc = TodayWeather->GetStringField("weather");
+//			int32 TodayHumidity = TodayWeather->GetIntegerField("humidity");
+//			float TodayWindSpeed = TodayWeather->GetNumberField("wind_speed");
+//
+//			UE_LOG(LogTemp, Log, TEXT("Today's Weather:"));
+//			UE_LOG(LogTemp, Log, TEXT("Temperature: %.2f"), TodayTemperature);
+//			UE_LOG(LogTemp, Log, TEXT("Weather: %s"), *TodayWeatherDesc);
+//			UE_LOG(LogTemp, Log, TEXT("Humidity: %d"), TodayHumidity);
+//			UE_LOG(LogTemp, Log, TEXT("Wind Speed: %.2f"), TodayWindSpeed);
+//
+//			// 내일 날씨 정보를 추출 (필요에 따라)
+//			TSharedPtr<FJsonObject> TomorrowWeather = JsonObject->GetObjectField("tomorrow");
+//			float TomorrowTemperature = TomorrowWeather->GetNumberField("temperature");
+//			FString TomorrowWeatherDesc = TomorrowWeather->GetStringField("weather");
+//			int32 TomorrowHumidity = TomorrowWeather->GetIntegerField("humidity");
+//			float TomorrowWindSpeed = TomorrowWeather->GetNumberField("wind_speed");
+//
+//			// UI에 표시할 텍스트를 구성
+//			FString DisplayText = FString::Printf(TEXT("Today's Weather:\nTemperature: %.2f\nWeather: %s\nHumidity: %d\nWind Speed: %.2f"),
+//				TodayTemperature, *TodayWeatherDesc, TodayHumidity, TodayWindSpeed);
+//
+//			if (httpWeatherUI)
+//			{
+//				// 필요한 정보만 뽑아서 화면에 출력하고 싶다.
+//				httpWeatherUI->SetTextLog(result);
+//			}
+//		}
+//		else
+//		{
+//			// JSON 파싱 실패 시 에러 처리
+//			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Failed to parse JSON response"));
+//		}
+//	}
+//	else
+//	{
+//		// 응답 실패 시 에러 처리
+//		UE_LOG(LogTemp, Error, TEXT("Failed to get weather data or connection unsuccessful"));
+//	}
+//}
