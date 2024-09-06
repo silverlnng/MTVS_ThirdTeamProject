@@ -100,6 +100,8 @@ public:
 	************************************************/
 	UPROPERTY(EditDefaultsOnly)
 	class AAJH_FarmTile* farmTile;
+	UPROPERTY(EditDefaultsOnly)
+	class AJS_Tree* treeTile;
 
 	/************************************************
 			������ �̺�Ʈ �Լ�
@@ -112,9 +114,15 @@ public:
 	/************************************************
 			�� ��� �Լ� �� UI ���� �Ҵ�
 	************************************************/
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UUserWidget> weatherUI;
+	UPROPERTY(EditDefaultsOnly)
 	class UAJH_WeatherWidget* httpWeatherUI;
 
+	// BT_today �� ������ �� ��û �� �Լ�
+	void ReqTodayWeather(FString url);
+	// ���� ���� �Լ�
+	//UFUNCTION()
 	// BT_today �� ������ �� ��û �� �Լ�
 	void ReqTodayWeather(FString url, FString json);
 	// ���� ���� �Լ�
