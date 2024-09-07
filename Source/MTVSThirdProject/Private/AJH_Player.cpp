@@ -17,6 +17,8 @@
 #include "Components/WidgetComponent.h"
 #include "MTVSThirdProject/YJ/NetWorkGameInstance.h"
 #include "MTVSThirdProject/YJ/UserNameWidget.h"
+#include "JS_Rock.h"
+#include "JS_Gress.h"
 
 
 // Sets default values
@@ -27,6 +29,7 @@ AAJH_Player::AAJH_Player()
 
 	springArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	springArmComp->SetupAttachment(RootComponent);
+	springArmComp->SetRelativeLocation(FVector(-100, 0, 0));
 	springArmComp->SetRelativeRotation(FRotator(-55, 0, 0));
 	springArmComp->TargetArmLength = 650;
 
@@ -65,6 +68,9 @@ void AAJH_Player::BeginPlay()
 	boxComp->OnComponentBeginOverlap.AddDynamic(this, &AAJH_Player::OnMyBoxCompBeginOverlap);
 	boxComp->OnComponentEndOverlap.AddDynamic(this, &AAJH_Player::OnMyBoxCompEndOverlap);
 	httpWeatherUI = Cast<UAJH_WeatherWidget>(UGameplayStatics::GetActorOfClass(GetWorld(), UAJH_WeatherWidget::StaticClass()));
+	tree = Cast<AJS_Tree>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_Tree::StaticClass()));
+	rock = Cast<AJS_Rock>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_Rock::StaticClass()));
+	gress = Cast<AJS_Gress>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_Gress::StaticClass()));
 	
 	
 	UserNameUI = Cast<UUserNameWidget>(UserNameWidgetComp->GetWidget());
@@ -115,7 +121,6 @@ void AAJH_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		input->BindAction(IA_Move, ETriggerEvent::Triggered, this, &AAJH_Player::OnMyActionMove);
 		input->BindAction(IA_Interation, ETriggerEvent::Started, this, &AAJH_Player::OnMyActionInteration);
 		input->BindAction(IA_Action, ETriggerEvent::Started, this, &AAJH_Player::OnMyAction);
-		input->BindAction(IA_Action, ETriggerEvent::Completed, this, &AAJH_Player::OnMyAction);
 		input->BindAction(IA_Tap, ETriggerEvent::Started, this, &AAJH_Player::OnMyActionTap);
 	}
 
@@ -159,16 +164,43 @@ void AAJH_Player::OnMyAction(const FInputActionValue& value)
 		FString objectName = outHit.GetActor()->GetName();
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, objectName);
 	}
+
+	if (outHit.GetComponent()->GetCollisionResponseToChannel(ECC_Visibility) == ECR_Block)
+	{
+		// Tag : Tree, Rock, Gress
+		if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Tree")))
+		{
+			tree = Cast<AJS_Tree>(outHit.GetActor());
+			tree->GetDamage_Implementation(true);
+			int32 hp = tree->curHP;
+			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
+		}
+		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Rock")))
+		{
+			rock = Cast<AJS_Rock>(outHit.GetActor());
+			rock->GetDamage_Implementation(true);
+			int32 hp = rock->curHP;
+			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
+		}
+		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Gress")))
+		{
+			gress = Cast<AJS_Gress>(outHit.GetActor());
+			gress->GetDamage_Implementation(true);
+			int32 hp = gress->curHP;
+			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
+		}
+	}
+
 }
 
 void AAJH_Player::OnMyActionTap()
 {
-	httpWeatherUI = Cast<UAJH_WeatherWidget>(CreateWidget(GetWorld(), weatherUI));
+	/*httpWeatherUI = Cast<UAJH_WeatherWidget>(CreateWidget(GetWorld(), weatherUI));
 	if (httpWeatherUI)
 	{
 		httpWeatherUI->AddToViewport();
 		httpWeatherUI->SetPlayerHttp(this);
-	}
+	}*/
 }
 
 void AAJH_Player::MouseCusorEvent()
@@ -183,13 +215,13 @@ void AAJH_Player::MouseCusorEvent()
 
 void AAJH_Player::InteractionLineTraceFuntion()
 {
-	// ��ũ���� �ִ� ���콺�� ������ �������� �Լ�
+	// 
 	UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectMousePositionToWorld(worldLoc, worldDir);
-	// ���� Ʈ���̽� ���
+	// 
 	start = worldLoc;
-	// ���� ����
+	// 
 	end = start + worldDir * 2000;
-	// ����ڵ�
+	// 
 	param;
 	param.AddIgnoredActor(this);
 	bHit = GetWorld()->LineTraceSingleByChannel(outHit, start, end, ECC_Visibility, param);
@@ -198,29 +230,63 @@ void AAJH_Player::InteractionLineTraceFuntion()
 void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	farmTile = Cast<AAJH_FarmTile>(OtherActor);
-	treeTile = Cast<AJS_Tree>(OtherActor);
+	tree = Cast<AJS_Tree>(OtherActor);
+	rock = Cast<AJS_Rock>(OtherActor);
+	gress = Cast<AJS_Gress>(OtherActor);
 	if (farmTile && OtherActor->ActorHasTag(TEXT("FarmTile")))
 	{
 		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 		
-		// �ݸ��� ä�� ���� �� Ȯ��
+		// 
 		ECollisionResponse Response = farmTile->boxComp->GetCollisionResponseToChannel(ECC_Visibility);
 		UE_LOG(LogTemp, Warning, TEXT("Collision response set to: %d"), Response);
 		OtherActor->GetName();
 		FString objectName = OtherActor->GetName();
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, objectName);
 	}
+	if(tree && OtherActor->ActorHasTag(TEXT("Tree")))
+	{
+		tree->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		tree->treeMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	}
+	if(rock && OtherActor->ActorHasTag(TEXT("Rock")))
+	{
+		rock->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		rock->rockMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	}
+	if(gress && OtherActor->ActorHasTag(TEXT("Gress")))
+	{
+		gress->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		gress->gressMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	}
 }
 
 void AAJH_Player::OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	farmTile = Cast<AAJH_FarmTile>(OtherActor);
-	treeTile = Cast<AJS_Tree>(OtherActor);
+	tree = Cast<AJS_Tree>(OtherActor);
+	rock = Cast<AJS_Rock>(OtherActor);
+	gress = Cast<AJS_Gress>(OtherActor);
 	if (farmTile && OtherActor->ActorHasTag(TEXT("FarmTile")))
 	{
 		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+	}
+	if (tree && OtherActor->ActorHasTag(TEXT("Tree")))
+	{
+		tree->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		tree->treeMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+	}
+	if (rock && OtherActor->ActorHasTag(TEXT("Rock")))
+	{
+		rock->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		rock->rockMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+	}
+	if (gress && OtherActor->ActorHasTag(TEXT("Gress")))
+	{
+		gress->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		gress->gressMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 	}
 }
 

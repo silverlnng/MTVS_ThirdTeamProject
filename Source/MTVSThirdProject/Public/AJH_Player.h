@@ -35,13 +35,13 @@ public:
 	class UCameraComponent* cameraComp;
 
 	/***********************************************
-			InputMappingContext ����
+			InputMappingContext 모음
 	***********************************************/
 	UPROPERTY(EditDefaultsOnly)
 	class UInputMappingContext* IMC_Operation;
 
 	/***********************************************
-			InputAction ���� ����
+			InputAction 변수 모음
 	***********************************************/
 	UPROPERTY(EditDefaultsOnly)
 	class UInputAction* IA_Move;
@@ -53,7 +53,7 @@ public:
 	class UInputAction* IA_Tap;
 
 	/************************************************
-			InputAction �Լ� ����
+			InputAction 함수 모음
 	************************************************/
 	void OnMyActionMove(const FInputActionValue& value);
 	void OnMyActionInteration(const FInputActionValue& value);
@@ -61,12 +61,12 @@ public:
 	void OnMyActionTap();
 
 	/************************************************
-			���콺 �̺�Ʈ ó�� �Լ�
+			마우스 포인트 상호작용
 	************************************************/
 	void MouseCusorEvent();
 
 	/************************************************
-			ĳ���� ��ȣ�ۿ� ����
+			상호작용 범위 지정
 	************************************************/
 	UPROPERTY(EditDefaultsOnly)
 	class UBoxComponent* boxComp;
@@ -74,37 +74,42 @@ public:
 	float interationSize = 400;
 
 	/************************************************
-			����Ʈ���̽� ����
+			상호작용 라인트레이스
 	************************************************/
-	// ���콺�� ��ġ
+	// 
 	FVector worldLoc;
-	// ���콺�� ����
+	// 
 	FVector worldDir;
-	// ���� Ʈ���̽� ���
+	// 
 	FHitResult outHit;
-	// ��ŸƮ ����
+	// 
 	FVector start;
-	// ���� ����
+	// 
 	FVector end;
-	// ����ڵ�
+	// 
 	FCollisionQueryParams param;
-	// �浹 �Ǵ� ����
+	// 
 	bool bHit;
 	/************************************************
-			����Ʈ���̽� �Լ�
+			라인트레이스 이벤트 함수
 	************************************************/
 	void InteractionLineTraceFuntion();
 
 	/************************************************
-			���� �Ҵ� ����
+			작물 정보 할당
 	************************************************/
 	UPROPERTY(EditDefaultsOnly)
 	class AAJH_FarmTile* farmTile;
+
 	UPROPERTY(EditDefaultsOnly)
-	class AJS_Tree* treeTile;
+	class AJS_Tree* tree;
+	UPROPERTY(EditDefaultsOnly)
+	class AJS_Rock* rock;
+	UPROPERTY(EditDefaultsOnly)
+	class AJS_Gress* gress;
 
 	/************************************************
-			������ �̺�Ʈ �Լ�
+			오버랩 이벤트 함수
 	************************************************/
 	UFUNCTION()
 	void OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -112,20 +117,17 @@ public:
 	void OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	/************************************************
-			�� ��� �Լ� �� UI ���� �Ҵ�
+			UI 정보 할당
 	************************************************/
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UUserWidget> weatherUI;
 	UPROPERTY(EditDefaultsOnly)
 	class UAJH_WeatherWidget* httpWeatherUI;
 
-	// BT_today �� ������ �� ��û �� �Լ�
+	// BT_today 
 	void ReqTodayWeather(FString url);
-	// ���� ���� �Լ�
-	//UFUNCTION()
-	// BT_today �� ������ �� ��û �� �Լ�
-	void ReqTodayWeather(FString url, FString json);
-	// ���� ���� �Լ�
+
+	// 
 	void OnResTodayWeather(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully);
 
 	/************************************************

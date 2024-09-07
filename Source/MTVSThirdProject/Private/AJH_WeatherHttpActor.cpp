@@ -79,7 +79,7 @@ void AAJH_WeatherHttpActor::OnResTodayWeather(FHttpRequestPtr Request, FHttpResp
 	if (bConnectedSuccessfully)
 	{
 		// ����
-		UE_LOG(LogTemp, Warning, TEXT("OnResNewBookInfo Success..."));
+		UE_LOG(LogTemp, Warning, TEXT("OnResTodayWeather Success..."));
 		FString result = Response->GetContentAsString();
         httpWeatherUI->SetTextLog(result);
 		// �ʿ��� ������ �̾Ƽ� ȭ�鿡 ����ϰ�ʹ�.
@@ -87,7 +87,7 @@ void AAJH_WeatherHttpActor::OnResTodayWeather(FHttpRequestPtr Request, FHttpResp
 	}
 	else {
 		// ����
-		UE_LOG(LogTemp, Warning, TEXT("OnResNewBookInfo Failed..."));
+		UE_LOG(LogTemp, Warning, TEXT("OnResTodayWeather Faild..."));
 	}
 }
 
