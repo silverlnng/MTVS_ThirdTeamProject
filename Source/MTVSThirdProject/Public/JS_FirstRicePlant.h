@@ -24,15 +24,28 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+
+	int32 maxHP = 1;
+	int32 curHP = maxHP;
 	float checkDeltaTime = 0;
 	float growTime = 5;
-
 	UPROPERTY(EditAnywhere)
-	class USphereComponent* sphereComp;
+	class UBoxComponent* boxComp;
 	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* sphereMeshComp;
+	class UStaticMeshComponent* boxMeshComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SecondPlant")
 	TSubclassOf<class AJS_SecondRicePlant> SpawnSecondRicePlant;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SecondPlant")
+	TSubclassOf<class AJS_SecondRicePlant> SpawnSecondPumpkinPlant;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SecondPlant")
+	TSubclassOf<class AJS_SecondRicePlant> SpawnSecondCarrotPlant;
+	//소환될 녀석을 담는 변수
+	UClass* PlantClassToSpawn = nullptr;
+
+	virtual void GetDamage_Implementation(bool damage) override;
+	virtual void SetCurHP_Implementation(float amount) override;
 	virtual void SpawnNextPlant_Implementation(int32 index) override;
 	virtual void Death_Implementation() override;
+	
 };

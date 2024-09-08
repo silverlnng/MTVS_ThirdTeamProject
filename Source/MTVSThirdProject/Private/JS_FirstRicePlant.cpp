@@ -2,8 +2,8 @@
 
 
 #include "JS_FirstRicePlant.h"
-#include "Components/SphereComponent.h"
 #include "JS_SecondRicePlant.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 AJS_FirstRicePlant::AJS_FirstRicePlant()
@@ -11,16 +11,21 @@ AJS_FirstRicePlant::AJS_FirstRicePlant()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	sphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("sphereComp"));
-	SetRootComponent(sphereComp);
+	boxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("boxComp"));
+	SetRootComponent(boxComp);
+	boxComp->SetBoxExtent(FVector(50));
+	boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Ignore);
 
-	sphereMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("sphereMeshComp"));
-	sphereMeshComp->SetupAttachment(sphereComp);
+	boxMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("boxMeshComp"));
+	boxMeshComp->SetupAttachment(boxComp);
+	boxMeshComp->SetRelativeScale3D(FVector(1));
+	boxMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Ignore);
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh> sphereMeshTemp(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
-	if (sphereMeshTemp.Succeeded()) {
-		sphereMeshComp->SetStaticMesh(sphereMeshTemp.Object);
+	ConstructorHelpers::FObjectFinder<UStaticMesh> boxMeshTemp(TEXT("/ Script / Engine.StaticMesh'/Engine/BasicShapes/Cube1.Cube1'"));
+	if (boxMeshTemp.Succeeded()) {
+		boxMeshComp->SetStaticMesh(boxMeshTemp.Object);
 	}
+	
 }
 
 // Called when the game starts or when spawned
@@ -36,19 +41,65 @@ void AJS_FirstRicePlant::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	checkDeltaTime += DeltaTime;
 	if(checkDeltaTime >= growTime){
-		SpawnNextPlant_Implementation(0);
+		if (this->ActorHasTag(TEXT("Wheat")))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("This actor has the Wheat tag."));
+			SpawnNextPlant_Implementation(0);
+			GetDamage_Implementation(true);
+		}
+		if (this->ActorHasTag(TEXT("PumpKin"))) {
+			UE_LOG(LogTemp, Warning, TEXT("This actor has the PumpKin tag."));
+			SpawnNextPlant_Implementation(1);
+			GetDamage_Implementation(true);
+		}
+		if (this->ActorHasTag(TEXT("Carrot"))) {
+			UE_LOG(LogTemp, Warning, TEXT("This actor has the Carrot tag."));
+			SpawnNextPlant_Implementation(2);
+			GetDamage_Implementation(true);
+		}
+	}
+}
+
+void AJS_FirstRicePlant::GetDamage_Implementation(bool damage)
+{
+	if (damage) SetCurHP_Implementation(curHP - 1);
+}
+
+void AJS_FirstRicePlant::SetCurHP_Implementation(float amount)
+{
+	if (amount <= 0) {
 		Death_Implementation();
 	}
+	else curHP = amount;
 }
 
 void AJS_FirstRicePlant::SpawnNextPlant_Implementation(int32 index)
 {
-	if(!SpawnSecondRicePlant) SpawnSecondRicePlant = AJS_SecondRicePlant::StaticClass();
-	if (SpawnSecondRicePlant) {
-		AJS_SecondRicePlant* secondRicePlant = GetWorld()->SpawnActor<AJS_SecondRicePlant>(SpawnSecondRicePlant, GetActorLocation(), FRotator::ZeroRotator);
-		if (secondRicePlant) {
-			secondRicePlant;
+	switch (index)
+	{
+	case 0:
+		PlantClassToSpawn = SpawnSecondRicePlant;
+		UE_LOG(LogTemp, Warning, TEXT("id : 0 SecondRicePlant spawn"));
+		break;
+	case 1:
+		PlantClassToSpawn = SpawnSecondPumpkinPlant;
+		UE_LOG(LogTemp, Warning, TEXT("id : 1 SecondPumpkinPlant spawn"));
+		break;
+	case 2:
+		PlantClassToSpawn = SpawnSecondCarrotPlant;
+		UE_LOG(LogTemp, Warning, TEXT("id : 2 SecondCarrotPlant spawn"));
+		break;
+	default:
+		break;
+	}
+
+	if (PlantClassToSpawn) {
+		//선택된 블루프린트 클래스로 액터 스폰
+		AJS_SecondRicePlant* SpawnPlant = GetWorld()->SpawnActor<AJS_SecondRicePlant>(PlantClassToSpawn, GetActorLocation(), FRotator::ZeroRotator);
+		if (SpawnPlant) {
+			SpawnPlant;
 		}
+		else UE_LOG(LogTemp, Warning, TEXT("Failed to spawn AJS_FirstRicePlant"));
 	}
 }
 

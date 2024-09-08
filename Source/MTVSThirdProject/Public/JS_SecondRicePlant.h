@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "JS_DefaultPlant.h"
 #include "JS_SecondRicePlant.generated.h"
 
 UCLASS()
-class MTVSTHIRDPROJECT_API AJS_SecondRicePlant : public AActor
+class MTVSTHIRDPROJECT_API AJS_SecondRicePlant : public AActor, public IJS_DefaultPlant
 {
 	GENERATED_BODY()
 	
@@ -27,4 +28,24 @@ public:
 	class USphereComponent* sphereComp;
 	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* sphereMeshComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "fruit")
+	TSubclassOf<class AJS_Rice> RiceFactory;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "fruit")
+	TSubclassOf<class AJS_Pumpkin> PumpkinFactory;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "fruit")
+	TSubclassOf<class AJS_Carrot> CarrotFactory;
+	
+	//소환될 녀석을 담는 변수
+	UClass* PlantClassToSpawn = nullptr;
+
+	int32 maxHP = 1;
+	int32 curHP = maxHP;
+	// 플레이어가 상호작용 했을 때
+	bool bInteractSecondPlant = true;
+
+	virtual void GetDamage_Implementation(bool damage) override;
+	virtual void SetCurHP_Implementation(float amount) override;
+	virtual void SpawnNextPlant_Implementation(int32 index) override;
+	virtual void Death_Implementation() override;
 };
