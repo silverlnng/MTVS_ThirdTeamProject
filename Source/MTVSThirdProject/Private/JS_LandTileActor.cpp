@@ -18,7 +18,7 @@ AJS_LandTileActor::AJS_LandTileActor()
 	boxComp->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
 	boxComp->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 
-	landTileComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("landTileComp"));
+	/*landTileComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("landTileComp"));
 	landTileComp->SetupAttachment(boxComp);
 	landTileComp->SetRelativeScale3D(FVector(1, 1, 0.01f));
 	
@@ -27,7 +27,7 @@ AJS_LandTileActor::AJS_LandTileActor()
 
 	if (landTileMeshTemp.Succeeded()) {
 		landTileComp->SetStaticMesh(landTileMeshTemp.Object);
-	}
+	}*/
 }
 
 // Called when the game starts or when spawned
