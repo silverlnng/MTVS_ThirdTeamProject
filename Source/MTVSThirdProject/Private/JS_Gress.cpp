@@ -13,10 +13,16 @@ AJS_Gress::AJS_Gress()
 
 	boxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("boxComp"));
 	boxComp->SetupAttachment(RootComponent);
+	boxComp->SetBoxExtent(FVector(25));
+	boxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	boxComp->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	boxComp->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+	boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Ignore);
 
 	gressMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("gressMeshComp"));
 	gressMeshComp->SetupAttachment(boxComp);
 	gressMeshComp->SetRelativeScale3D(FVector(0.5f));
+	gressMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Ignore);
 
 	ConstructorHelpers::FObjectFinder <UStaticMesh> gressMeshTemp(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
 	if (gressMeshTemp.Succeeded()) {
@@ -54,5 +60,16 @@ void AJS_Gress::SetCurHP_Implementation(float amount)
 void AJS_Gress::Death_Implementation()
 {
 	this->Destroy();
+}
+
+void AJS_Gress::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Overlap Detected in boxComp!"));
+
+	// 디버그 메시지로 어떤 액터가 겹쳤는지 출력
+	if (OtherActor) {
+		FString actorName = OtherActor->GetName();
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Overlapping with Actor: %s"), *actorName));
+	}
 }
 

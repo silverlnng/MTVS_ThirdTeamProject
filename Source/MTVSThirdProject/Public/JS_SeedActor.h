@@ -23,9 +23,22 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AJS_FirstRicePlant> SpawnFirstRicePlnat;
+	class UBoxComponent* boxComp;
+	UPROPERTY(EditAnywhere)
+	class UStaticMeshComponent* seedMeshComp;
+
+	//한 클래스에서 여러 BP액터를 스폰할 수 있게 선언
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FirstPlant")
+	TSubclassOf<class AJS_FirstRicePlant> SpawnFirstRicePlant;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FirstPlant")
+	TSubclassOf<class AJS_FirstRicePlant> SpawnFirstPumpkinPlant;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FirstPlant")
+	TSubclassOf<class AJS_FirstRicePlant> SpawnFirstCarrotPlant;
+
+	//소환될 녀석을 담는 변수
+	UClass* PlantClassToSpawn = nullptr;
+
 	int32 maxHP = 1;
 	int32 curHP = maxHP;
 	float checkDeltaTime = 0;

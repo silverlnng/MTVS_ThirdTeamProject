@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "JS_GridManager.h"
 #include "JS_LandGridActor.generated.h"
 
 UCLASS()
@@ -36,4 +37,12 @@ public:
 	TSubclassOf<class AJS_Rock> RockFactory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class AJS_Gress> GressFactory;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AJS_GridManager* GridManager;
+	AJS_LandTileActor* TileActor;
+
+	void SetGridTile();
+	bool IsActorOutOfBounds(AActor* Actor);
+	void PlaceActorOnTile(FVector2D GridCoordinates, AActor* ActorToPlace);
+	void FindActorsOnTile(FVector2D GridCoordinates, TArray<AActor*>& OutOverlappingActors);
 };
