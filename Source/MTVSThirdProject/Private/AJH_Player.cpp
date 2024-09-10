@@ -122,6 +122,10 @@ void AAJH_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		input->BindAction(IA_Interation, ETriggerEvent::Started, this, &AAJH_Player::OnMyActionInteration);
 		input->BindAction(IA_Action, ETriggerEvent::Started, this, &AAJH_Player::OnMyAction);
 		input->BindAction(IA_Tap, ETriggerEvent::Started, this, &AAJH_Player::OnMyActionTap);
+		input->BindAction(IA_SelectNone, ETriggerEvent::Started, this, &AAJH_Player::OnMySelectedNone);
+		input->BindAction(IA_SelectRiceSeed, ETriggerEvent::Started, this, &AAJH_Player::OnMySelectRiceSeed);
+		input->BindAction(IA_SelectPumpkinSeed, ETriggerEvent::Started, this, &AAJH_Player::OnMySelectPumpkinSeed);
+		input->BindAction(IA_SelectCarrotSeed, ETriggerEvent::Started, this, &AAJH_Player::OnMySelectCarrotSeed);
 	}
 
 }
@@ -158,36 +162,50 @@ void AAJH_Player::OnMyActionInteration(const FInputActionValue& value)
 void AAJH_Player::OnMyAction(const FInputActionValue& value)
 {
 	InteractionLineTraceFuntion();
-	if (bHit && outHit.GetActor()->ActorHasTag(TEXT("FarmTile")))
-	{
-		outHit.GetActor()->GetName();
-		FString objectName = outHit.GetActor()->GetName();
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, objectName);
-	}
 
 	if (outHit.GetComponent()->GetCollisionResponseToChannel(ECC_Visibility) == ECR_Block)
 	{
 		// Tag : Tree, Rock, Gress
-		if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Tree")))
+		if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Tree")) && selectedSeedType == ESeedType::None)
 		{
 			tree = Cast<AJS_Tree>(outHit.GetActor());
 			tree->GetDamage_Implementation(true);
 			int32 hp = tree->curHP;
 			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
 		}
-		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Rock")))
+		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Rock")) && selectedSeedType == ESeedType::None)
 		{
 			rock = Cast<AJS_Rock>(outHit.GetActor());
 			rock->GetDamage_Implementation(true);
 			int32 hp = rock->curHP;
 			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
 		}
-		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Gress")))
+		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Gress")) && selectedSeedType == ESeedType::None)
 		{
 			gress = Cast<AJS_Gress>(outHit.GetActor());
 			gress->GetDamage_Implementation(true);
 			int32 hp = gress->curHP;
 			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
+		}
+		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Seed")))
+		{
+			switch (selectedSeedType)
+			{
+			case ESeedType::None:
+				ActionNone();
+				break;
+			case ESeedType::RiceSeed:
+				ActionRice();
+				break;
+			case ESeedType::PumpkinSeed:
+				ActionPumpkin();
+				break;
+			case ESeedType::CarrotSeed:
+				ActionCarrot();
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -227,13 +245,62 @@ void AAJH_Player::InteractionLineTraceFuntion()
 	bHit = GetWorld()->LineTraceSingleByChannel(outHit, start, end, ECC_Visibility, param);
 }
 
+void AAJH_Player::OnMySelectedSeed(ESeedType newSeedType)
+{
+	selectedSeedType = newSeedType;
+}
+
+void AAJH_Player::OnMySelectedNone()
+{
+	OnMySelectedSeed(ESeedType::None);
+	UE_LOG(LogTemp, Warning, TEXT("Selected Seed : None"));
+}
+
+void AAJH_Player::OnMySelectRiceSeed()
+{
+	OnMySelectedSeed(ESeedType::RiceSeed);
+	UE_LOG(LogTemp, Warning, TEXT("Selected Seed : Rice"));
+}
+
+void AAJH_Player::OnMySelectPumpkinSeed()
+{
+	OnMySelectedSeed(ESeedType::PumpkinSeed);
+	UE_LOG(LogTemp, Warning, TEXT("Selected Seed : Pumpkin"));
+}
+
+void AAJH_Player::OnMySelectCarrotSeed()
+{
+	OnMySelectedSeed(ESeedType::CarrotSeed);
+	UE_LOG(LogTemp, Warning, TEXT("Selected Seed : Carrrot"));
+}
+
+void AAJH_Player::ActionNone()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Action : None"));
+}
+
+void AAJH_Player::ActionRice()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Action : Rice"));
+}
+
+void AAJH_Player::ActionPumpkin()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Action : Pumpkin"));
+}
+
+void AAJH_Player::ActionCarrot()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Action : Carrot"));
+}
+
 void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	farmTile = Cast<AAJH_FarmTile>(OtherActor);
 	tree = Cast<AJS_Tree>(OtherActor);
 	rock = Cast<AJS_Rock>(OtherActor);
 	gress = Cast<AJS_Gress>(OtherActor);
-	if (farmTile && OtherActor->ActorHasTag(TEXT("FarmTile")))
+	if (farmTile && OtherActor->ActorHasTag(TEXT("Seed")))
 	{
 		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
@@ -268,7 +335,7 @@ void AAJH_Player::OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent
 	tree = Cast<AJS_Tree>(OtherActor);
 	rock = Cast<AJS_Rock>(OtherActor);
 	gress = Cast<AJS_Gress>(OtherActor);
-	if (farmTile && OtherActor->ActorHasTag(TEXT("FarmTile")))
+	if (farmTile && OtherActor->ActorHasTag(TEXT("Seed")))
 	{
 		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
@@ -289,117 +356,6 @@ void AAJH_Player::OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent
 		gress->gressMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 	}
 }
-
-void AAJH_Player::ReqTodayWeather(FString url)
-{
-	//FHttpModule& httpModule = FHttpModule::Get();
-	//TSharedRef<IHttpRequest> req = httpModule.CreateRequest();
-
-	//// ��û�� ������ ����
-	//req->SetURL(url);
-	//req->SetVerb("GET");
-	//req->SetHeader(TEXT("content-type"), TEXT("application/json"));
-	//// req->SetContentAsString(json);
-
-	//// ���� ���� �Լ��� ����
-	//req->OnProcessRequestComplete().BindUObject(this, &AAJH_Player::OnResTodayWeather);
-	//// ������ ��û
-	//req->ProcessRequest();
-	//UE_LOG(LogTemp, Warning, TEXT("Request Sent : %s"), *url);
-	// ��û�� ������ ����
-	/*req->SetURL(url);
-	req->SetVerb(TEXT("POST"));
-	req->SetHeader(TEXT("content-type"), TEXT("application/json"));
-	req->SetContentAsString(json);*/
-
-	// ���� ���� �Լ��� ����
-	//req->OnProcessRequestComplete().BindUObject(this, &AAJH_Player::OnResTodayWeather);
-	// ������ ��û
-	//req->ProcessRequest();
-}
-
-void AAJH_Player::OnResTodayWeather(FHttpRequestPtr HttpReq, FHttpResponsePtr HttpRes, bool bConnectedSuccessfully)
-{
-	//if (bConnectedSuccessfully)
-	//{
-	//	// ����
-	//	FString result = HttpRes->GetContentAsString();
-
-	//	httpWeatherUI->SetTextLog(UAJH_JsonParseLib::WeatherJsonParse(result));
-	//	UE_LOG(LogTemp, Warning, TEXT("result : %s"), *result);
-	//}
-	//else
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("OnResTodayWeather Faild..."));
-	//}
-}
-
-//void AAJH_Player::OnResTodayWeather(FHttpRequestPtr HttpReq, FHttpResponsePtr HttpRes, bool bConnectedSuccessfully)
-//{
-//	UE_LOG(LogTemp, Warning, TEXT("OnResTodayWeather Start"));
-//	if (bConnectedSuccessfully)
-//	{
-//		// ����
-//		FString result = HttpRes->GetContentAsString();
-//		UE_LOG(LogTemp, Log, TEXT("Response: %s"), *result);
-//
-//		// Json �Ľ� �غ�
-//		TSharedPtr<FJsonObject> JsonObject;
-//		TSharedRef<TJsonReader<TCHAR>> Reader = TJsonReaderFactory<TCHAR>::Create(result);
-//
-//		// Json �Ľ�
-//		if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
-//		{
-//			// ���� ���� ������ ����
-//			TSharedPtr<FJsonObject> TodayWeather = JsonObject->GetObjectField("today");
-//			float TodayTemperature = TodayWeather->GetNumberField("temperature");
-//			FString TodayWeatherDesc = TodayWeather->GetStringField("weather");
-//			int32 TodayHumidity = TodayWeather->GetIntegerField("humidity");
-//			float TodayWindSpeed = TodayWeather->GetNumberField("wind_speed");
-//
-//			UE_LOG(LogTemp, Log, TEXT("Today's Weather:"));
-//			UE_LOG(LogTemp, Log, TEXT("Temperature: %.2f"), TodayTemperature);
-//			UE_LOG(LogTemp, Log, TEXT("Weather: %s"), *TodayWeatherDesc);
-//			UE_LOG(LogTemp, Log, TEXT("Humidity: %d"), TodayHumidity);
-//			UE_LOG(LogTemp, Log, TEXT("Wind Speed: %.2f"), TodayWindSpeed);
-//
-//			// ���� ���� ������ ���� (�ʿ信 ����)
-//			TSharedPtr<FJsonObject> TomorrowWeather = JsonObject->GetObjectField("tomorrow");
-//			float TomorrowTemperature = TomorrowWeather->GetNumberField("temperature");
-//			FString TomorrowWeatherDesc = TomorrowWeather->GetStringField("weather");
-//			int32 TomorrowHumidity = TomorrowWeather->GetIntegerField("humidity");
-//			float TomorrowWindSpeed = TomorrowWeather->GetNumberField("wind_speed");
-//
-//			// UI�� ǥ���� �ؽ�Ʈ�� ����
-//			FString DisplayText = FString::Printf(TEXT("Today's Weather:\nTemperature: %.2f\nWeather: %s\nHumidity: %d\nWind Speed: %.2f"),
-//				TodayTemperature, *TodayWeatherDesc, TodayHumidity, TodayWindSpeed);
-//
-//			if (httpWeatherUI)
-//			{
-//				// �ʿ��� ������ �̾Ƽ� ȭ�鿡 ����ϰ� �ʹ�.
-//				httpWeatherUI->SetTextLog(result);
-//			}
-//		}
-//		else
-//		{
-//			// JSON �Ľ� ���� �� ���� ó��
-//			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Failed to parse JSON response"));
-//		}
-//	}
-//	else
-//	{
-//		// ���� ���� �� ���� ó��
-//		UE_LOG(LogTemp, Error, TEXT("Failed to get weather data or connection unsuccessful"));
-//	}
-//}
-	/*if (bConnectedSuccessfully)
-	{
-		// ����
-		FString result = Response->GetContentAsString();
-		// �ʿ��� ������ �̾Ƽ� ȭ�鿡 ����ϰ� �ʹ�.
-		httpWeatherUI->SetTextLog(result);
-	}*/
-
 
 void AAJH_Player::ServerChange_Implementation(const FString& userName_, int32 meshNum_)
 {
