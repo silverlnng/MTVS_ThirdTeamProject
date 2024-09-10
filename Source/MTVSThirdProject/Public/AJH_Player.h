@@ -119,17 +119,37 @@ public:
 	class UInputAction* IA_SelectCarrotSeed;
 
 	ESeedType selectedSeedType;
-
+	/************************
+			씨앗 선택
+	*************************/
 	void OnMySelectedSeed(ESeedType newSeedType);
 	void OnMySelectedNone();
 	void OnMySelectRiceSeed();
 	void OnMySelectPumpkinSeed();
 	void OnMySelectCarrotSeed();
-
+	/************************
+			씨앗 행동
+	*************************/
 	void ActionNone();
 	void ActionRice();
 	void ActionPumpkin();
 	void ActionCarrot();
+
+	/************************
+			작물 공장
+	*************************/
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class AJS_Rice> riceFactory;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class AJS_Pumpkin> pumpkinFactory;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class AJS_Carrot> carrotFactory;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class AJS_SeedActor> SeedFatory;
+
+	FActorSpawnParameters seedParam;
+	UPROPERTY(EditDefaultsOnly)
+	class AJS_SeedActor* seed;
 
 	/************************************************
 			오버랩 이벤트 함수
@@ -181,3 +201,4 @@ enum class ESeedType : uint8
 	PumpkinSeed,
 	CarrotSeed,
 };
+

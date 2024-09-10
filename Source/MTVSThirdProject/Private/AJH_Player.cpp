@@ -19,6 +19,10 @@
 #include "MTVSThirdProject/YJ/UserNameWidget.h"
 #include "JS_Rock.h"
 #include "JS_Gress.h"
+#include "JS_Rice.h"
+#include "JS_Pumpkin.h"
+#include "JS_Carrot.h"
+#include "JS_SeedActor.h"
 
 
 // Sets default values
@@ -71,7 +75,6 @@ void AAJH_Player::BeginPlay()
 	tree = Cast<AJS_Tree>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_Tree::StaticClass()));
 	rock = Cast<AJS_Rock>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_Rock::StaticClass()));
 	gress = Cast<AJS_Gress>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_Gress::StaticClass()));
-	
 	
 	UserNameUI = Cast<UUserNameWidget>(UserNameWidgetComp->GetWidget());
 
@@ -187,7 +190,7 @@ void AAJH_Player::OnMyAction(const FInputActionValue& value)
 			int32 hp = gress->curHP;
 			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
 		}
-		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Seed")))
+		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("LandTile")))
 		{
 			switch (selectedSeedType)
 			{
@@ -276,21 +279,31 @@ void AAJH_Player::OnMySelectCarrotSeed()
 
 void AAJH_Player::ActionNone()
 {
+	
 	UE_LOG(LogTemp, Warning, TEXT("Action : None"));
 }
 
 void AAJH_Player::ActionRice()
 {
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
+	// seed->SpawnNextPlant_Implementation(0);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Rice"));
 }
 
 void AAJH_Player::ActionPumpkin()
 {
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
+	// seed->SpawnNextPlant_Implementation(1);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Pumpkin"));
 }
 
 void AAJH_Player::ActionCarrot()
 {
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
+	// seed->SpawnNextPlant_Implementation(2);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Carrot"));
 }
 
