@@ -39,12 +39,15 @@ public:
 	//소환될 녀석을 담는 변수
 	UClass* PlantClassToSpawn = nullptr;
 
-	int32 maxHP = 1;
-	int32 curHP = maxHP;
-	float checkDeltaTime = 0;
-	float growTime = 5;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Seed")
-	bool bSeedActorInteract = true;
+	int32 maxHP = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Seed")
+	int32 curHP = maxHP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Seed")
+	float checkDeltaTime = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Seed")
+	float growTime = 5;
+	
 
 	virtual void GetDamage_Implementation(bool damage) override;
 	virtual void SetCurHP_Implementation(float amount) override;

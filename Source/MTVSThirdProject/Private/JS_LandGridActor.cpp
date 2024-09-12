@@ -3,10 +3,8 @@
 
 #include "JS_LandGridActor.h"
 #include "JS_LandTileActor.h"
-#include "JS_Rock.h"
-#include "JS_Tree.h"
-#include "JS_Gress.h"
 #include "Components/BoxComponent.h"
+#include "JS_ObstacleActor.h"
 
 // Sets default values
 AJS_LandGridActor::AJS_LandGridActor()
@@ -94,10 +92,10 @@ void AJS_LandGridActor::SetGridTile()
 					AActor* spawnedObject = nullptr; //스폰된 오브젝트를 저장할 변수
 
 					if (randomChoice < 10 && randomChoice > 0) {
-						spawnedObject = GetWorld()->SpawnActor<AJS_Tree>(TreeFactory, spawnedTile->GetActorLocation() + (GetActorUpVector() * 50), FRotator::ZeroRotator, spawnParams);
+						spawnedObject = GetWorld()->SpawnActor<AJS_ObstacleActor>(TreeFactory, spawnedTile->GetActorLocation() + (GetActorUpVector() * 50), FRotator::ZeroRotator, spawnParams);
 					}
 					else if (randomChoice < 20 && randomChoice >= 10) {
-						 spawnedObject = GetWorld()->SpawnActor<AJS_Rock>(RockFactory, spawnedTile->GetActorLocation() + (GetActorUpVector() * 50), FRotator::ZeroRotator, spawnParams);
+						spawnedObject = GetWorld()->SpawnActor<AJS_ObstacleActor>(RockFactory, spawnedTile->GetActorLocation() + (GetActorUpVector() * 50), FRotator::ZeroRotator, spawnParams);
 						if (spawnedObject)
 						{
 							UE_LOG(LogTemp, Warning, TEXT("Not null to spawnRock"));
@@ -108,7 +106,7 @@ void AJS_LandGridActor::SetGridTile()
 						}
 					}
 					else if (randomChoice < 40 && randomChoice > 20) {
-						 spawnedObject = GetWorld()->SpawnActor<AJS_Gress>(GressFactory, spawnedTile->GetActorLocation() + (GetActorUpVector() * 25), FRotator::ZeroRotator, spawnParams);
+						 spawnedObject = GetWorld()->SpawnActor<AJS_ObstacleActor>(GressFactory, spawnedTile->GetActorLocation() + (GetActorUpVector() * 50), FRotator::ZeroRotator, spawnParams);
 					}
 
 					//오브젝트가 스폰된 경우 그리드에 기록
