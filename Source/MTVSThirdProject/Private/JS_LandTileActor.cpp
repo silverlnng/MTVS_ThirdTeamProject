@@ -16,7 +16,7 @@ AJS_LandTileActor::AJS_LandTileActor()
 	boxComp->SetBoxExtent(FVector(50, 50, 1));
 	boxComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	boxComp->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
-	boxComp->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+	boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Block);
 
 	/*landTileComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("landTileComp"));
 	landTileComp->SetupAttachment(boxComp);
@@ -74,5 +74,12 @@ void AJS_LandTileActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 	if (OtherActor) {
 	FString actorName = OtherActor->GetName();
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Overlapping with Actor: %s"), *actorName));
+	}
+}
+
+void AJS_LandTileActor::SpawnCrops(int32 id)
+{
+	if () {
+
 	}
 }

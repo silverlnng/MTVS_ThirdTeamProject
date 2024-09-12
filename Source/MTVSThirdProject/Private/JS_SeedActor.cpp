@@ -37,7 +37,7 @@ void AJS_SeedActor::Tick(float DeltaTime)
 
 	checkDeltaTime += DeltaTime;
 
-	if (bSeedActorInteract && checkDeltaTime >= growTime) {
+	if (checkDeltaTime >= growTime) {
 		//상호작용은 한 번만
 		if (this->ActorHasTag(TEXT("Wheat"))) {
 			//씨를 파괴하고 벼 작물로 스폰
