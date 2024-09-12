@@ -6,6 +6,7 @@
 #include "OnlineSubsystem.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/EditableText.h"
+#include "GameFramework/PlayerState.h"
 
 void ALoginGameMode::BeginPlay()
 {
@@ -37,6 +38,7 @@ void ALoginGameMode::BeginPlay()
 					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,"No such login");
 					const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 					FString name = *LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId()->ToString();
+					
 					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,*name);
 					//loginUI->eText_hostName->SetText(FText::FromString(name));
 					loginUI->eText_hostName->SetHintText(FText::FromString(name));

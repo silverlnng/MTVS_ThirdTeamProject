@@ -12,12 +12,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Content/Resource/Character/Panda/Breathing_Idle_panda.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Resource/Character/Panda/Breathing_Idle_panda_Anim.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Resource/Character/Panda/Breathing_Idle_panda_PhysicsAsset.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Resource/Character/Panda/Breathing_Idle_panda_Skeleton.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Resource/Character/Panda/Innermouth_shd_004.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Resource/Character/Panda/R_Sclera_geoSG1.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/Resource/Character/Panda/lambert2.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/BP/BP_TestYJ_GM.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/BP/BP_TestYJ_GM.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MTVSThirdProject.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/MTVSThirdProject.sln.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/MTVSThirdProject.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/MTVSThirdProject.Build.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/YJ/TestYJMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/TestYJMap.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginGameMode.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginGameMode.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginGameMode.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginGameMode.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +43,7 @@
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Engine/LocalPlayer.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/OnlineReplStructs.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Pawn.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/PlayerState.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Kismet/KismetMathLibrary.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Kismet/KismetMathLibrary.inl" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/Components/PawnMovementComponent.cpp" root0="FORCE_HIGHLIGHTING" />
@@ -528,6 +533,7 @@
       <workItem from="1726052513808" duration="1260000" />
       <workItem from="1726097638426" duration="3245000" />
       <workItem from="1726111660113" duration="1804000" />
+      <workItem from="1726131144815" duration="3689000" />
     </task>
     <servers />
   </component>
