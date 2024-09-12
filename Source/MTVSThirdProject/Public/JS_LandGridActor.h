@@ -32,11 +32,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class AJS_LandTileActor> TileFactory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class AJS_Tree> TreeFactory;
+	TSubclassOf<class AJS_ObstacleActor> TreeFactory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class AJS_Rock> RockFactory;
+	TSubclassOf<class AJS_ObstacleActor> RockFactory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class AJS_Gress> GressFactory;
+	TSubclassOf<class AJS_ObstacleActor> GressFactory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AJS_GridManager* GridManager;
 	AJS_LandTileActor* TileActor;
