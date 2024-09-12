@@ -79,7 +79,7 @@ void AJS_LandTileActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 
 void AJS_LandTileActor::SpawnCrops(int32 id)
 {
-	if () {
+	/*if () {
 
-	}
+	}*/
 }

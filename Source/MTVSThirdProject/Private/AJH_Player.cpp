@@ -11,18 +11,16 @@
 #include "Components/BoxComponent.h"
 #include "HttpModule.h"
 #include "AJH_WeatherWidget.h"
-#include "JS_Tree.h"
 #include "AJH_JsonParseLib.h"
 #include "Net/UnrealNetwork.h"
 #include "Components/WidgetComponent.h"
 #include "MTVSThirdProject/YJ/NetWorkGameInstance.h"
 #include "MTVSThirdProject/YJ/UserNameWidget.h"
-#include "JS_Rock.h"
-#include "JS_Gress.h"
 #include "JS_Rice.h"
 #include "JS_Pumpkin.h"
 #include "JS_Carrot.h"
 #include "JS_SeedActor.h"
+#include "JS_ObstacleActor.h"
 
 
 // Sets default values
@@ -72,9 +70,7 @@ void AAJH_Player::BeginPlay()
 	boxComp->OnComponentBeginOverlap.AddDynamic(this, &AAJH_Player::OnMyBoxCompBeginOverlap);
 	boxComp->OnComponentEndOverlap.AddDynamic(this, &AAJH_Player::OnMyBoxCompEndOverlap);
 	httpWeatherUI = Cast<UAJH_WeatherWidget>(UGameplayStatics::GetActorOfClass(GetWorld(), UAJH_WeatherWidget::StaticClass()));
-	tree = Cast<AJS_Tree>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_Tree::StaticClass()));
-	rock = Cast<AJS_Rock>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_Rock::StaticClass()));
-	gress = Cast<AJS_Gress>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_Gress::StaticClass()));
+	object = Cast<AJS_ObstacleActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_ObstacleActor::StaticClass()));
 	
 	UserNameUI = Cast<UUserNameWidget>(UserNameWidgetComp->GetWidget());
 
@@ -171,23 +167,24 @@ void AAJH_Player::OnMyAction(const FInputActionValue& value)
 		// Tag : Tree, Rock, Gress
 		if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Tree")) && selectedSeedType == ESeedType::None)
 		{
-			tree = Cast<AJS_Tree>(outHit.GetActor());
-			tree->GetDamage_Implementation(true);
-			int32 hp = tree->curHP;
+			object = Cast<AJS_ObstacleActor>(outHit.GetActor());
+			object->GetDamage_Implementation(true);
+			// hp 체크용
+			int32 hp = object->curHP;
 			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
 		}
 		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Rock")) && selectedSeedType == ESeedType::None)
 		{
-			rock = Cast<AJS_Rock>(outHit.GetActor());
-			rock->GetDamage_Implementation(true);
-			int32 hp = rock->curHP;
+			object = Cast<AJS_ObstacleActor>(outHit.GetActor());
+			object->GetDamage_Implementation(true);
+			int32 hp = object->curHP;
 			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
 		}
 		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Gress")) && selectedSeedType == ESeedType::None)
 		{
-			gress = Cast<AJS_Gress>(outHit.GetActor());
-			gress->GetDamage_Implementation(true);
-			int32 hp = gress->curHP;
+			object = Cast<AJS_ObstacleActor>(outHit.GetActor());
+			object->GetDamage_Implementation(true);
+			int32 hp = object->curHP;
 			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
 		}
 		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("LandTile")))
@@ -285,7 +282,7 @@ void AAJH_Player::ActionNone()
 
 void AAJH_Player::ActionRice()
 {
-	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
 	// seed->SpawnNextPlant_Implementation(0);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Rice"));
@@ -293,7 +290,7 @@ void AAJH_Player::ActionRice()
 
 void AAJH_Player::ActionPumpkin()
 {
-	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
 	// seed->SpawnNextPlant_Implementation(1);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Pumpkin"));
@@ -301,7 +298,7 @@ void AAJH_Player::ActionPumpkin()
 
 void AAJH_Player::ActionCarrot()
 {
-	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
 	// seed->SpawnNextPlant_Implementation(2);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Carrot"));
@@ -310,9 +307,7 @@ void AAJH_Player::ActionCarrot()
 void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	farmTile = Cast<AAJH_FarmTile>(OtherActor);
-	tree = Cast<AJS_Tree>(OtherActor);
-	rock = Cast<AJS_Rock>(OtherActor);
-	gress = Cast<AJS_Gress>(OtherActor);
+	object = Cast<AJS_ObstacleActor>(OtherActor);
 	if (farmTile && OtherActor->ActorHasTag(TEXT("Seed")))
 	{
 		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
@@ -325,48 +320,48 @@ void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedCompone
 		FString objectName = OtherActor->GetName();
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, objectName);
 	}
-	if(tree && OtherActor->ActorHasTag(TEXT("Tree")))
+	if(object && OtherActor->ActorHasTag(TEXT("Tree")))
 	{
-		tree->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		tree->treeMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 	}
-	if(rock && OtherActor->ActorHasTag(TEXT("Rock")))
+	if(object && OtherActor->ActorHasTag(TEXT("Rock")))
 	{
-		rock->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		rock->rockMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 	}
-	if(gress && OtherActor->ActorHasTag(TEXT("Gress")))
+	if(object && OtherActor->ActorHasTag(TEXT("Gress")))
 	{
-		gress->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		gress->gressMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 	}
 }
 
 void AAJH_Player::OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	farmTile = Cast<AAJH_FarmTile>(OtherActor);
-	tree = Cast<AJS_Tree>(OtherActor);
-	rock = Cast<AJS_Rock>(OtherActor);
-	gress = Cast<AJS_Gress>(OtherActor);
+	object = Cast<AJS_ObstacleActor>(OtherActor);
+	object = Cast<AJS_ObstacleActor>(OtherActor);
+	object = Cast<AJS_ObstacleActor>(OtherActor);
 	if (farmTile && OtherActor->ActorHasTag(TEXT("Seed")))
 	{
 		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 	}
-	if (tree && OtherActor->ActorHasTag(TEXT("Tree")))
+	if (object && OtherActor->ActorHasTag(TEXT("Tree")))
 	{
-		tree->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
-		tree->treeMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 	}
-	if (rock && OtherActor->ActorHasTag(TEXT("Rock")))
+	if (object && OtherActor->ActorHasTag(TEXT("Rock")))
 	{
-		rock->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
-		rock->rockMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 	}
-	if (gress && OtherActor->ActorHasTag(TEXT("Gress")))
+	if (object && OtherActor->ActorHasTag(TEXT("Gress")))
 	{
-		gress->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
-		gress->gressMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 	}
 }
 
