@@ -102,11 +102,7 @@ public:
 	class AAJH_FarmTile* farmTile;
 
 	UPROPERTY(EditDefaultsOnly)
-	class AJS_Tree* tree;
-	UPROPERTY(EditDefaultsOnly)
-	class AJS_Rock* rock;
-	UPROPERTY(EditDefaultsOnly)
-	class AJS_Gress* gress;
+	class AJS_ObstacleActor* object;
 
 
 	UPROPERTY(EditDefaultsOnly)
