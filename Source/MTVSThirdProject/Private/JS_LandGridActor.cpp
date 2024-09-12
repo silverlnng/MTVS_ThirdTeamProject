@@ -41,18 +41,7 @@ void AJS_LandGridActor::Tick(float DeltaTime)
 	FVector2D queryCoordinates(0, 0);
 	AActor* objectAtTile = GridManager->GetObjectAtGridCell(queryCoordinates);
 	bool checkTile = GridManager->IsCellOccupied(queryCoordinates);
-	if (checkTile) {
-		//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("This Tile Something IN"));
-	}
-	else {
-		//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Tile is empty"));
-	}
-	if (objectAtTile) {
-		//UE_LOG(LogTemp, Warning, TEXT("Object found at tile (3, 5): %s"), *objectAtTile->GetName());
-	}
-	else {
-		//UE_LOG(LogTemp, Warning, TEXT("Tile (3, 5) is empty."));
-	}
+	
 	for (auto& Elem : GridManager->Grid) {
 		FGridTile& Tile = Elem.Value;
 		
