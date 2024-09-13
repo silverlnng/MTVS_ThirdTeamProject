@@ -44,6 +44,9 @@ public:
 	// 플레이어가 상호작용 했을 때
 	bool bInteractSecondPlant = true;
 
+	int32 riceID = 70100;
+	int32 pumpKinID = 70105;
+	int32 carrotID = 70104;
 	virtual void GetDamage_Implementation(bool damage) override;
 	virtual void SetCurHP_Implementation(float amount) override;
 	virtual void SpawnNextPlant_Implementation(int32 index) override;

@@ -29,6 +29,10 @@ public:
 	int32 curHP = maxHP;
 	float checkDeltaTime = 0;
 	float growTime = 5;
+
+	int32 ricePlantID = 11210;
+	int32 pumpKinPlantID = 11214;
+	int32 carrotPlantID = 11213;
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* boxComp;
 	UPROPERTY(EditAnywhere)

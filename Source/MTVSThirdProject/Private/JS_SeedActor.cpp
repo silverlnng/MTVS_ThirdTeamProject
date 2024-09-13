@@ -42,17 +42,17 @@ void AJS_SeedActor::Tick(float DeltaTime)
 		if (this->ActorHasTag(TEXT("Wheat"))) {
 			//¾¾¸¦ ÆÄ±«ÇÏ°í º­ ÀÛ¹°·Î ½ºÆù
 			UE_LOG(LogTemp, Warning, TEXT("This actor has the Wheat tag."));
-			SpawnNextPlant_Implementation(0);
+			SpawnNextPlant_Implementation(riceID);
 			GetDamage_Implementation(true);
 		}
 		if(this->ActorHasTag(TEXT("PumpKin"))) {
 			UE_LOG(LogTemp, Warning, TEXT("This actor has the PumpKin tag."));
-			SpawnNextPlant_Implementation(1);
+			SpawnNextPlant_Implementation(pumpKinID);
 			GetDamage_Implementation(true);
 		}
 		if (this->ActorHasTag(TEXT("Carrot"))) {
 			UE_LOG(LogTemp, Warning, TEXT("This actor has the Carrot tag."));
-			SpawnNextPlant_Implementation(2);
+			SpawnNextPlant_Implementation(carrotID);
 			GetDamage_Implementation(true);
 		}	
 	}
@@ -76,17 +76,17 @@ void AJS_SeedActor::SpawnNextPlant_Implementation(int32 index)
 	/*if (!SpawnFirstRicePlnat) SpawnFirstRicePlnat = AJS_FirstRicePlant::StaticClass();*/
 	switch (index)
 	{
-	case 0 :
+	case 11010:
 		PlantClassToSpawn = SpawnFirstRicePlant;
-		UE_LOG(LogTemp, Warning, TEXT("id : 0 firstRicePlant spawn"));
+		UE_LOG(LogTemp, Warning, TEXT("id : 11110 firstRicePlant spawn"));
 		break;
-	case 1 :
+	case 11014:
 		PlantClassToSpawn = SpawnFirstPumpkinPlant;
-		UE_LOG(LogTemp, Warning, TEXT("id : 1 firstRicePlant spawn"));
+		UE_LOG(LogTemp, Warning, TEXT("id : 11114 firstRicePlant spawn"));
 		break;
-	case 2 :
+	case 11013:
 		PlantClassToSpawn = SpawnFirstCarrotPlant;
-		UE_LOG(LogTemp, Warning, TEXT("id : 2 firstRicePlant spawn"));
+		UE_LOG(LogTemp, Warning, TEXT("id : 11113 firstRicePlant spawn"));
 		break;
 	default:
 		break;
