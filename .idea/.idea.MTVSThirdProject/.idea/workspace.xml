@@ -12,14 +12,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/YJ/SocketManager.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/YJ/SocketManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/TestYJMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/TestYJMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/UI/WBP_HttpWidget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/UI/WBP_HttpWidget.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpActor.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpWidget.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpWidget.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/JsonParseLib.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/JsonParseLib.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/JsonParseLib.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/JsonParseLib.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -261,6 +257,18 @@
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
       </configuration_15>
+      <configuration_16>
+        <option name="CONFIGURATION" value="" />
+        <option name="PLATFORM" value="" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/MTVSThirdProject.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
+        <option name="EXE_PATH" value="$(TargetPath)" />
+        <option name="PROGRAM_PARAMETERS" value="" />
+        <option name="WORKING_DIRECTORY" value="$(ProjectDir)" />
+        <option name="PASS_PARENT_ENVS" value="1" />
+        <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
+      </configuration_16>
       <option name="DEFAULT_PROJECT_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/MTVSThirdProject.vcxproj" />
       <option name="AUTO_SELECT_PRIORITY" value="10010" />
       <method v="2">
@@ -537,6 +545,7 @@
       <workItem from="1726131144815" duration="3789000" />
       <workItem from="1726210005337" duration="3533000" />
       <workItem from="1726216416475" duration="3729000" />
+      <workItem from="1726222011993" duration="298000" />
     </task>
     <servers />
   </component>

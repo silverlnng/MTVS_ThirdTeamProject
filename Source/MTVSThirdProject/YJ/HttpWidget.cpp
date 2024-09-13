@@ -65,5 +65,8 @@ void UHttpWidget::SetHttpActor(class AHttpActor* actor)
 void UHttpWidget::SetWeatherImage(FString str)
 {
 	UTexture2D* img=WeatherData[str];
-	Img_WeatherImage->SetBrushFromTexture(img);
+	if (img)
+	{
+		Img_WeatherImage->SetBrushFromTexture(img);
+	}
 }
