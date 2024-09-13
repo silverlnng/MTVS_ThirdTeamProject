@@ -57,5 +57,14 @@ public:
 	
 	UPROPERTY(meta=(BindWidget))
 	class UTextBlock* TextLogParse;
+
+	UPROPERTY(meta=(BindWidget))
+	class UImage* Img_WeatherImage;
+
+	UFUNCTION()
+	void SetWeatherImage(FString str);
+
+	UPROPERTY(EditAnywhere)
+	TMap<FString,UTexture2D*> WeatherData;
 	
 };

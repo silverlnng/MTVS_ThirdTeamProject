@@ -14,8 +14,11 @@ class MTVSTHIRDPROJECT_API UJsonParseLib : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 public:	
-
+	
 	static FString JsonParse(const FString& json);
 
-	static FString MakeJson(const TMap<FString, FString> Source);	
+	static FString MakeJson(const TMap<FString, FString> Source);
+	
+	UFUNCTION(BlueprintCallable)
+	static FString GetweatherString(const FString& json);
 };

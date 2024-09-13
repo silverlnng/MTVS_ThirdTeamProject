@@ -69,6 +69,10 @@ void AHttpActor::OnResStorageInfo(FHttpRequestPtr Request, FHttpResponsePtr Resp
 		//HttpUI->SetTextLog(UJsonParseLib::JsonParse(result));
 		HttpUI->SetTextLog(result);
 		HttpUI->SetTextLogParse(UJsonParseLib::JsonParse(result));
+		
+		FString temp = UJsonParseLib::GetweatherString(result);
+		
+		HttpUI->SetWeatherImage(temp);
 	}
 	else{
 		// 실패
