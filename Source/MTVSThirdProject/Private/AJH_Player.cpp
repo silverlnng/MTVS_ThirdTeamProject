@@ -131,9 +131,9 @@ void AAJH_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void AAJH_Player::OnMyActionMove(const FInputActionValue& value)
 {
-	FVector2D MovementVector = value.Get<FVector2D>();
+	//FVector2D MovementVector = value.Get<FVector2D>();
 
-	if (Controller != nullptr)
+	/*if (Controller != nullptr)
 	{
 		const FRotator Rotation = this->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -144,7 +144,35 @@ void AAJH_Player::OnMyActionMove(const FInputActionValue& value)
 
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
-	}
+	}*/
+	const FVector2D MovementVector = value.Get<FVector2D>();
+	const FRotator rotation = Controller->GetControlRotation();
+	const FRotator YawRotation (0.0f, rotation.Yaw, 0.0f);
+
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	AddMovementInput(ForwardDirection, MovementVector.Y);
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	AddMovementInput(RightDirection, MovementVector.X);
+
+	// 현재 캐릭터가 향하고 있는 방향을 얻습니다.
+	FRotator CurrentRotation = GetActorRotation();
+
+	// 이동 벡터를 합산하여 캐릭터가 회전할 목표 방향을 계산합니다.
+	FVector TargetDirection = (ForwardDirection * MovementVector.Y) + (RightDirection * MovementVector.X);
+
+
+	// 목표 방향에 맞는 회전 값을 계산합니다.
+	FRotator TargetRotation = TargetDirection.Rotation();
+
+	// 회전과 이동 분리: 목표 회전값을 계산하여 캐릭터를 먼저 회전시킵니다.
+	FRotator NewRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, GetWorld()->GetDeltaSeconds(), rotationSpeed);
+
+	// 회전을 적용
+	SetActorRotation(NewRotation);
+
+	AddMovementInput(ForwardDirection, MovementVector.Y);
+	AddMovementInput(RightDirection, MovementVector.X);
+	
 }
 
 void AAJH_Player::OnMyActionInteration(const FInputActionValue& value)

@@ -56,6 +56,7 @@ public:
 			InputAction 함수 모음
 	************************************************/
 	void OnMyActionMove(const FInputActionValue& value);
+	//void OnMyActionMove(float value);
 	void OnMyActionInteration(const FInputActionValue& value);
 	void OnMyAction(const FInputActionValue& value);
 	void OnMyActionTap();
@@ -72,6 +73,14 @@ public:
 	class UBoxComponent* boxComp;
 
 	float interationSize = 400;
+
+	/************************************************
+			플레이어 스테이터스
+	************************************************/
+
+	UPROPERTY(EditDefaultsOnly)
+	float rotationSpeed = 15.0f;
+	float RotationThreshold = 2.0f;
 
 	/************************************************
 			상호작용 라인트레이스
