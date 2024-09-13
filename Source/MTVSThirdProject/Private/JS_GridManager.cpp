@@ -65,7 +65,7 @@ AActor* AJS_GridManager::GetObjectAtGridCell(FVector2D gridCoordinates)
 	}
 	return nullptr;
 }
-
+// 주어진 2D 좌표가 그리드에 있는지 확인하고, 그 좌표가 존재하면 해당 셀이 점유되었는지를 반환한다. 존재하지 않으면 기본적으로 점유되지 않은 것으로 간주하여 false를 반환
 bool AJS_GridManager::IsCellOccupied(FVector2D gridCoordinates)
 {
 	if (Grid.Contains(gridCoordinates)) {

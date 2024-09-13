@@ -72,14 +72,45 @@ void AJS_LandTileActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 
 	// 디버그 메시지로 어떤 액터가 겹쳤는지 출력
 	if (OtherActor) {
-	FString actorName = OtherActor->GetName();
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Overlapping with Actor: %s"), *actorName));
+		FString actorName = OtherActor->GetName();
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Overlapping with Actor: %s"), *actorName));
 	}
 }
 
 void AJS_LandTileActor::SpawnCrops(int32 id)
 {
-	/*if () {
+	if(!GridManager) return;
 
-	}*/
+	FVector2D tileCoords = GetGridCoordinates();
+
+	//타일 점유 되었는지 확인
+	if (GridManager->IsCellOccupied(tileCoords)) {
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Tile is already occupied!"));
+		return;
+	}
+
+	FActorSpawnParameters spawnParmas;
+	spawnParmas.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	//선택한 작물이 있으면 스폰
+	AActor* spawnedCrop = nullptr;  
+	switch (id)
+	{
+		case 0:
+			spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(wheatSeedFactroy, GetActorLocation(), FRotator::ZeroRotator, spawnParmas);
+			break;
+		case 1:
+			spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(pumpKinSeedFactroy, GetActorLocation(), FRotator::ZeroRotator, spawnParmas);
+			break;
+		case 2:
+			spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(carrotSeedFactroy, GetActorLocation(), FRotator::ZeroRotator, spawnParmas);
+			break;
+	}
+	
+	if (spawnedCrop) {
+		GridManager->SetObjectAtGridCell(tileCoords, spawnedCrop);
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to spawn crop!"));
+	}
 }

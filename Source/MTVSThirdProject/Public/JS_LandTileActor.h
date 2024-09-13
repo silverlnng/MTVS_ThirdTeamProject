@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "JS_GridManager.h"
+#include "JS_SeedActor.h"
 #include "JS_LandTileActor.generated.h"
 
 UCLASS()
@@ -29,9 +30,16 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* landTileComp;
 	
-
+	UPROPERTY(EditAnywhere, Category = "SetSeed")
+	TSubclassOf<AJS_SeedActor> wheatSeedFactroy;
+	UPROPERTY(EditAnywhere, Category = "SetSeed")
+	TSubclassOf<AJS_SeedActor> pumpKinSeedFactroy;
+	UPROPERTY(EditAnywhere, Category = "SetSeed")
+	TSubclassOf<AJS_SeedActor> carrotSeedFactroy;
+	
 	AJS_GridManager* GridManager;
 	FVector2D GridCoordinates; // 타일 그리드 좌표
+
 	FVector2D GetGridCoordinates() const { return GridCoordinates;} // 타일의 그리드 좌표를 반환하는 함수
 	void SetGridCoordinates(FVector2D NewCoordinates) { GridCoordinates = NewCoordinates;} // 타일의 좌표를 설정하는 함수
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
