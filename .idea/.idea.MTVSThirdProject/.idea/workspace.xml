@@ -12,16 +12,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Content/Resource/Character/Panda/Breathing_Idle_panda.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Resource/Character/Panda/Breathing_Idle_panda_Anim.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Resource/Character/Panda/Breathing_Idle_panda_PhysicsAsset.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Resource/Character/Panda/Breathing_Idle_panda_Skeleton.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Resource/Character/Panda/Innermouth_shd_004.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Resource/Character/Panda/R_Sclera_geoSG1.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/Resource/Character/Panda/lambert2.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/TestYJMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/TestYJMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginGameMode.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginGameMode.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -533,7 +527,8 @@
       <workItem from="1726052513808" duration="1260000" />
       <workItem from="1726097638426" duration="3245000" />
       <workItem from="1726111660113" duration="1804000" />
-      <workItem from="1726131144815" duration="3689000" />
+      <workItem from="1726131144815" duration="3789000" />
+      <workItem from="1726210005337" duration="2294000" />
     </task>
     <servers />
   </component>

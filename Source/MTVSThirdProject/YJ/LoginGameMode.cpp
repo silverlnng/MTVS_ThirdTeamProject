@@ -35,7 +35,7 @@ void ALoginGameMode::BeginPlay()
 				}
 				else
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,"No such login");
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,"No Steam login");
 					const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 					FString name = *LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId()->ToString();
 					
