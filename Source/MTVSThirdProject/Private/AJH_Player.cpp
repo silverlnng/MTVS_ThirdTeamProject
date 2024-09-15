@@ -6,6 +6,7 @@
 #include "../../../../Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputComponent.h"
 #include "../../../../Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputSubsystems.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
@@ -29,14 +30,26 @@ AAJH_Player::AAJH_Player()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
+
 	springArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	springArmComp->SetupAttachment(RootComponent);
-	springArmComp->SetRelativeLocation(FVector(-100, 0, 0));
 	springArmComp->SetRelativeRotation(FRotator(-55, 0, 0));
 	springArmComp->TargetArmLength = 650;
+	springArmComp->bUsePawnControlRotation = false;
+	// 카메라의 회전을 고정시키기 위한 설정
+	springArmComp->bInheritPitch = false;
+	springArmComp->bInheritYaw = false;
+	springArmComp->bInheritRoll = false;
 
 	cameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
-	cameraComp->SetupAttachment(springArmComp);
+	cameraComp->SetupAttachment(springArmComp, USpringArmComponent::SocketName);
+	cameraComp->bUsePawnControlRotation = false;
 
 	boxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
 	boxComp->SetupAttachment(RootComponent);
@@ -131,9 +144,9 @@ void AAJH_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void AAJH_Player::OnMyActionMove(const FInputActionValue& value)
 {
-	//FVector2D MovementVector = value.Get<FVector2D>();
+	FVector2D MovementVector = value.Get<FVector2D>();
 
-	/*if (Controller != nullptr)
+	if (Controller != nullptr)
 	{
 		const FRotator Rotation = this->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -144,34 +157,34 @@ void AAJH_Player::OnMyActionMove(const FInputActionValue& value)
 
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
-	}*/
-	const FVector2D MovementVector = value.Get<FVector2D>();
-	const FRotator rotation = Controller->GetControlRotation();
-	const FRotator YawRotation (0.0f, rotation.Yaw, 0.0f);
+	}
+	//const FVector2D MovementVector = value.Get<FVector2D>();
+	//const FRotator rotation = Controller->GetControlRotation();
+	//const FRotator YawRotation (0.0f, rotation.Yaw, 0.0f);
 
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	AddMovementInput(ForwardDirection, MovementVector.Y);
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	AddMovementInput(RightDirection, MovementVector.X);
+	//const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	//AddMovementInput(ForwardDirection, MovementVector.Y);
+	//const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	//AddMovementInput(RightDirection, MovementVector.X);
 
-	// 현재 캐릭터가 향하고 있는 방향을 얻습니다.
-	FRotator CurrentRotation = GetActorRotation();
+	//// 현재 캐릭터가 향하고 있는 방향을 얻습니다.
+	//FRotator CurrentRotation = GetActorRotation();
 
-	// 이동 벡터를 합산하여 캐릭터가 회전할 목표 방향을 계산합니다.
-	FVector TargetDirection = (ForwardDirection * MovementVector.Y) + (RightDirection * MovementVector.X);
+	//// 이동 벡터를 합산하여 캐릭터가 회전할 목표 방향을 계산합니다.
+	//FVector TargetDirection = (ForwardDirection * MovementVector.Y) + (RightDirection * MovementVector.X);
 
 
-	// 목표 방향에 맞는 회전 값을 계산합니다.
-	FRotator TargetRotation = TargetDirection.Rotation();
+	//// 목표 방향에 맞는 회전 값을 계산합니다.
+	//FRotator TargetRotation = TargetDirection.Rotation();
 
-	// 회전과 이동 분리: 목표 회전값을 계산하여 캐릭터를 먼저 회전시킵니다.
-	FRotator NewRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, GetWorld()->GetDeltaSeconds(), rotationSpeed);
+	//// 회전과 이동 분리: 목표 회전값을 계산하여 캐릭터를 먼저 회전시킵니다.
+	//FRotator NewRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, GetWorld()->GetDeltaSeconds(), rotationSpeed);
 
-	// 회전을 적용
-	SetActorRotation(NewRotation);
+	//// 회전을 적용
+	//SetActorRotation(NewRotation);
 
-	AddMovementInput(ForwardDirection, MovementVector.Y);
-	AddMovementInput(RightDirection, MovementVector.X);
+	//AddMovementInput(ForwardDirection, MovementVector.Y);
+	//AddMovementInput(RightDirection, MovementVector.X);
 	
 }
 
