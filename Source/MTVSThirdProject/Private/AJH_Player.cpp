@@ -22,6 +22,7 @@
 #include "JS_Carrot.h"
 #include "JS_SeedActor.h"
 #include "JS_ObstacleActor.h"
+#include "AJH_PlayerAnimInstance.h"
 
 
 // Sets default values
@@ -84,6 +85,7 @@ void AAJH_Player::BeginPlay()
 	boxComp->OnComponentEndOverlap.AddDynamic(this, &AAJH_Player::OnMyBoxCompEndOverlap);
 	httpWeatherUI = Cast<UAJH_WeatherWidget>(UGameplayStatics::GetActorOfClass(GetWorld(), UAJH_WeatherWidget::StaticClass()));
 	object = Cast<AJS_ObstacleActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_ObstacleActor::StaticClass()));
+	anim = CastChecked<UAJH_PlayerAnimInstance>(GetMesh()->GetAnimInstance());
 	
 	UserNameUI = Cast<UUserNameWidget>(UserNameWidgetComp->GetWidget());
 
@@ -107,7 +109,8 @@ void AAJH_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	MouseCusorEvent();
+	//MouseCusorEvent();
+
 	
 }
 
@@ -206,23 +209,32 @@ void AAJH_Player::OnMyAction(const FInputActionValue& value)
 	if (outHit.GetComponent()->GetCollisionResponseToChannel(ECC_Visibility) == ECR_Block)
 	{
 		// Tag : Tree, Rock, Gress
-		if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Tree")) && selectedSeedType == ESeedType::None)
+		if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Tree")) && selectedSeedType == ESeedType::None && anim && anim->bAttackAnimation == false)
 		{
+			// 몽타주 재생
+			anim->PlayMeleeAttackMontage();
+
 			object = Cast<AJS_ObstacleActor>(outHit.GetActor());
 			object->GetDamage_Implementation(true);
 			// hp 체크용
 			int32 hp = object->curHP;
 			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
 		}
-		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Rock")) && selectedSeedType == ESeedType::None)
+		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Rock")) && selectedSeedType == ESeedType::None && anim && anim->bAttackAnimation == false)
 		{
+			// 몽타주 재생
+			anim->PlayMeleeAttackMontage();
+
 			object = Cast<AJS_ObstacleActor>(outHit.GetActor());
 			object->GetDamage_Implementation(true);
 			int32 hp = object->curHP;
 			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
 		}
-		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Gress")) && selectedSeedType == ESeedType::None)
+		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Gress")) && selectedSeedType == ESeedType::None && anim && anim->bAttackAnimation == false)
 		{
+			// 몽타주 재생
+			anim->PlayMeleeAttackMontage();
+
 			object = Cast<AJS_ObstacleActor>(outHit.GetActor());
 			object->GetDamage_Implementation(true);
 			int32 hp = object->curHP;

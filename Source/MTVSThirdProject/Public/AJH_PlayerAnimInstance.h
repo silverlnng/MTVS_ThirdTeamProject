@@ -20,8 +20,27 @@ public:
 	// Vertical
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float speed;
+	// Horizontal
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float direction;
 
+	// Owner
+	UPROPERTY()
+	class AAJH_Player* player;
+	
+	/***********************************************
+			애니메이션 모음
+	***********************************************/
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class UAnimMontage* meleeAttackMontage;
+	void PlayMeleeAttackMontage();
+	// 노티파이로 제어 해보자 스타트면 inpt입력 받지 않게 엔드면 input입력 받게
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	bool bEndAnimation;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	bool bAttackAnimation = false;
+	UFUNCTION(BlueprintCallable)
+	void OnEndAnim();
 
 };

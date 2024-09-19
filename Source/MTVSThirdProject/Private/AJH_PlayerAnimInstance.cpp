@@ -9,7 +9,7 @@ void UAJH_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	AAJH_Player* player = Cast<AAJH_Player>(TryGetPawnOwner());
+	player = Cast<AAJH_Player>(TryGetPawnOwner());
 	if (player == nullptr)
 	{
 		return;
@@ -24,3 +24,22 @@ void UAJH_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	direction = FVector::DotProduct(rightVector, velocity);
 
 }
+
+void UAJH_PlayerAnimInstance::PlayMeleeAttackMontage()
+{
+	bEndAnimation = true;
+	bAttackAnimation = true;
+	if (meleeAttackMontage)
+	{
+		Montage_Play(meleeAttackMontage);
+		player->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+	}
+}
+
+void UAJH_PlayerAnimInstance::OnEndAnim()
+{
+	bEndAnimation = false;
+	bAttackAnimation = false;
+	player->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+}
+

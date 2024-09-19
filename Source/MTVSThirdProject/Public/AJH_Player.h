@@ -164,6 +164,12 @@ public:
 	UFUNCTION()
 	void OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	/************************
+			애니메이션
+	*************************/
+	UPROPERTY()
+	class UAJH_PlayerAnimInstance* anim;
+
 	/************************************************
 			UI 정보 할당
 	************************************************/
