@@ -34,4 +34,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	class AYJHUD* MyHUD;
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 QuestNum =1;
+
+	
 };

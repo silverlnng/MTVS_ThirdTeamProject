@@ -13,17 +13,13 @@
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/BP/BP_TestYJ_GM.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/BP/BP_TestYJ_GM.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/LobbyMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/LobbyMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/NPCMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/NPCMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/YJ/SocketManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/YJ/SocketManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/YJ/SocketManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/YJ/SocketManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NPCData.csv" beforeDir="false" afterPath="$PROJECT_DIR$/NPCData.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/CSVManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/CSVManager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/CSVManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/CSVManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCWidget.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCWidget.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -552,6 +548,8 @@
       <workItem from="1726222011993" duration="298000" />
       <workItem from="1726807986755" duration="688000" />
       <workItem from="1726808707263" duration="12685000" />
+      <workItem from="1726834007431" duration="246000" />
+      <workItem from="1726834269860" duration="914000" />
     </task>
     <servers />
   </component>

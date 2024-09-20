@@ -54,7 +54,10 @@ void ANPCCharacter::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
 		}
 	}
 	
-	// 일단 ui 나오도록 ui 의 소유권은 누가 ? 
+	// 일단 ui 나오도록 ui 의 소유권은 누가 ?
+
+	// ACSVManager::MakeEachCSVLines(int32 num) 에 자신의 QuestNum 를 전달하고 실행
+	// npc가 어떻게 ACSVManager를 알게 할것인지 ?? 
 	
 }
 

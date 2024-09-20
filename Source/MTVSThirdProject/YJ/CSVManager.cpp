@@ -73,7 +73,7 @@ void ACSVManager::ReadCSV()
 	{
 
 		
-		FileContent.ParseIntoArrayLines(CSVLines);
+		FileContent.ParseIntoArrayLines(TotalCSVLines);
 		
 		// 한 줄씩 나누기
 		TArray<FString> Lines;
@@ -108,7 +108,21 @@ void ACSVManager::ReadCSV()
 
 void ACSVManager::CSVLinesNum(int32 num)
 {
-	FString str = CSVLines[num];
+	FString str = TotalCSVLines[num];
 	//이걸 ui 에 나오게 해야함
 	NPC_UI->SetTextLog(str);
+}
+
+// 현재 퀘스트 넘버 를 받고 , 새롭게 퀘스트를 받을때 마다 이걸 실행
+void ACSVManager::MakeEachCSVLines(int32 num)
+{
+	EachCSVLines.Empty();
+	// TotalCSVLines 에서 현재 퀘스트 넘버를 적용한 EachCSVLines 를 만들기
+	int32 start = TotalCSVLines.IndexOfByKey(num);
+	int32 end = TotalCSVLines.IndexOfByKey(start + 1);
+	
+	for (int32 i = start; i <= start; ++i)
+	{
+		EachCSVLines.Add(TotalCSVLines[i]);
+	}
 }

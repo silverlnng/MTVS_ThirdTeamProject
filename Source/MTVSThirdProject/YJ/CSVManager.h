@@ -30,8 +30,14 @@ public:
 	class UNPCWidget* NPC_UI;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
-	TArray<FString> CSVLines;
+	TArray<FString> TotalCSVLines;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	TArray<FString> EachCSVLines;
 
 	UFUNCTION()
 	void CSVLinesNum(int32 num);
+
+	UFUNCTION()
+	void MakeEachCSVLines(int32 num);
 };

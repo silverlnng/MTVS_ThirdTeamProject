@@ -28,6 +28,7 @@ void UNPCWidget::OnClickbackButton()
 	curCount--;
 	// csv 리더기에서 str 받아온 다음 출력하기
 	// 델리게이트에  curCount 만넘겨서 실행하기
+	//+ 지금 현재 상호작용하는 npc의 QuestNum 도 생각을 해야함 
 	ReadCSVDele.Broadcast(curCount);
 }
 
