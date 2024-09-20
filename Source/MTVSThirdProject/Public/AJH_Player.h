@@ -167,6 +167,10 @@ public:
 	void ServerBeginOverlap(AActor* OtherActor, bool bIsBeginOverlap);
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastBeginOverlap(AActor* OtherActor, bool bIsBeginOverlap);
+	UFUNCTION(Server, Reliable)
+	void ServerEndOverlap(AActor* OtherActor, bool bIsBeginOverlap);
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastEndOverlap(AActor* OtherActor, bool bIsBeginOverlap);
 
 	/************************
 			애니메이션
