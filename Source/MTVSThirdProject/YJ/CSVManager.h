@@ -16,5 +16,8 @@ class MTVSTHIRDPROJECT_API UCSVManager : public UBlueprintFunctionLibrary
 
 	UFUNCTION(BlueprintCallable,category="CSV",meta=(Keywords="Save"))
 	static bool SaveArrayText(FString SaveDirectory,FString fileName,TArray<FString> SaveText,bool AllowOverWriting);
+
+	UFUNCTION(BlueprintCallable,category="CSV",meta=(Keywords="Save"))
+	void ReadCSV();
 	
 };
