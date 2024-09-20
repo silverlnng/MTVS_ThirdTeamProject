@@ -24,9 +24,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(Replicated, EditDefaultsOnly)
 	class UBoxComponent* boxComp;
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(Replicated, EditDefaultsOnly)
 	class UStaticMeshComponent* bodyMesh;
 
+	UFUNCTION(Server, Reliable)
+	void ServerChangeCollision();
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiChangeCollision();
+
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 };

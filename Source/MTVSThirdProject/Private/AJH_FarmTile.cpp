@@ -4,6 +4,7 @@
 #include "AJH_FarmTile.h"
 #include "Components/BoxComponent.h"
 #include "AJH_Player.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AAJH_FarmTile::AAJH_FarmTile()
@@ -24,10 +25,7 @@ AAJH_FarmTile::AAJH_FarmTile()
 void AAJH_FarmTile::BeginPlay()
 {
 	Super::BeginPlay();
-
 	SetActorTickEnabled(false);
-	boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
-	bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 	
 }
 
@@ -38,5 +36,25 @@ void AAJH_FarmTile::Tick(float DeltaTime)
 
 }
 
+void AAJH_FarmTile::ServerChangeCollision_Implementation()
+{
 
+	MultiChangeCollision();
+
+}
+
+void AAJH_FarmTile::MultiChangeCollision_Implementation()
+{
+	boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+	bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+}
+
+void AAJH_FarmTile::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AAJH_FarmTile, boxComp);
+	DOREPLIFETIME(AAJH_FarmTile, bodyMesh);
+
+}
 
