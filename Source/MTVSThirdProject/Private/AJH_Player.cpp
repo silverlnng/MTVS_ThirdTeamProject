@@ -361,32 +361,13 @@ void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedCompone
 {
 	farmTile = Cast<AAJH_FarmTile>(OtherActor);
 	object = Cast<AJS_ObstacleActor>(OtherActor);
-	if (farmTile && OtherActor->ActorHasTag(TEXT("Seed")))
+	if (HasAuthority())
 	{
-		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		
-		// 
-		ECollisionResponse Response = farmTile->boxComp->GetCollisionResponseToChannel(ECC_Visibility);
-		UE_LOG(LogTemp, Warning, TEXT("Collision response set to: %d"), Response);
-		OtherActor->GetName();
-		FString objectName = OtherActor->GetName();
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, objectName);
+		ServerBeginOverlap(OtherActor, true);
 	}
-	if(object && OtherActor->ActorHasTag(TEXT("Tree")))
+	else
 	{
-		object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-	}
-	if(object && OtherActor->ActorHasTag(TEXT("Rock")))
-	{
-		object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-	}
-	if(object && OtherActor->ActorHasTag(TEXT("Gress")))
-	{
-		object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		ServerBeginOverlap(OtherActor, true);
 	}
 }
 
@@ -416,6 +397,72 @@ void AAJH_Player::OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent
 		object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 		object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 	}
+}
+
+void AAJH_Player::ServerBeginOverlap_Implementation(AActor* OtherActor, bool bIsBeginOverlap)
+{
+	if (!OtherActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : null"));
+		return;
+	}
+
+	if (bIsBeginOverlap)
+	{
+		// MulticastBeginOverlap(OtherActor ,bIsBeginOverlap);
+		UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : Hello"));
+	}
+}
+
+void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool bIsBeginOverlap)
+{
+	if (!OtherActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("MultiBeginOverlap : null"));
+		return;
+	}
+
+	if (bIsBeginOverlap)
+	{
+		/*if (farmTile && OtherActor->ActorHasTag(TEXT("Seed")))
+		{
+			farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+			farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+
+			ECollisionResponse Response = farmTile->boxComp->GetCollisionResponseToChannel(ECC_Visibility);
+			UE_LOG(LogTemp, Warning, TEXT("Collision response set to: %d"), Response);
+			OtherActor->GetName();
+			FString objectName = OtherActor->GetName();
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, objectName);
+		}*/
+		if (object && OtherActor->ActorHasTag(TEXT("Tree")))
+		{
+			if (object->boxComp)
+			{
+				object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+			}
+			if (object->staticMeshComp)
+			{
+				object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+			}
+		}
+		if (object && OtherActor->ActorHasTag(TEXT("Rock")))
+		{
+			if(object->boxComp)
+			object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+			if(object->staticMeshComp)
+			object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		}
+		if (object && OtherActor->ActorHasTag(TEXT("Gress")))
+		{
+			if (object->boxComp)
+			object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+			if(object->staticMeshComp)
+			object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		}
+	}
+
+	
 }
 
 void AAJH_Player::ServerChange_Implementation(const FString& userName_, int32 meshNum_)
