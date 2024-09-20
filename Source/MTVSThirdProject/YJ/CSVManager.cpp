@@ -2,11 +2,40 @@
 
 
 #include "CSVManager.h"
+
+#include "NPCWidget.h"
+#include "YJHUD.h"
 #include "Misc/FileHelper.h"
 #include "HAL/PlatformFileManager.h"
 
-bool UCSVManager::SaveArrayText(FString SaveDirectory, FString fileName, TArray<FString> SaveText,
-	bool AllowOverWriting)
+void ACSVManager::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	auto* pc= GetWorld()->GetFirstPlayerController();
+	
+	if (pc)
+	{
+		MyHUD = pc->GetHUD<AYJHUD>();
+		if (MyHUD)
+		{
+			FTimerHandle TimerHandle;
+			GetWorldTimerManager().SetTimer(TimerHandle, [this]()
+			{
+				if (MyHUD->NPCUI)
+				{
+					NPC_UI = MyHUD->NPCUI;
+					NPC_UI->ReadCSVDele.AddDynamic(this,&ACSVManager::CSVLinesNum);
+					CSVLinesNum(0);
+				}
+			}, 1.0f, false);
+		}
+	}
+	ReadCSV();
+}
+
+bool ACSVManager::SaveArrayText(FString SaveDirectory, FString fileName, TArray<FString> SaveText,
+                                bool AllowOverWriting)
 {
 	SaveDirectory += "\\";
 	SaveDirectory += fileName;
@@ -32,7 +61,7 @@ bool UCSVManager::SaveArrayText(FString SaveDirectory, FString fileName, TArray<
 	return FFileHelper::SaveStringToFile(FinalString,*SaveDirectory);
 }
 
-void UCSVManager::ReadCSV()
+void ACSVManager::ReadCSV()
 {
 	FString CSVPath = FPaths::ProjectDir() / TEXT("NPCData.csv");
 
@@ -42,12 +71,20 @@ void UCSVManager::ReadCSV()
 	// 파일 읽기
 	if (FFileHelper::LoadFileToString(FileContent, *CSVPath))
 	{
+
+		
+		FileContent.ParseIntoArrayLines(CSVLines);
+		
 		// 한 줄씩 나누기
 		TArray<FString> Lines;
 		FileContent.ParseIntoArrayLines(Lines);
-
-		for (const FString& Line : Lines)
+		
+		for (const FString& Line : Lines) // Lines 를 전체 순회하기 
 		{
+			//FString str;
+			//str.Append(Line);
+			//NPC_UI->SetTextLog(str);
+			
 			// 쉼표로 구분된 각 항목 분리
 			TArray<FString> Columns;
 			Line.ParseIntoArray(Columns, TEXT(","), true);
@@ -67,4 +104,11 @@ void UCSVManager::ReadCSV()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to load CSV file: %s"), *CSVPath);
 	}
+}
+
+void ACSVManager::CSVLinesNum(int32 num)
+{
+	FString str = CSVLines[num];
+	//이걸 ui 에 나오게 해야함
+	NPC_UI->SetTextLog(str);
 }

@@ -13,13 +13,17 @@
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Jin/Blueprints/Anim/Animation/FastRun_Anim.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Jin/Blueprints/Anim/Animation/FastRun_Anim.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Jin/Blueprints/Anim/BS_Panda.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Jin/Blueprints/Anim/BS_Panda.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Jin/Blueprints/BP_Player.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Jin/Blueprints/BP_Player.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/TestYJMap.umap" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/YJ/BP/BP_TestYJ_GM.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/BP/BP_TestYJ_GM.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/YJ/LobbyMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/LobbyMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/YJ/NPCMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/NPCMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/YJ/SocketManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/YJ/SocketManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/YJ/SocketManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/YJ/SocketManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/CSVManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/CSVManager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/CSVManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/CSVManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpWidget.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCWidget.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCWidget.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +47,7 @@
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Components/PrimitiveComponent.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Engine/LocalPlayer.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Character.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/HUD.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/OnlineReplStructs.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Pawn.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/PlayerState.h" root0="FORCE_HIGHLIGHTING" />
@@ -61,6 +66,8 @@
     <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/UserNameWidget.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/UserNameWidget.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJHUD.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJHUD.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -544,7 +551,7 @@
       <workItem from="1726216416475" duration="3729000" />
       <workItem from="1726222011993" duration="298000" />
       <workItem from="1726807986755" duration="688000" />
-      <workItem from="1726808707263" duration="5823000" />
+      <workItem from="1726808707263" duration="12685000" />
     </task>
     <servers />
   </component>

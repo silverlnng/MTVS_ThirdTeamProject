@@ -3,7 +3,10 @@
 
 #include "NPCCharacter.h"
 
+#include "AJH_Player.h"
 #include "MovieSceneSequenceID.h"
+#include "NPCWidget.h"
+#include "YJHUD.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -39,7 +42,18 @@ void ANPCCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 void ANPCCharacter::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// OtherActor 가 플레이어 일때 그 플레이어의 로컬에게만 
+	// OtherActor 가 플레이어 일때 그 플레이어의 로컬에게만
+	if(OtherActor->IsA(AAJH_Player::StaticClass()))
+	{
+		if(GetController() && GetController()->IsLocalController())
+		{
+			auto* pc =GetController<APlayerController>();
+			MyHUD=pc->GetHUD<AYJHUD>();
+			// csvmanager 를 통해 읽어오기
+			MyHUD->NPCUI->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
+	
 	// 일단 ui 나오도록 ui 의 소유권은 누가 ? 
 	
 }
