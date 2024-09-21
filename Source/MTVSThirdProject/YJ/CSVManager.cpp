@@ -118,11 +118,11 @@ void ACSVManager::MakeEachCSVLines(int32 num)
 {
 	EachCSVLines.Empty();
 	// TotalCSVLines 에서 현재 퀘스트 넘버를 적용한 EachCSVLines 를 만들기
-	int32 start = TotalCSVLines.IndexOfByKey(num);
-	int32 end = TotalCSVLines.IndexOfByKey(start + 1);
+	//int32 start = TotalCSVLines.Find(num);
+	//int32 end = TotalCSVLines.IndexOfByKey(start + 1);
 	
-	for (int32 i = start; i <= start; ++i)
+	/*for (int32 i = start; i <= start; ++i)
 	{
 		EachCSVLines.Add(TotalCSVLines[i]);
-	}
+	}*/
 }
