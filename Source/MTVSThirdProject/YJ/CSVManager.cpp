@@ -12,7 +12,7 @@ void ACSVManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	auto* pc= GetWorld()->GetFirstPlayerController();
+	/*auto* pc= GetWorld()->GetFirstPlayerController();
 	
 	if (pc)
 	{
@@ -31,7 +31,7 @@ void ACSVManager::BeginPlay()
 			}, 1.0f, false);
 		}
 	}
-	ReadCSV();
+	ReadCSV();*/
 }
 
 bool ACSVManager::SaveArrayText(FString SaveDirectory, FString fileName, TArray<FString> SaveText,
@@ -118,11 +118,14 @@ void ACSVManager::MakeEachCSVLines(int32 num)
 {
 	EachCSVLines.Empty();
 	// TotalCSVLines 에서 현재 퀘스트 넘버를 적용한 EachCSVLines 를 만들기
-	//int32 start = TotalCSVLines.Find(num);
-	//int32 end = TotalCSVLines.IndexOfByKey(start + 1);
+	int32 start;
+	TotalCSVLines.Find(FString::FromInt(num),start);
 	
-	/*for (int32 i = start; i <= start; ++i)
+	int32 end;
+	TotalCSVLines.Find(FString::FromInt(num+1),end);
+	
+	for (int32 i = start; i <= start; ++i)
 	{
 		EachCSVLines.Add(TotalCSVLines[i]);
-	}*/
+	}
 }

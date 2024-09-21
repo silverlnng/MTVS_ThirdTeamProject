@@ -15,6 +15,6 @@ void AYJHUD::BeginPlay()
 	if(NPCUI)
 	{
 		NPCUI->AddToViewport();
-		//NPCUI->SetVisibility(ESlateVisibility::Hidden);
+		NPCUI->SetVisibility(ESlateVisibility::Hidden);
 	}
 }

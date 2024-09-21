@@ -34,9 +34,25 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	class AYJHUD* MyHUD;
-
-	UPROPERTY(EditDefaultsOnly)
-	int32 QuestNum =1;
-
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	class UNPCWidget* NPC_UI;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category=Quest)
+	int32 QuestNum =1; // npc 인스턴스 마다 다르게 설정할것
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	TArray<FString> TotalCSVLines;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	TArray<FString> EachCSVLines;
+	
+	UFUNCTION()
+	void ReadCSV();
+	
+	UFUNCTION()
+	void MakeEachCSVLines(int32 num);
+
+	UFUNCTION()
+	void ReadEachLinesNum(int32 num);
 };

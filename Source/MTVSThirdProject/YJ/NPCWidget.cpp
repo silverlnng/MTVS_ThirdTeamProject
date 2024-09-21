@@ -34,6 +34,7 @@ void UNPCWidget::OnClickbackButton()
 
 void UNPCWidget::OnClickfrontButton()
 {
+	// 지금 현재 npc EachCSVLines 의 최대값보다 크면 return 해야함
 	curCount++;
 	// curCount 에 해당하는 줄글을 가져와서 표시하기
 	ReadCSVDele.Broadcast(curCount);
