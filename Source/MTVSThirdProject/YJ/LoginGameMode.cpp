@@ -5,8 +5,11 @@
 #include "LoginFirstWidget.h"
 #include "OnlineSubsystem.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/ComboBoxString.h"
 #include "Components/EditableText.h"
-#include "GameFramework/PlayerState.h"
+#include "ThirdParty/Steamworks/Steamv157/sdk/public/steam/steam_api.h"
+
+#pragma comment(lib, "ThirdParty/Steamworks/Steamv157/sdk/redistributable_bin/win64/steam_api64.lib")
 
 void ALoginGameMode::BeginPlay()
 {
@@ -20,33 +23,23 @@ void ALoginGameMode::BeginPlay()
 			GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(true);
 			
 			// 스팀서버 접속이라면
-
-			FTimerHandle handle;
-			GetWorldTimerManager().SetTimer(handle,[this]()
+			
+			if(IOnlineSubsystem::Get()->GetSubsystemName()=="STEAM")
 			{
-				if(IOnlineSubsystem::Get()->GetSubsystemName()=="STEAM")
+				if (SteamAPI_Init())
 				{
-					const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
-					FString name = *LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId()->ToString();
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,*name);
-					//loginUI->eText_hostName->SetText(FText::FromString(name));
-					loginUI->eText_hostName->SetHintText(FText::FromString(name));
-						//
+					CSteamID steamID = SteamUser()->GetSteamID();
+					const char* nickname = SteamFriends()->GetPersonaName();
+					UE_LOG(LogTemp, Log, TEXT("Steam Nickname: %s"), UTF8_TO_TCHAR(nickname));
+					loginUI->eText_hostName->SetHintText(FText::FromString(UTF8_TO_TCHAR(nickname)));
 				}
-				else
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,"No Steam login");
-					const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
-					FString name = *LocalPlayer->GetPreferredUniqueNetId().GetUniqueNetId()->ToString();
-					
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,*name);
-					//loginUI->eText_hostName->SetText(FText::FromString(name));
-					loginUI->eText_hostName->SetHintText(FText::FromString(name));
-				}
-			},3.f,false);
-			
-			
-			
+			}
+			else
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,"No Steam login");
+				
+				loginUI->eText_hostName->SetHintText(FText::FromString("닉네임을 입력해주세요"));
+			}
 		}
 	}
 	

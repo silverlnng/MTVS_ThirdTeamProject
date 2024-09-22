@@ -12,7 +12,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJHUD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJHUD.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Jin/Blueprints/BP_Player.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Jin/Blueprints/BP_Player.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Master/AlphaMap_.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Master/AlphaMap_.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/YJ/BP/BP_MainGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/BP/BP_MainGameMode.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/YJ/UI/WBP_LoginFirst.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/UI/WBP_LoginFirst.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/MTVSThirdProject.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/MTVSThirdProject.Build.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/LoginFirstWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/LoginFirstWidget.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginGameMode.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginGameMode.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NetWorkGameInstance.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

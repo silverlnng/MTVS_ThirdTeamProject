@@ -88,8 +88,8 @@ void UNetWorkGameInstance::OnCreatedSession(FName sessionName, bool bWasSuccessf
 
 	//멀티플레이를 할 맵으로 이동한다. 맵의 경로 작성해주기
 	///Script/Engine.World'/Game/Maps/BattleMap.BattleMap' 에서 상대 경로 만 넣어주면 됨
-	
-	GetWorld()->ServerTravel("/Game/YJ/MainGameMap?Listen",true);
+	///Script/Engine.World'/Game/Master/AlphaMap_.AlphaMap_'
+	GetWorld()->ServerTravel("/Game/Master/AlphaMap_?Listen",true);
 	//지금현재 리슨서버이기때문에  ?listen 으로 설정 
 }
 

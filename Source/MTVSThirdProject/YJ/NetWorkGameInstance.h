@@ -51,7 +51,7 @@ public:
 	int32 ClickedplayerCount=10;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
-	FString UserNickName;
+	FString UserNickName="None";
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
 	int32 meshNum;
 	
