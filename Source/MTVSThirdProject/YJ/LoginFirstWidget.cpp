@@ -17,6 +17,7 @@ void ULoginFirstWidget::NativeConstruct()
 	ResetButton->OnClicked.AddDynamic(this, &ULoginFirstWidget::OnClickedResetButton);
 	ComboBoxStr_Char->OnSelectionChanged.AddDynamic(this,&ULoginFirstWidget::SelectCharacter);
 	HBox_char->SetVisibility(ESlateVisibility::Hidden);
+	ResetButton->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void ULoginFirstWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
