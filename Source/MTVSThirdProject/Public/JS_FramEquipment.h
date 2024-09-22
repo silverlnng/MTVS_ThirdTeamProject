@@ -58,13 +58,18 @@ public:
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Fishing")
 	int32 trashCount = 0;
 
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 	void StartFishing();
 	void GetHaveWater();
 
-	UFUNCTION()
-	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
-	/*UFUNCTION(Server, Reliable)
+	UFUNCTION(Server, Reliable)
+	void Server_OverlapBegin(AActor* OtherActor);
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_OverlapBegin(AActor* OtherActor);
+
+	UFUNCTION(Server, Reliable)
 	void Server_StartFishing();
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_StartFishing();
@@ -74,9 +79,6 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_GetHaveWater();
 
-	UFUNCTION(Server, Reliable)
-	void Server_OverlapBegin(AActor* OtherActor);
-	UFUNCTION(NetMulticast, Reliable)
-	void Multicast_OverlapBegin(AActor* OtherActor);*/
+
 
 };
