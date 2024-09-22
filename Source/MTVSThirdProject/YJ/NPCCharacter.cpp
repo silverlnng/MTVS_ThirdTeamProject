@@ -27,8 +27,8 @@ void ANPCCharacter::BeginPlay()
 	Super::BeginPlay();
 	BoxComp->OnComponentBeginOverlap.AddDynamic(this,&ANPCCharacter::OnBoxBeginOverlap);
 	BoxComp->OnComponentEndOverlap.AddDynamic(this,&ANPCCharacter::OnBoxEndOverlap);
-	auto* pc= GetWorld()->GetFirstPlayerController();
 	
+	pc= Cast<AYJPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (pc)
 	{
 		MyHUD = pc->GetHUD<AYJHUD>();
@@ -40,7 +40,7 @@ void ANPCCharacter::BeginPlay()
 				if (MyHUD->NPCUI)
 				{
 					NPC_UI = MyHUD->NPCUI;
-					NPC_UI->ReadCSVDele.AddDynamic(this,&ANPCCharacter::ReadEachLinesNum);
+					//NPC_UI->ReadCSVDele.AddDynamic(this,&ANPCCharacter::ReadEachLinesNum);
 					//CSVLinesNum(0);
 				}
 			}, 1.0f, false);
@@ -72,6 +72,8 @@ void ANPCCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 void ANPCCharacter::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	pc->SetInputMode(FInputModeGameOnly());
+	pc->SetShowMouseCursor(false);
 	NPC_UI->SetVisibility(ESlateVisibility::Hidden);
 	NPC_UI->YesNoBox->SetVisibility(ESlateVisibility::Hidden);
 }
@@ -84,7 +86,7 @@ void ANPCCharacter::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
 	ATP_ThirdPersonCharacter* player = Cast<ATP_ThirdPersonCharacter>(OtherActor);
 	if(player && player->IsLocallyControlled())
 	{
-		auto* pc = player->GetController<AYJPlayerController>();
+		pc = player->GetController<AYJPlayerController>();
 		if (pc)
 		{
 			MyHUD = pc->GetHUD<AYJHUD>();
@@ -98,6 +100,8 @@ void ANPCCharacter::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
 					NPC_UI->curCount = 0;
 				}
 			}
+			pc->SetInputMode(FInputModeUIOnly());
+			pc->SetShowMouseCursor(true);
 		}
 		
 		// csvmanager 를 통해 읽어오기, 

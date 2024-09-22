@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "YJ/SocketManager.h"
+#include "SocketManager.h"
 
 // Sets default values
 ASocketManager::ASocketManager()

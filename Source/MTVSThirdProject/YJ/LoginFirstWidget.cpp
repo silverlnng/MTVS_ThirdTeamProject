@@ -6,6 +6,7 @@
 #include "Components/Button.h"
 #include "Components/ComboBoxString.h"
 #include "Components/EditableText.h"
+#include "Components/HorizontalBox.h"
 #include "MTVSThirdProject/YJ/LoginWidget.h"
 #include "MTVSThirdProject/YJ/NetWorkGameInstance.h"
 
@@ -15,7 +16,7 @@ void ULoginFirstWidget::NativeConstruct()
 	gi = GetGameInstance<UNetWorkGameInstance>();
 	btn_findSessions->OnClicked.AddDynamic(this, &ULoginFirstWidget::OnClickedFindSessionsButton);
 	ComboBoxStr_Char->OnSelectionChanged.AddDynamic(this,&ULoginFirstWidget::SelectCharacter);
-	ComboBoxStr_Char->SetVisibility(ESlateVisibility::Hidden);
+	HBox_char->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void ULoginFirstWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

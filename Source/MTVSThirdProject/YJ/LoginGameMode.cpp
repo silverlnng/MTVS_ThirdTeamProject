@@ -31,14 +31,15 @@ void ALoginGameMode::BeginPlay()
 					CSteamID steamID = SteamUser()->GetSteamID();
 					const char* nickname = SteamFriends()->GetPersonaName();
 					UE_LOG(LogTemp, Log, TEXT("Steam Nickname: %s"), UTF8_TO_TCHAR(nickname));
-					loginUI->eText_hostName->SetHintText(FText::FromString(UTF8_TO_TCHAR(nickname)));
+					//loginUI->eText_hostName->SetHintText(FText::FromString(UTF8_TO_TCHAR(nickname)));
+					loginUI->eText_hostName->SetText(FText::FromString(UTF8_TO_TCHAR(nickname)));
 				}
 			}
 			else
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,"No Steam login");
 				
-				loginUI->eText_hostName->SetHintText(FText::FromString("닉네임을 입력해주세요"));
+				loginUI->eText_hostName->SetHintText(FText::FromString(TEXT("닉네임을 입력해주세요")));
 			}
 		}
 	}

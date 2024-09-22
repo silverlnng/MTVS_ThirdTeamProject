@@ -28,6 +28,9 @@ public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "MySettings")
 	class UComboBoxString* ComboBoxStr_Char;
 
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "MySettings")
+	class UHorizontalBox* HBox_char;
+
 	UPROPERTY(BlueprintReadOnly)
 	class UNetWorkGameInstance* gi;
 

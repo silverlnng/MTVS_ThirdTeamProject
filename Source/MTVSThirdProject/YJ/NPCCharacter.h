@@ -51,6 +51,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
 	TArray<FString> EachCSVLines;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class AYJPlayerController* pc;
 	UFUNCTION()
 	void ReadCSV();
 	
