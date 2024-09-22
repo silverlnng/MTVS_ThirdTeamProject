@@ -27,7 +27,6 @@ void AJS_LandGridActor::BeginPlay()
 		GridManager->InitializeGrid(gridSize, gridSize);
 		SetGridTile();
 	}
-
 }
 
 // Called every frame

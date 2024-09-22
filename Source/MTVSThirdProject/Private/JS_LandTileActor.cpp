@@ -17,17 +17,6 @@ AJS_LandTileActor::AJS_LandTileActor()
 	boxComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	boxComp->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
 	boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Block);
-
-	/*landTileComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("landTileComp"));
-	landTileComp->SetupAttachment(boxComp);
-	landTileComp->SetRelativeScale3D(FVector(1, 1, 0.01f));
-	
-
-	ConstructorHelpers::FObjectFinder<UStaticMesh> landTileMeshTemp(TEXT("/ Script / Engine.StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
-
-	if (landTileMeshTemp.Succeeded()) {
-		landTileComp->SetStaticMesh(landTileMeshTemp.Object);
-	}*/
 }
 
 // Called when the game starts or when spawned
@@ -42,19 +31,13 @@ void AJS_LandTileActor::BeginPlay()
 void AJS_LandTileActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	//틱에서 레이를 맞았는지 계속 체크해서 
-	//플레이어가 상호작용을 했다면
-			//GetDamager(true);
-	//if (Tile.occupyingActor->ActorHasTag("Tree")) {
-	//	//GetDamager(true);
-	//}
-	//else if (Tile.occupyingActor->ActorHasTag("Gress")) {
-	//	//GetDamager(true);
-	//}
-	//else if (Tile.occupyingActor->ActorHasTag("Rock")) {
-	//	//GetDamager(true);
-	//}
+	//젖어 있지 않으면 델타타임을 않더함.
+	if(bIsWet == false) checkDeltaTime += DeltaTime;
+	//시간이 6분이 지나면 마르는 걸 체크
+	if (checkDeltaTime == dryingTime) {
+		checkDeltaTime = 0;
+		bIsWet = false;
+	}
 }
 
 void AJS_LandTileActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -80,10 +63,10 @@ void AJS_LandTileActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 void AJS_LandTileActor::SpawnCrops(int32 id)
 {
 	if(!GridManager) return;
-
-	FVector2D tileCoords = GetGridCoordinates();
-
+	if(canFraming == false || bIsWet == false) return;
+	
 	//타일 점유 되었는지 확인
+	FVector2D tileCoords = GetGridCoordinates();
 	if (GridManager->IsCellOccupied(tileCoords)) {
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Tile is already occupied!"));
 		return;
@@ -96,14 +79,22 @@ void AJS_LandTileActor::SpawnCrops(int32 id)
 	AActor* spawnedCrop = nullptr;  
 	switch (id)
 	{
-		case 0:
+		case 11010:
 			spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(wheatSeedFactroy, GetActorLocation(), FRotator::ZeroRotator, spawnParmas);
 			break;
-		case 1:
+		case 11011:
+			spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(watermelonSeedFactroy, GetActorLocation(), FRotator::ZeroRotator, spawnParmas);
+			break;
+		case 11012:
+			spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(strawberrySeedFactroy, GetActorLocation(), FRotator::ZeroRotator, spawnParmas);
+			break;
+		case 11013:
+			spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(carrotSeedFactroy, GetActorLocation(), FRotator::ZeroRotator, spawnParmas);
+			break;
+		case 11014:
 			spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(pumpKinSeedFactroy, GetActorLocation(), FRotator::ZeroRotator, spawnParmas);
 			break;
-		case 2:
-			spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(carrotSeedFactroy, GetActorLocation(), FRotator::ZeroRotator, spawnParmas);
+		default:
 			break;
 	}
 	

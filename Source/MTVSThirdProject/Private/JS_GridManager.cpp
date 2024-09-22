@@ -2,6 +2,7 @@
 
 
 #include "JS_GridManager.h"
+#include "JS_LandTileActor.h"
 
 // Sets default values
 AJS_GridManager::AJS_GridManager()
@@ -73,7 +74,7 @@ bool AJS_GridManager::IsCellOccupied(FVector2D gridCoordinates)
 	}
 	return false;
 }
-
+//그리드를 초기화 시키는 함수
 void AJS_GridManager::ClearGridCell(FVector2D gridCoordinates)
 {
 	if (Grid.Contains(gridCoordinates)) {
@@ -95,4 +96,3 @@ FVector AJS_GridManager::GetTileLocation(FVector2D GridCoordinates)
 
 	return FVector(X, Y, Origin.Z);
 }
-

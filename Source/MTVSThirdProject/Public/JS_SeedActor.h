@@ -35,6 +35,10 @@ public:
 	TSubclassOf<class AJS_FirstRicePlant> SpawnFirstPumpkinPlant;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FirstPlant")
 	TSubclassOf<class AJS_FirstRicePlant> SpawnFirstCarrotPlant;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FirstPlant")
+	TSubclassOf<class AJS_FirstRicePlant> SpawnFirstStrawberryPlant;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FirstPlant")
+	TSubclassOf<class AJS_FirstRicePlant> SpawnFirstWatermelonPlant;
 
 	//¼ÒÈ¯µÉ ³à¼®À» ´ã´Â º¯¼ö
 	UClass* PlantClassToSpawn = nullptr;
@@ -48,9 +52,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Seed")
 	float growTime = 5;
 	
+	//¾¾¾ÑÀÇ ID°ª
 	int32 riceID = 11010;
-	int32 pumpKinID = 11014;
+	int32 watermelonID = 11011;
+	int32 strawberryID = 11012;
 	int32 carrotID = 11013;
+	int32 pumpKinID = 11014;
+	
 
 
 	virtual void GetDamage_Implementation(bool damage) override;

@@ -30,9 +30,13 @@ public:
 	float checkDeltaTime = 0;
 	float growTime = 5;
 
+	//줄기의 ID값
 	int32 ricePlantID = 11210;
-	int32 pumpKinPlantID = 11214;
+	int32 watermelonPlantID = 11211;
+	int32 strawberryPlantID = 11212;
 	int32 carrotPlantID = 11213;
+	int32 pumpKinPlantID = 11214;
+
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* boxComp;
 	UPROPERTY(EditAnywhere)
@@ -44,6 +48,10 @@ public:
 	TSubclassOf<class AJS_SecondRicePlant> SpawnSecondPumpkinPlant;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SecondPlant")
 	TSubclassOf<class AJS_SecondRicePlant> SpawnSecondCarrotPlant;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SecondPlant")
+	TSubclassOf<class AJS_SecondRicePlant> SpawnSecondStrawberryPlant;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SecondPlant")
+	TSubclassOf<class AJS_SecondRicePlant> SpawnSecondWatermelonPlant;
 	//소환될 녀석을 담는 변수
 	UClass* PlantClassToSpawn = nullptr;
 

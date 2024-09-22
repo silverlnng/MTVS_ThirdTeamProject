@@ -45,7 +45,17 @@ void AJS_ObstacleActor::Tick(float DeltaTime)
 
 void AJS_ObstacleActor::GetDamage_Implementation(bool damage)
 {
-	if (damage) SetCurHP_Implementation(curHP - 1);
+	if (damage) {
+		if (this->ActorHasTag(TEXT("Tree"))) {
+			btree = true;
+			SetCurHP_Implementation(treeCurHP - 1);
+
+		}
+		else if (this->ActorHasTag(TEXT("Rock")) || this->ActorHasTag(TEXT("Gress"))){
+			SetCurHP_Implementation(curHP - 5);
+		}
+	}
+	
 }
 
 void AJS_ObstacleActor::SetCurHP_Implementation(float amount)
@@ -53,12 +63,11 @@ void AJS_ObstacleActor::SetCurHP_Implementation(float amount)
 	if (amount <= 0) {
 		Death_Implementation();
 	}
+	if(btree){
+		btree = false;
+		treeCurHP = amount;
+	}
 	else curHP = amount;
-}
-
-void AJS_ObstacleActor::SpawnNextPlant_Implementation(int32 index)
-{
-
 }
 
 void AJS_ObstacleActor::Death_Implementation()
@@ -75,5 +84,6 @@ void AJS_ObstacleActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 		FString actorName = OtherActor->GetName();
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Overlapping with Actor: %s"), *actorName));
 	}
+
 }
 

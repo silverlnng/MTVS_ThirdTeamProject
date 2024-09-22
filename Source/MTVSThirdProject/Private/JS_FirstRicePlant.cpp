@@ -57,6 +57,16 @@ void AJS_FirstRicePlant::Tick(float DeltaTime)
 			SpawnNextPlant_Implementation(carrotPlantID);
 			GetDamage_Implementation(true);
 		}
+		if (this->ActorHasTag(TEXT("Strawberry"))) {
+			UE_LOG(LogTemp, Warning, TEXT("This actor has the Strawberry tag."));
+			SpawnNextPlant_Implementation(strawberryPlantID);
+			GetDamage_Implementation(true);
+		}
+		if (this->ActorHasTag(TEXT("Watermelon"))) {
+			UE_LOG(LogTemp, Warning, TEXT("This actor has the Watermelon tag."));
+			SpawnNextPlant_Implementation(watermelonPlantID);
+			GetDamage_Implementation(true);
+		}
 	}
 }
 
@@ -81,14 +91,24 @@ void AJS_FirstRicePlant::SpawnNextPlant_Implementation(int32 index)
 		PlantClassToSpawn = SpawnSecondRicePlant;
 		UE_LOG(LogTemp, Warning, TEXT("id : 11210 SecondRicePlant spawn"));
 		break;
-	case 11214:
-		PlantClassToSpawn = SpawnSecondPumpkinPlant;
-		UE_LOG(LogTemp, Warning, TEXT("id : 11214 SecondPumpkinPlant spawn"));
+	case 11211:
+		PlantClassToSpawn = SpawnSecondWatermelonPlant;
+		UE_LOG(LogTemp, Warning, TEXT("id : 11211 SecondWatermelonPlant spawn"));
+		break;
+	case 11212:
+		PlantClassToSpawn = SpawnSecondStrawberryPlant;
+		UE_LOG(LogTemp, Warning, TEXT("id : 11212 SecondStrawberryPlant spawn"));
 		break;
 	case 11213:
 		PlantClassToSpawn = SpawnSecondCarrotPlant;
 		UE_LOG(LogTemp, Warning, TEXT("id : 11213 SecondCarrotPlant spawn"));
 		break;
+	case 11214:
+		PlantClassToSpawn = SpawnSecondPumpkinPlant;
+		UE_LOG(LogTemp, Warning, TEXT("id : 11214 SecondPumpkinPlant spawn"));
+		break;
+	
+	
 	default:
 		break;
 	}
