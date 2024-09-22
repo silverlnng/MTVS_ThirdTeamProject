@@ -53,6 +53,10 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class AYJPlayerController* pc;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class AAJH_Player* player;
+	
 	UFUNCTION()
 	void ReadCSV();
 	

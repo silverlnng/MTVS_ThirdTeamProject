@@ -10,6 +10,7 @@
 #include "YJPlayerController.h"
 #include "Components/BoxComponent.h"
 #include "Components/HorizontalBox.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "MTVSThirdProject/TP_ThirdPerson/TP_ThirdPersonCharacter.h"
 
 // Sets default values
@@ -72,6 +73,7 @@ void ANPCCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 void ANPCCharacter::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	player->EnableInput(pc);
 	pc->SetInputMode(FInputModeGameOnly());
 	pc->SetShowMouseCursor(false);
 	NPC_UI->SetVisibility(ESlateVisibility::Hidden);
@@ -82,11 +84,12 @@ void ANPCCharacter::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// OtherActor 가 플레이어 일때 그 플레이어의 로컬에게만
-	//AAJH_Player* player = Cast<AAJH_Player>(OtherActor);
-	ATP_ThirdPersonCharacter* player = Cast<ATP_ThirdPersonCharacter>(OtherActor);
+	player = Cast<AAJH_Player>(OtherActor);
+	//ATP_ThirdPersonCharacter* player = Cast<ATP_ThirdPersonCharacter>(OtherActor);
 	if(player && player->IsLocallyControlled())
 	{
 		pc = player->GetController<AYJPlayerController>();
+		
 		if (pc)
 		{
 			MyHUD = pc->GetHUD<AYJHUD>();
@@ -100,6 +103,7 @@ void ANPCCharacter::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
 					NPC_UI->curCount = 0;
 				}
 			}
+			player->DisableInput(pc);
 			pc->SetInputMode(FInputModeUIOnly());
 			pc->SetShowMouseCursor(true);
 		}
