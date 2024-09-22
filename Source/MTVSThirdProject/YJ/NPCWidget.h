@@ -20,6 +20,8 @@ public:
 	virtual void NativeConstruct() override;
 
 	FReadCSV ReadCSVDele;
+	UPROPERTY(VisibleAnywhere)
+	class AYJPlayerController* YJPC;
 	
 	UPROPERTY(VisibleAnywhere)
 	int32 curCount =0;
@@ -32,6 +34,16 @@ public:
 	
 	UPROPERTY(meta=(BindWidget))
 	class UTextBlock* TextLog;
+
+	UPROPERTY(meta=(BindWidget))
+	class UHorizontalBox* YesNoBox;
+
+	UPROPERTY(meta=(BindWidget))
+	class UButton* Btn_Yes;
+
+	UPROPERTY(meta=(BindWidget))
+	class UButton* Btn_No;
+	
 	
 	UFUNCTION()
 	void SetTextLog(FString str);
@@ -40,5 +52,10 @@ public:
 	void OnClickbackButton();
 	UFUNCTION()
 	void OnClickfrontButton();
+
+	UFUNCTION()
+	void OnClickYesBtn();
+	UFUNCTION()
+	void OnClickNoBtn();
 	
 };

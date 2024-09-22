@@ -7,7 +7,9 @@
 #include "MovieSceneSequenceID.h"
 #include "NPCWidget.h"
 #include "YJHUD.h"
+#include "YJPlayerController.h"
 #include "Components/BoxComponent.h"
+#include "Components/HorizontalBox.h"
 #include "MTVSThirdProject/TP_ThirdPerson/TP_ThirdPersonCharacter.h"
 
 // Sets default values
@@ -24,7 +26,7 @@ void ANPCCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	BoxComp->OnComponentBeginOverlap.AddDynamic(this,&ANPCCharacter::OnBoxBeginOverlap);
-
+	BoxComp->OnComponentEndOverlap.AddDynamic(this,&ANPCCharacter::OnBoxEndOverlap);
 	auto* pc= GetWorld()->GetFirstPlayerController();
 	
 	if (pc)
@@ -67,18 +69,25 @@ void ANPCCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 }
 
+void ANPCCharacter::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	
+}
+
 void ANPCCharacter::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                      UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// OtherActor 가 플레이어 일때 그 플레이어의 로컬에게만
 	//AAJH_Player* player = Cast<AAJH_Player>(OtherActor);
 	ATP_ThirdPersonCharacter* player = Cast<ATP_ThirdPersonCharacter>(OtherActor);
 	if(player && player->IsLocallyControlled())
 	{
-		auto* pc = player->GetController<APlayerController>();
+		auto* pc = player->GetController<AYJPlayerController>();
 		if (pc)
 		{
 			MyHUD = pc->GetHUD<AYJHUD>();
+			pc->CurNPC = this;
 			if (MyHUD)
 			{
 				if (MyHUD->NPCUI)
@@ -134,7 +143,11 @@ void ANPCCharacter::MakeEachCSVLines(int32 num)
 void ANPCCharacter::ReadEachLinesNum(int32 num)
 {
 	// 이때 num 이 EachCSVLines 보다 크면 x => 수락,거절 ui
-	if(num>=EachCSVLines.Num()){return;}
+	if(num>=EachCSVLines.Num())
+	{
+		NPC_UI->YesNoBox->SetVisibility(ESlateVisibility::Visible);
+		return;
+	}
 	FString str = EachCSVLines[num];
 	//이걸 ui 에 나오게 해야함
 	NPC_UI->SetTextLog(str);
