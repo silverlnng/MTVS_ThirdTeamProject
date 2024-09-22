@@ -12,8 +12,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/TA/Fantastic_Village_Pack/maps/AlphaMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/TA/Fantastic_Village_Pack/maps/AlphaMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJHUD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJHUD.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

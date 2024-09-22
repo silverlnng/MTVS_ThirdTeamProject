@@ -9,12 +9,17 @@
 void AYJHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	NPCUI =CreateWidget<UNPCWidget>(GetWorld(),NPCWidgetFactory);
-	
-	if(NPCUI)
+
+	if(GetOwningPlayerController()->IsLocalController())
 	{
-		NPCUI->AddToViewport();
-		NPCUI->SetVisibility(ESlateVisibility::Hidden);
+		NPCUI =CreateWidget<UNPCWidget>(GetWorld(),NPCWidgetFactory);
+		
+		if(NPCUI)
+		{
+			NPCUI->AddToViewport();
+			NPCUI->SetVisibility(ESlateVisibility::Hidden);
+		}
 	}
+	
+	
 }
