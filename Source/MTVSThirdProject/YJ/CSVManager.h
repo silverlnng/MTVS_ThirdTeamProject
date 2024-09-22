@@ -10,11 +10,34 @@
  * 
  */
 UCLASS()
-class MTVSTHIRDPROJECT_API UCSVManager : public UBlueprintFunctionLibrary
+class MTVSTHIRDPROJECT_API ACSVManager : public AActor
 {
 	GENERATED_BODY()
 
+public:
+	virtual void BeginPlay() override;
+	
 	UFUNCTION(BlueprintCallable,category="CSV",meta=(Keywords="Save"))
 	static bool SaveArrayText(FString SaveDirectory,FString fileName,TArray<FString> SaveText,bool AllowOverWriting);
-	
+
+	UFUNCTION(BlueprintCallable,category="CSV",meta=(Keywords="Save"))
+	void ReadCSV();
+
+	UPROPERTY(EditDefaultsOnly)
+	class AYJHUD* MyHUD;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	class UNPCWidget* NPC_UI;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	TArray<FString> TotalCSVLines;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	TArray<FString> EachCSVLines;
+
+	UFUNCTION()
+	void CSVLinesNum(int32 num);
+
+	UFUNCTION()
+	void MakeEachCSVLines(int32 num);
 };

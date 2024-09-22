@@ -13,13 +13,13 @@
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/TestYJMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/TestYJMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/UI/WBP_HttpWidget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/UI/WBP_HttpWidget.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpActor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpWidget.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpWidget.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/JsonParseLib.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/JsonParseLib.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/JsonParseLib.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/JsonParseLib.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NPCData.csv" beforeDir="false" afterPath="$PROJECT_DIR$/NPCData.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/CSVManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/CSVManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/CSVManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/CSVManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCWidget.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,8 +38,12 @@
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Misc/CoreMiscDefines.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Misc/FileHelper.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/CoreOnline/Public/Online/CoreOnline.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/CoreUObject/Public/Templates/Casts.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/CoreUObject/Public/UObject/Object.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Components/PrimitiveComponent.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Engine/LocalPlayer.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Character.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/HUD.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/OnlineReplStructs.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Pawn.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/PlayerState.h" root0="FORCE_HIGHLIGHTING" />
@@ -54,8 +58,12 @@
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Public/Components/ComboBoxString.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Public/Components/Image.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Public/Components/TextBlock.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/UserNameWidget.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/UserNameWidget.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJHUD.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJHUD.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -537,6 +545,11 @@
       <workItem from="1726131144815" duration="3789000" />
       <workItem from="1726210005337" duration="3533000" />
       <workItem from="1726216416475" duration="3729000" />
+      <workItem from="1726222011993" duration="298000" />
+      <workItem from="1726807986755" duration="688000" />
+      <workItem from="1726808707263" duration="12685000" />
+      <workItem from="1726834007431" duration="246000" />
+      <workItem from="1726834269860" duration="914000" />
     </task>
     <servers />
   </component>

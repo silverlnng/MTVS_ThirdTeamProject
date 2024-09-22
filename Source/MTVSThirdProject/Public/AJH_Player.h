@@ -163,6 +163,20 @@ public:
 	void OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	void OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UFUNCTION(Server, Reliable)
+	void ServerBeginOverlap(AActor* OtherActor, bool bIsBeginOverlap);
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastBeginOverlap(AActor* OtherActor, bool bIsBeginOverlap);
+	UFUNCTION(Server, Reliable)
+	void ServerEndOverlap(AActor* OtherActor, bool bIsBeginOverlap);
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastEndOverlap(AActor* OtherActor, bool bIsBeginOverlap);
+
+	/************************
+			애니메이션
+	*************************/
+	UPROPERTY()
+	class UAJH_PlayerAnimInstance* anim;
 
 	/************************************************
 			UI 정보 할당
