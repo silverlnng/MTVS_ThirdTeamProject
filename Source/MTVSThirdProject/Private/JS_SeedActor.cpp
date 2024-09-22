@@ -1,10 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+Ôªø// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JS_SeedActor.h"
 #include "JS_FirstRicePlant.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AJS_SeedActor::AJS_SeedActor()
@@ -21,6 +22,22 @@ AJS_SeedActor::AJS_SeedActor()
 	seedMeshComp->SetupAttachment(boxComp);
 	seedMeshComp->SetRelativeScale3D(FVector(1, 1, 0.1f));
 	seedMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Ignore);
+
+	bReplicates = true;
+}
+
+void AJS_SeedActor::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	DOREPLIFETIME (AJS_SeedActor , PlantClassToSpawn);
+	DOREPLIFETIME (AJS_SeedActor , maxHP);
+	DOREPLIFETIME (AJS_SeedActor , curHP);
+	DOREPLIFETIME (AJS_SeedActor , checkDeltaTime);
+	DOREPLIFETIME (AJS_SeedActor , growTime);
+	DOREPLIFETIME (AJS_SeedActor , planting_Wheat_SeedCount);
+	DOREPLIFETIME (AJS_SeedActor , planting_Pumpkin_SeedCount);
+	DOREPLIFETIME (AJS_SeedActor , planting_Carrot_SeedCount);
+	DOREPLIFETIME (AJS_SeedActor , planting_Strawberry_SeedCount);
+	DOREPLIFETIME (AJS_SeedActor , planting_Watermelon_SeedCount);
 }
 
 // Called when the game starts or when spawned
@@ -28,6 +45,10 @@ void AJS_SeedActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	APlayerController* playerController = GetWorld()->GetFirstPlayerController();
+	if ( playerController ) {
+		SetOwner(playerController);
+	}
 }
 
 // Called every frame
@@ -37,30 +58,35 @@ void AJS_SeedActor::Tick(float DeltaTime)
 
 	checkDeltaTime += DeltaTime;
 
-	if (checkDeltaTime >= growTime) {
-		//ªÛ»£¿€øÎ¿∫ «— π¯∏∏
+	if (HasAuthority() && checkDeltaTime >= growTime) {
+		//ÏÉÅÌò∏ÏûëÏö©ÏùÄ Ìïú Î≤àÎßå
 		if (this->ActorHasTag(TEXT("Wheat"))) {
-			//ææ∏¶ ∆ƒ±´«œ∞Ì ∫≠ ¿€π∞∑Œ Ω∫∆˘
+			//Ïî®Î•º ÌååÍ¥¥ÌïòÍ≥† Î≤º ÏûëÎ¨ºÎ°ú Ïä§Ìè∞
+			if( planting_Wheat_SeedCount < 5) planting_Wheat_SeedCount++;
 			UE_LOG(LogTemp, Warning, TEXT("This actor has the Wheat tag."));
 			SpawnNextPlant_Implementation(riceID);
 			GetDamage_Implementation(true);
 		}
 		if(this->ActorHasTag(TEXT("PumpKin"))) {
+			if ( planting_Pumpkin_SeedCount < 5 ) planting_Pumpkin_SeedCount++;
 			UE_LOG(LogTemp, Warning, TEXT("This actor has the PumpKin tag."));
 			SpawnNextPlant_Implementation(pumpKinID);
 			GetDamage_Implementation(true);
 		}
 		if (this->ActorHasTag(TEXT("Carrot"))) {
+			if ( planting_Carrot_SeedCount < 5 ) planting_Carrot_SeedCount++;
 			UE_LOG(LogTemp, Warning, TEXT("This actor has the Carrot tag."));
 			SpawnNextPlant_Implementation(carrotID);
 			GetDamage_Implementation(true);
 		}
 		if (this->ActorHasTag(TEXT("Strawberry"))) {
+			if ( planting_Strawberry_SeedCount < 5 ) planting_Strawberry_SeedCount++;
 			UE_LOG(LogTemp, Warning, TEXT("This actor has the Strawberry tag."));
 			SpawnNextPlant_Implementation(strawberryID);
 			GetDamage_Implementation(true);
 		}
 		if (this->ActorHasTag(TEXT("Watermelon"))) {
+			if ( planting_Watermelon_SeedCount < 5 ) planting_Watermelon_SeedCount++;
 			UE_LOG(LogTemp, Warning, TEXT("This actor has the Watermelon tag."));
 			SpawnNextPlant_Implementation(watermelonID);
 			GetDamage_Implementation(true);
@@ -70,59 +96,102 @@ void AJS_SeedActor::Tick(float DeltaTime)
 
 void AJS_SeedActor::GetDamage_Implementation(bool damage)
 {
-	if(damage) SetCurHP_Implementation(curHP - 1);
+	Server_GetDamageRPC(damage);
 }
 
 void AJS_SeedActor::SetCurHP_Implementation(float amount)
 {
-	if (amount <= 0) {
-		Death_Implementation();
-	}
-	else curHP = amount;
+	Server_SetCurHPRPC(amount);
 }
 
 void AJS_SeedActor::SpawnNextPlant_Implementation(int32 index)
 {
-	/*if (!SpawnFirstRicePlnat) SpawnFirstRicePlnat = AJS_FirstRicePlant::StaticClass();*/
-	switch (index)
-	{
-	case 11010:
-		PlantClassToSpawn = SpawnFirstRicePlant;
-		UE_LOG(LogTemp, Warning, TEXT("id : 11110 firstRicePlant spawn"));
-		break;
-	case 11011:
-		PlantClassToSpawn = SpawnFirstWatermelonPlant;
-		UE_LOG(LogTemp, Warning, TEXT("id : 11011 firstRicePlant spawn"));
-		break;
-	case 11012:
-		PlantClassToSpawn = SpawnFirstStrawberryPlant;
-		UE_LOG(LogTemp, Warning, TEXT("id : 11012 firstRicePlant spawn"));
-		break;
-	case 11013:
-		PlantClassToSpawn = SpawnFirstCarrotPlant;
-		UE_LOG(LogTemp, Warning, TEXT("id : 11013 firstRicePlant spawn"));
-		break;
-	case 11014:
-		PlantClassToSpawn = SpawnFirstPumpkinPlant;
-		UE_LOG(LogTemp, Warning, TEXT("id : 11014 firstRicePlant spawn"));
-		break;
-	default:
-		break;
-	}
-
-	if (PlantClassToSpawn) {
-		//º±≈√µ» ∫Ì∑Á«¡∏∞∆Æ ≈¨∑°Ω∫∑Œ æ◊≈Õ Ω∫∆˘
-		AJS_FirstRicePlant* SpawnPlant = GetWorld()->SpawnActor<AJS_FirstRicePlant>(PlantClassToSpawn, GetActorLocation(), FRotator::ZeroRotator);
-		if (SpawnPlant) {
-			SpawnPlant;
-		}
-		else UE_LOG(LogTemp, Warning, TEXT("Failed to spawn AJS_FirstRicePlant"));
-	}
-	
+	if (HasAuthority()) Server_SpawnNextPlantRPC(index);
 }
 
 void AJS_SeedActor::Death_Implementation()
 {
+	Server_DeathRPC();
+}
+
+// GetDamageRPC ------------------------------------------------------------------
+void AJS_SeedActor::Server_GetDamageRPC_Implementation(bool damage)
+{
+	Multicast_GetDamageRPC(damage);
+}
+void AJS_SeedActor::Multicast_GetDamageRPC_Implementation(bool damage)
+{
+	if ( damage ) SetCurHP_Implementation(curHP - 1);
+}
+// GetDamageRPC ------------------------------------------------------------------
+
+// SetCurHPRPC ------------------------------------------------------------------
+void AJS_SeedActor::Server_SetCurHPRPC_Implementation(float amount)
+{
+	Multicast_SetCurHPRPC(amount);
+}
+void AJS_SeedActor::Multicast_SetCurHPRPC_Implementation(float amount)
+{
+	if ( amount <= 0 ) Death_Implementation();
+	else curHP = amount;
+}
+// SetCurHPRPC ------------------------------------------------------------------
+
+// SpawnNextPlantRPC ------------------------------------------------------------------
+void AJS_SeedActor::Server_SpawnNextPlantRPC_Implementation(int32 index)
+{
+	if(HasAuthority()) Multicast_SpawnNextPlantRPC(index);
+}
+void AJS_SeedActor::Multicast_SpawnNextPlantRPC_Implementation(int32 index)
+{
+	if ( HasAuthority() ) {
+		switch ( index )
+		{
+		case 11010:
+			PlantClassToSpawn = SpawnFirstRicePlant;
+			UE_LOG(LogTemp , Warning , TEXT("id : 11110 firstRicePlant spawn"));
+			break;
+		case 11011:
+			PlantClassToSpawn = SpawnFirstWatermelonPlant;
+			UE_LOG(LogTemp , Warning , TEXT("id : 11011 firstRicePlant spawn"));
+			break;
+		case 11012:
+			PlantClassToSpawn = SpawnFirstStrawberryPlant;
+			UE_LOG(LogTemp , Warning , TEXT("id : 11012 firstRicePlant spawn"));
+			break;
+		case 11013:
+			PlantClassToSpawn = SpawnFirstCarrotPlant;
+			UE_LOG(LogTemp , Warning , TEXT("id : 11013 firstRicePlant spawn"));
+			break;
+		case 11014:
+			PlantClassToSpawn = SpawnFirstPumpkinPlant;
+			UE_LOG(LogTemp , Warning , TEXT("id : 11014 firstRicePlant spawn"));
+			break;
+		default:
+			break;
+		}
+
+		if ( PlantClassToSpawn ) {
+			//ÏÑ†ÌÉùÎêú Î∏îÎ£®ÌîÑÎ¶∞Ìä∏ ÌÅ¥ÎûòÏä§Î°ú Ïï°ÌÑ∞ Ïä§Ìè∞
+			AJS_FirstRicePlant* SpawnPlant = GetWorld()->SpawnActor<AJS_FirstRicePlant>(PlantClassToSpawn , GetActorLocation() , FRotator::ZeroRotator);
+			if ( SpawnPlant ) {
+				SpawnPlant;
+			}
+			else UE_LOG(LogTemp , Warning , TEXT("Failed to spawn AJS_FirstRicePlant"));
+		}
+	}
+}
+// SpawnNextPlantRPC ------------------------------------------------------------------
+
+// DeathRPC ------------------------------------------------------------------
+void AJS_SeedActor::Server_DeathRPC_Implementation()
+{
+	Multicast_DeathRPC();
+}
+
+void AJS_SeedActor::Multicast_DeathRPC_Implementation()
+{
 	this->Destroy();
 }
+// DeathRPC ------------------------------------------------------------------
 

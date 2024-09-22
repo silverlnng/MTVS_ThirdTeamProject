@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+Ôªø// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -24,6 +24,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* boxComp;
 	UPROPERTY(EditAnywhere)
@@ -32,7 +34,7 @@ public:
 
 	AJS_LandTileActor* tileActor;
 
-	//≥Û±‚±∏ æ∆¿Ã≈€ π¯»£
+	//ÎÜçÍ∏∞Íµ¨ ÏïÑÏù¥ÌÖú Î≤àÌò∏
 	int32 hoe = 95001;
 	int32 pick = 95002;
 	int32 sickle = 65003;
@@ -40,24 +42,41 @@ public:
 	int32 pail = 95005;
 	int32 fishing_Rod = 95006;
 
-	//π∞ √§øÏ±‚
+	//Î¨º Ï±ÑÏö∞Í∏∞
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Pail")
 	int32 haveWater = 0;
 
-	//≥¨Ω√
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fishing")
+	//ÎÇöÏãú
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Fishing")
 	float currentTime = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fishing")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Fishing")
 	int32 fishingCount = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fishing")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Fishing")
 	int32 jewelCount = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fishing")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Fishing")
 	int32 fishCount = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fishing")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Fishing")
 	int32 trashCount = 0;
 
 	void StartFishing();
 	void GetHaveWater();
+
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	
+	/*UFUNCTION(Server, Reliable)
+	void Server_StartFishing();
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_StartFishing();
+
+	UFUNCTION(Server, Reliable)
+	void Server_GetHaveWater();
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_GetHaveWater();
+
+	UFUNCTION(Server, Reliable)
+	void Server_OverlapBegin(AActor* OtherActor);
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_OverlapBegin(AActor* OtherActor);*/
+
 };

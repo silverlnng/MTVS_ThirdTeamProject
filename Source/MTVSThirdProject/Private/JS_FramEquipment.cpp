@@ -1,10 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JS_FramEquipment.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "JS_ObstacleActor.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AJS_FramEquipment::AJS_FramEquipment()
@@ -21,12 +22,32 @@ AJS_FramEquipment::AJS_FramEquipment()
 	framEquipmentComp->SetupAttachment(boxComp);
 	framEquipmentComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Ignore);
 
+	bReplicates = true;
+}
+
+void AJS_FramEquipment::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//ë³€ìˆ˜ì— replicatedë¥¼ ì‚¬ìš©í•œë‹¤ë©´ ë“±ë¡í•´ì•¼í•¨.
+	DOREPLIFETIME (AJS_FramEquipment, haveWater);
+	DOREPLIFETIME (AJS_FramEquipment, currentTime);
+	DOREPLIFETIME (AJS_FramEquipment, fishingCount);
+	DOREPLIFETIME (AJS_FramEquipment, jewelCount);
+	DOREPLIFETIME (AJS_FramEquipment, fishCount);
+	DOREPLIFETIME (AJS_FramEquipment, trashCount);
 }
 
 // Called when the game starts or when spawned
 void AJS_FramEquipment::BeginPlay()
 {
 	Super::BeginPlay();
+
+	/*APlayerController* playerController = GetWorld()->GetFirstPlayerController();
+	if ( playerController ) {
+		SetOwner(playerController);
+	}*/
+
 	boxComp->OnComponentBeginOverlap.AddDynamic(this, &AJS_FramEquipment::OnOverlapBegin);
 }
 
@@ -39,14 +60,14 @@ void AJS_FramEquipment::Tick(float DeltaTime)
 
 void AJS_FramEquipment::StartFishing()
 {
-	//³¬½Ã È½¼ö Ã¼Å©
-	if(fishingCount <= 3) fishingCount++;
-	//15~25ÃÊ»çÀÌ¸¦ ·£´ıÀ¸·Î ¾ò¾î¿È
+	//ë‚šì‹œ íšŸìˆ˜ ì²´í¬
+	if(fishingCount < 3) fishingCount++;
+	//15~25ì´ˆì‚¬ì´ë¥¼ ëœë¤ìœ¼ë¡œ ì–»ì–´ì˜´
 	int32 randomTime = FMath::RandRange(15, 25);
 	if (currentTime > 25) {
 		currentTime = 0;
 	}
-	//currentTimeÀÌ ·£´ı¼ıÀÚ¿Í °°¾ÆÁö¸é 3°¡Áö Áß ÇÏ³ª È¹µæ
+	//currentTimeì´ ëœë¤ìˆ«ìì™€ ê°™ì•„ì§€ë©´ 3ê°€ì§€ ì¤‘ í•˜ë‚˜ íšë“
 	if (randomTime == currentTime) {
 		int32 randomCount = FMath::RandRange(0, 99);
 		if(randomCount < 5 && jewelCount < 1) jewelCount++;
@@ -57,29 +78,32 @@ void AJS_FramEquipment::StartFishing()
 
 void AJS_FramEquipment::GetHaveWater()
 {
-	if (haveWater >= 0 && haveWater < 10) haveWater = 10;
+	if (haveWater >= 0 && haveWater < 10){
+		haveWater = 10;
+		UE_LOG(LogTemp, Warning, TEXT("haveWater = %d"), haveWater);
+	}
 }
 
 void AJS_FramEquipment::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//±ªÀÌÁú
+	//ê´­ì´ì§ˆ
 	if (OtherActor && OtherActor->ActorHasTag(TEXT("LandTile")) && this->ActorHasTag(TEXT("Hoe"))){
-		//±ªÀÌÁú ÇÒ¶§ ºÒ°ª ¹Ş¾Æ¼­ ¶¥ ÀÛ¹° ½ÉÀ» ¼ö ÀÖ°Ô Ã³¸®
+		//ê´­ì´ì§ˆ í• ë•Œ ë¶ˆê°’ ë°›ì•„ì„œ ë•… ì‘ë¬¼ ì‹¬ì„ ìˆ˜ ìˆê²Œ ì²˜ë¦¬
 		tileActor->canFraming = true;
 	}
-	//¾çµ¿ÀÌ ¹°Ã¤¿ì±â
+	//ì–‘ë™ì´ ë¬¼ì±„ìš°ê¸°
 	if (OtherActor && OtherActor->ActorHasTag(TEXT("Well")) && this->ActorHasTag(TEXT("Pail"))) {
 		GetHaveWater();
 	}
-	//³¬½Ã
+	//ë‚šì‹œ
 	if (OtherActor && OtherActor->ActorHasTag(TEXT("Fishing_Spot")) && this->ActorHasTag(TEXT("Fishing_Rod"))) {
 		StartFishing();
 	}
-	// Ãæµ¹ÇÑ ¾×ÅÍ°¡ ³ª¹«, µ¹, Ç® ÅÂ±×¸¦ °¡Áø Àå¾Ö¹°ÀÎ °æ¿ì
+	// ì¶©ëŒí•œ ì•¡í„°ê°€ ë‚˜ë¬´, ëŒ, í’€ íƒœê·¸ë¥¼ ê°€ì§„ ì¥ì• ë¬¼ì¸ ê²½ìš°
 	if (OtherActor && (OtherActor->ActorHasTag(TEXT("Tree")) || OtherActor->ActorHasTag(TEXT("Rock")) || OtherActor->ActorHasTag(TEXT("Gress")))) {
 		AJS_ObstacleActor* obstacleActor = Cast<AJS_ObstacleActor>(OtherActor);
 		if (obstacleActor) {
-			// Àåºñ°¡ Axe, Pick, Sickle Áß ÇÏ³ªÀÏ ¶§ Ã³¸®
+			// ì¥ë¹„ê°€ Axe, Pick, Sickle ì¤‘ í•˜ë‚˜ì¼ ë•Œ ì²˜ë¦¬
 			if (this->ActorHasTag(TEXT("Axe")) && OtherActor->ActorHasTag(TEXT("Tree"))) {
 				obstacleActor->GetDamage_Implementation(true);
 			}
@@ -93,4 +117,3 @@ void AJS_FramEquipment::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 		}
 	}
 }
-

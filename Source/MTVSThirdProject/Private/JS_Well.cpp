@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JS_Well.h"
@@ -18,6 +18,8 @@ AJS_Well::AJS_Well()
 	staticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("framEquipment"));
 	staticMeshComp->SetupAttachment(boxComp);
 	staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Ignore);
+
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned

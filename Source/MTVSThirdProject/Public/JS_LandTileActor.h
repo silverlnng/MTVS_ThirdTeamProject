@@ -25,6 +25,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* boxComp;
 	UPROPERTY(EditAnywhere)
@@ -42,8 +45,10 @@ public:
 	TSubclassOf<AJS_SeedActor> strawberrySeedFactroy;
 
 	//물에 타일이 젖어있는지 확인하는 변수
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite)
 	bool bIsWet = false;
 	//괭이질을 했는지 확인하는 변수
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite)
 	bool canFraming = false;
 	//땅이 건조해지는 걸 체크하는 변수
 	float checkDeltaTime = 0;
@@ -55,8 +60,19 @@ public:
 
 	FVector2D GetGridCoordinates() const { return GridCoordinates;} // 타일의 그리드 좌표를 반환하는 함수
 	void SetGridCoordinates(FVector2D NewCoordinates) { GridCoordinates = NewCoordinates;} // 타일의 좌표를 설정하는 함수
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
 	void SpawnCrops(int32 id);
+
+	UFUNCTION(Server, Reliable)
+	void Server_SpawnCrops(int32 id);
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_SpawnCrops(int32 id);
+
+	UFUNCTION(Server, Reliable)
+	void Server_EndPlay(const EEndPlayReason::Type EndPlayReason);
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_EndPlay(const EEndPlayReason::Type EndPlayReason);
+
 };

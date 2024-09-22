@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JS_Fishing_Spot.h"
@@ -14,6 +14,8 @@ AJS_Fishing_Spot::AJS_Fishing_Spot()
 	boxComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	boxComp->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
 	boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Overlap);
+
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned
