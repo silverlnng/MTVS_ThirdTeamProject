@@ -72,7 +72,8 @@ void ANPCCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 void ANPCCharacter::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	
+	NPC_UI->SetVisibility(ESlateVisibility::Hidden);
+	NPC_UI->YesNoBox->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void ANPCCharacter::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -92,8 +93,9 @@ void ANPCCharacter::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
 			{
 				if (MyHUD->NPCUI)
 				{
-					MyHUD->NPCUI->SetVisibility(ESlateVisibility::Visible);
-					MyHUD->NPCUI->curCount = 0;
+					NPC_UI=MyHUD->NPCUI;
+					NPC_UI->SetVisibility(ESlateVisibility::Visible);
+					NPC_UI->curCount = 0;
 				}
 			}
 		}
