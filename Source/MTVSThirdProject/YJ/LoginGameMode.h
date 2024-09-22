@@ -15,7 +15,10 @@ class MTVSTHIRDPROJECT_API ALoginGameMode : public AGameMode
 	GENERATED_BODY()
 public:	
 	virtual void BeginPlay() override;
-	UPROPERTY(EditAnywhere,Category="Mysettings");
-	TSubclassOf<class UUserWidget> loginWidget;	
 	
+	UPROPERTY(EditAnywhere,Category="Mysettings")
+	TSubclassOf<class UUserWidget> loginWidget;	
+
+	UPROPERTY(EditDefaultsOnly, Category="Mysettings")
+	class ULoginFirstWidget* loginUI;
 };

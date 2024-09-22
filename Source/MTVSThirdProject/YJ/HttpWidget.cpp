@@ -5,6 +5,7 @@
 
 #include "HttpActor.h"
 #include "Components/Button.h"
+#include "Components/Image.h"
 #include "Components/TextBlock.h"
 
 void UHttpWidget::NativeConstruct()
@@ -13,6 +14,7 @@ void UHttpWidget::NativeConstruct()
 	Btn_JsonRequest->OnClicked.AddDynamic(this,&UHttpWidget::OnMyClickSend);
 	Btn_JsonPost->OnClicked.AddDynamic(this,&UHttpWidget::OnMyClickPost);
 	Btn_GetWebImage->OnClicked.AddDynamic(this,&UHttpWidget::OnMyClickGetWebImage);
+	
 }
 
 void UHttpWidget::OnMyClickSend()
@@ -58,4 +60,14 @@ void UHttpWidget::SetTextLogParse(FString logParse)
 void UHttpWidget::SetHttpActor(class AHttpActor* actor)
 {
 	httpActor = actor;	
+}
+
+void UHttpWidget::SetWeatherImage(FString str)
+{
+	UTexture2D* img=WeatherData[str];
+	if(img==nullptr){return;}
+	if (img)
+	{
+		Img_WeatherImage->SetBrushFromTexture(img);
+	}
 }

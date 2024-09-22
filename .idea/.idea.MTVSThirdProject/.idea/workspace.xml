@@ -12,33 +12,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/UserNameWidget.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/UserNameWidget.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/BP/BP_MainGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/BP/BP_MainGameMode.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/BP/BP_TestYJ_GM.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/BP/BP_TestYJ_GM.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/MainGameMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/MainGameMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/TestYJMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/TestYJMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/UI/WBP_UserName.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/UI/WBP_UserName.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_Player.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_Player.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/AJH_FarmTile.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/AJH_GameMode.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/AJH_JsonParseLib.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/AJH_Player.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/AJH_PlayerController.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/AJH_WeatherWidget.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/JS_DefaultActor.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/JS_DefaultPlant.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/JS_FirstRicePlant.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/JS_Gress.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/JS_LandGridActor.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/JS_LandTileActor.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/JS_Rock.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/JS_SecondRicePlant.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/JS_SeedActor.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/JS_Tree.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/LoginFirstWidget.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,20 +27,41 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Containers/Array.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Math/Matrix.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Math/Matrix.inl" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Misc/CoreMiscDefines.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Misc/FileHelper.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/CoreOnline/Public/Online/CoreOnline.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/CoreUObject/Public/Templates/Casts.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/CoreUObject/Public/UObject/Object.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Components/PrimitiveComponent.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Engine/LocalPlayer.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Character.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/HUD.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/OnlineReplStructs.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Pawn.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/PlayerState.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Kismet/BlueprintFunctionLibrary.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Kismet/KismetMathLibrary.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Kismet/KismetMathLibrary.inl" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/Components/PawnMovementComponent.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/KismetSystemLibrary.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/LocalPlayer.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/Pawn.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Public/Blueprint/UserWidget.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Public/Components/ComboBoxString.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Public/Components/Image.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Public/Components/TextBlock.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/UserNameWidget.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/UserNameWidget.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJHUD.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJHUD.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJPlayerController.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJPlayerController.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -79,7 +75,7 @@
   &quot;keyToString&quot;: {
     &quot;C++ Project.MTVSThirdProject.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/YJ&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/Socket&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -541,6 +537,19 @@
       <workItem from="1725515906240" duration="7808000" />
       <workItem from="1725524418455" duration="160000" />
       <workItem from="1725524815714" duration="2751000" />
+      <workItem from="1726052513808" duration="1260000" />
+      <workItem from="1726097638426" duration="3245000" />
+      <workItem from="1726111660113" duration="1804000" />
+      <workItem from="1726131144815" duration="3789000" />
+      <workItem from="1726210005337" duration="3533000" />
+      <workItem from="1726216416475" duration="3729000" />
+      <workItem from="1726222011993" duration="298000" />
+      <workItem from="1726807986755" duration="688000" />
+      <workItem from="1726808707263" duration="12685000" />
+      <workItem from="1726834007431" duration="246000" />
+      <workItem from="1726834269860" duration="914000" />
+      <workItem from="1726893227377" duration="5182000" />
+      <workItem from="1726981597229" duration="4442000" />
     </task>
     <servers />
   </component>

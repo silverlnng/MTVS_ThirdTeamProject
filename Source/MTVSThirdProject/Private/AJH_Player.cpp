@@ -6,23 +6,23 @@
 #include "../../../../Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputComponent.h"
 #include "../../../../Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputSubsystems.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
 #include "HttpModule.h"
 #include "AJH_WeatherWidget.h"
-#include "JS_Tree.h"
 #include "AJH_JsonParseLib.h"
 #include "Net/UnrealNetwork.h"
 #include "Components/WidgetComponent.h"
 #include "MTVSThirdProject/YJ/NetWorkGameInstance.h"
 #include "MTVSThirdProject/YJ/UserNameWidget.h"
-#include "JS_Rock.h"
-#include "JS_Gress.h"
 #include "JS_Rice.h"
 #include "JS_Pumpkin.h"
 #include "JS_Carrot.h"
 #include "JS_SeedActor.h"
+#include "JS_ObstacleActor.h"
+#include "AJH_PlayerAnimInstance.h"
 
 
 // Sets default values
@@ -31,14 +31,26 @@ AAJH_Player::AAJH_Player()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
+
 	springArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	springArmComp->SetupAttachment(RootComponent);
-	springArmComp->SetRelativeLocation(FVector(-100, 0, 0));
 	springArmComp->SetRelativeRotation(FRotator(-55, 0, 0));
 	springArmComp->TargetArmLength = 650;
+	springArmComp->bUsePawnControlRotation = false;
+	// 카메라의 회전을 고정시키기 위한 설정
+	springArmComp->bInheritPitch = false;
+	springArmComp->bInheritYaw = false;
+	springArmComp->bInheritRoll = false;
 
 	cameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
-	cameraComp->SetupAttachment(springArmComp);
+	cameraComp->SetupAttachment(springArmComp, USpringArmComponent::SocketName);
+	cameraComp->bUsePawnControlRotation = false;
 
 	boxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
 	boxComp->SetupAttachment(RootComponent);
@@ -72,9 +84,8 @@ void AAJH_Player::BeginPlay()
 	boxComp->OnComponentBeginOverlap.AddDynamic(this, &AAJH_Player::OnMyBoxCompBeginOverlap);
 	boxComp->OnComponentEndOverlap.AddDynamic(this, &AAJH_Player::OnMyBoxCompEndOverlap);
 	httpWeatherUI = Cast<UAJH_WeatherWidget>(UGameplayStatics::GetActorOfClass(GetWorld(), UAJH_WeatherWidget::StaticClass()));
-	tree = Cast<AJS_Tree>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_Tree::StaticClass()));
-	rock = Cast<AJS_Rock>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_Rock::StaticClass()));
-	gress = Cast<AJS_Gress>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_Gress::StaticClass()));
+	object = Cast<AJS_ObstacleActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_ObstacleActor::StaticClass()));
+	anim = CastChecked<UAJH_PlayerAnimInstance>(GetMesh()->GetAnimInstance());
 	
 	UserNameUI = Cast<UUserNameWidget>(UserNameWidgetComp->GetWidget());
 
@@ -98,7 +109,8 @@ void AAJH_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	MouseCusorEvent();
+	//MouseCusorEvent();
+
 	
 }
 
@@ -169,25 +181,35 @@ void AAJH_Player::OnMyAction(const FInputActionValue& value)
 	if (outHit.GetComponent()->GetCollisionResponseToChannel(ECC_Visibility) == ECR_Block)
 	{
 		// Tag : Tree, Rock, Gress
-		if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Tree")) && selectedSeedType == ESeedType::None)
+		if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Tree")) && selectedSeedType == ESeedType::None && anim && anim->bAttackAnimation == false)
 		{
-			tree = Cast<AJS_Tree>(outHit.GetActor());
-			tree->GetDamage_Implementation(true);
-			int32 hp = tree->curHP;
+			// 몽타주 재생
+			anim->PlayMeleeAttackMontage();
+
+			object = Cast<AJS_ObstacleActor>(outHit.GetActor());
+			object->GetDamage_Implementation(true);
+			// hp 체크용
+			int32 hp = object->curHP;
 			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
 		}
-		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Rock")) && selectedSeedType == ESeedType::None)
+		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Rock")) && selectedSeedType == ESeedType::None && anim && anim->bAttackAnimation == false)
 		{
-			rock = Cast<AJS_Rock>(outHit.GetActor());
-			rock->GetDamage_Implementation(true);
-			int32 hp = rock->curHP;
+			// 몽타주 재생
+			anim->PlayMeleeAttackMontage();
+
+			object = Cast<AJS_ObstacleActor>(outHit.GetActor());
+			object->GetDamage_Implementation(true);
+			int32 hp = object->curHP;
 			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
 		}
-		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Gress")) && selectedSeedType == ESeedType::None)
+		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Gress")) && selectedSeedType == ESeedType::None && anim && anim->bAttackAnimation == false)
 		{
-			gress = Cast<AJS_Gress>(outHit.GetActor());
-			gress->GetDamage_Implementation(true);
-			int32 hp = gress->curHP;
+			// 몽타주 재생
+			anim->PlayMeleeAttackMontage();
+
+			object = Cast<AJS_ObstacleActor>(outHit.GetActor());
+			object->GetDamage_Implementation(true);
+			int32 hp = object->curHP;
 			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
 		}
 		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("LandTile")))
@@ -209,6 +231,12 @@ void AAJH_Player::OnMyAction(const FInputActionValue& value)
 			default:
 				break;
 			}
+		}
+		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Seed")))
+		{
+			outHit.GetActor()->GetName();
+			FString objectName = outHit.GetActor()->GetName();
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, objectName);
 		}
 	}
 
@@ -285,7 +313,7 @@ void AAJH_Player::ActionNone()
 
 void AAJH_Player::ActionRice()
 {
-	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
 	// seed->SpawnNextPlant_Implementation(0);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Rice"));
@@ -293,7 +321,7 @@ void AAJH_Player::ActionRice()
 
 void AAJH_Player::ActionPumpkin()
 {
-	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
 	// seed->SpawnNextPlant_Implementation(1);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Pumpkin"));
@@ -301,7 +329,7 @@ void AAJH_Player::ActionPumpkin()
 
 void AAJH_Player::ActionCarrot()
 {
-	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
 	// seed->SpawnNextPlant_Implementation(2);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Carrot"));
@@ -310,64 +338,144 @@ void AAJH_Player::ActionCarrot()
 void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	farmTile = Cast<AAJH_FarmTile>(OtherActor);
-	tree = Cast<AJS_Tree>(OtherActor);
-	rock = Cast<AJS_Rock>(OtherActor);
-	gress = Cast<AJS_Gress>(OtherActor);
-	if (farmTile && OtherActor->ActorHasTag(TEXT("Seed")))
+	object = Cast<AJS_ObstacleActor>(OtherActor);
+	if (HasAuthority())
 	{
-		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		
-		// 
-		ECollisionResponse Response = farmTile->boxComp->GetCollisionResponseToChannel(ECC_Visibility);
-		UE_LOG(LogTemp, Warning, TEXT("Collision response set to: %d"), Response);
-		OtherActor->GetName();
-		FString objectName = OtherActor->GetName();
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, objectName);
+		ServerBeginOverlap(OtherActor, true);
 	}
-	if(tree && OtherActor->ActorHasTag(TEXT("Tree")))
+	else
 	{
-		tree->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		tree->treeMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-	}
-	if(rock && OtherActor->ActorHasTag(TEXT("Rock")))
-	{
-		rock->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		rock->rockMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-	}
-	if(gress && OtherActor->ActorHasTag(TEXT("Gress")))
-	{
-		gress->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-		gress->gressMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		ServerBeginOverlap(OtherActor, true);
 	}
 }
 
 void AAJH_Player::OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	farmTile = Cast<AAJH_FarmTile>(OtherActor);
-	tree = Cast<AJS_Tree>(OtherActor);
-	rock = Cast<AJS_Rock>(OtherActor);
-	gress = Cast<AJS_Gress>(OtherActor);
-	if (farmTile && OtherActor->ActorHasTag(TEXT("Seed")))
+	object = Cast<AJS_ObstacleActor>(OtherActor);
+	if (HasAuthority())
 	{
-		farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
-		farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		ServerEndOverlap(OtherActor, true);
 	}
-	if (tree && OtherActor->ActorHasTag(TEXT("Tree")))
+	else
 	{
-		tree->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
-		tree->treeMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		ServerEndOverlap(OtherActor, true);
 	}
-	if (rock && OtherActor->ActorHasTag(TEXT("Rock")))
+}
+
+void AAJH_Player::ServerBeginOverlap_Implementation(AActor* OtherActor, bool bIsBeginOverlap)
+{
+	if (!OtherActor)
 	{
-		rock->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
-		rock->rockMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : null"));
+		return;
 	}
-	if (gress && OtherActor->ActorHasTag(TEXT("Gress")))
+
+	if (bIsBeginOverlap)
 	{
-		gress->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
-		gress->gressMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		MulticastBeginOverlap(OtherActor ,bIsBeginOverlap);
+		UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : Hello"));
 	}
+}
+
+void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool bIsBeginOverlap)
+{
+	if (!OtherActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("MultiBeginOverlap : null"));
+		return;
+	}
+
+	if (bIsBeginOverlap)
+	{
+		if (farmTile && OtherActor->ActorHasTag(TEXT("Seed")))
+		{
+			farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+			farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+
+			ECollisionResponse Response = farmTile->boxComp->GetCollisionResponseToChannel(ECC_Visibility);
+			UE_LOG(LogTemp, Warning, TEXT("Collision response set to: %d"), Response);
+			OtherActor->GetName();
+			FString objectName = OtherActor->GetName();
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, objectName);
+		}
+		if (object && OtherActor->ActorHasTag(TEXT("Tree")))
+		{
+			if (object->boxComp)
+			{
+				object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+			}
+			if (object->staticMeshComp)
+			{
+				object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+			}
+		}
+		if (object && OtherActor->ActorHasTag(TEXT("Rock")))
+		{
+			if(object->boxComp)
+			object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+			if(object->staticMeshComp)
+			object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		}
+		if (object && OtherActor->ActorHasTag(TEXT("Gress")))
+		{
+			if (object->boxComp)
+			object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+			if(object->staticMeshComp)
+			object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+		}
+	}
+
+	
+}
+
+void AAJH_Player::ServerEndOverlap_Implementation(AActor* OtherActor, bool bIsBeginOverlap)
+{
+	if (!OtherActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : null"));
+		return;
+	}
+
+	if (bIsBeginOverlap)
+	{
+		MulticastEndOverlap(OtherActor ,bIsBeginOverlap);
+		UE_LOG(LogTemp, Warning, TEXT("ServerEndOverlap : Bey"));
+	}
+}
+
+void AAJH_Player::MulticastEndOverlap_Implementation(AActor* OtherActor, bool bIsBeginOverlap)
+{
+	if (!OtherActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("MultiEndOverlap : null"));
+		return;
+	}
+	if (bIsBeginOverlap)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("MultiEndOverlap : Bye"));
+		if (farmTile && OtherActor->ActorHasTag(TEXT("Seed")))
+		{
+			farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+			farmTile->bodyMesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		}
+		if (object && OtherActor->ActorHasTag(TEXT("Tree")))
+		{
+			object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+			object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		}
+		if (object && OtherActor->ActorHasTag(TEXT("Rock")))
+		{
+			object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+			object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		}
+		if (object && OtherActor->ActorHasTag(TEXT("Gress")))
+		{
+			object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+			object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		}
+	}
+
 }
 
 void AAJH_Player::ServerChange_Implementation(const FString& userName_, int32 meshNum_)
@@ -381,4 +489,5 @@ void AAJH_Player::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& Ou
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AAJH_Player,UserName);
 	DOREPLIFETIME(AAJH_Player,MeshNum);
+
 }

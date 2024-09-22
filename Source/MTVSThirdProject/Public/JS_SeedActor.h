@@ -48,6 +48,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Seed")
 	float growTime = 5;
 	
+	int32 riceID = 11010;
+	int32 pumpKinID = 11014;
+	int32 carrotID = 11013;
+
 
 	virtual void GetDamage_Implementation(bool damage) override;
 	virtual void SetCurHP_Implementation(float amount) override;

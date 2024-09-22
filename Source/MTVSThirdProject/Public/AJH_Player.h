@@ -56,6 +56,7 @@ public:
 			InputAction 함수 모음
 	************************************************/
 	void OnMyActionMove(const FInputActionValue& value);
+	//void OnMyActionMove(float value);
 	void OnMyActionInteration(const FInputActionValue& value);
 	void OnMyAction(const FInputActionValue& value);
 	void OnMyActionTap();
@@ -72,6 +73,14 @@ public:
 	class UBoxComponent* boxComp;
 
 	float interationSize = 400;
+
+	/************************************************
+			플레이어 스테이터스
+	************************************************/
+
+	UPROPERTY(EditDefaultsOnly)
+	float rotationSpeed = 15.0f;
+	float RotationThreshold = 2.0f;
 
 	/************************************************
 			상호작용 라인트레이스
@@ -102,11 +111,7 @@ public:
 	class AAJH_FarmTile* farmTile;
 
 	UPROPERTY(EditDefaultsOnly)
-	class AJS_Tree* tree;
-	UPROPERTY(EditDefaultsOnly)
-	class AJS_Rock* rock;
-	UPROPERTY(EditDefaultsOnly)
-	class AJS_Gress* gress;
+	class AJS_ObstacleActor* object;
 
 
 	UPROPERTY(EditDefaultsOnly)
@@ -158,6 +163,20 @@ public:
 	void OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	void OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UFUNCTION(Server, Reliable)
+	void ServerBeginOverlap(AActor* OtherActor, bool bIsBeginOverlap);
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastBeginOverlap(AActor* OtherActor, bool bIsBeginOverlap);
+	UFUNCTION(Server, Reliable)
+	void ServerEndOverlap(AActor* OtherActor, bool bIsBeginOverlap);
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastEndOverlap(AActor* OtherActor, bool bIsBeginOverlap);
+
+	/************************
+			애니메이션
+	*************************/
+	UPROPERTY()
+	class UAJH_PlayerAnimInstance* anim;
 
 	/************************************************
 			UI 정보 할당

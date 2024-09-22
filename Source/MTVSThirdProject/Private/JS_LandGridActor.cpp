@@ -42,18 +42,20 @@ void AJS_LandGridActor::Tick(float DeltaTime)
 	AActor* objectAtTile = GridManager->GetObjectAtGridCell(queryCoordinates);
 	bool checkTile = GridManager->IsCellOccupied(queryCoordinates);
 	
-	for (auto& Elem : GridManager->Grid) {
-		FGridTile& Tile = Elem.Value;
+	//그리드 배열 순회
+	for (auto& Elem : GridManager->Grid) { //Elem 각 그리드 요소 Elem.Value는 타일 정보를 가져온다(FGridTile)
+		FGridTile& Tile = Elem.Value;// Elem.Value를 참조해서 현재 타일(FGridTile)을 가져옴. Tile변수는 현재 처리 중인 타일에 대한 참조
 		
-		TArray<AActor*> OverlappingActors;
-		FindActorsOnTile(Tile.gridCoordinates, OverlappingActors);
+		TArray<AActor*> OverlappingActors; // 현재 타일과 겹치는 액터들을 저장하기 위한 배열
+		FindActorsOnTile(Tile.gridCoordinates, OverlappingActors); //타일 좌표에 해당하는 타일에 겹치는 액터들을 찾고 그 액터들을 OverlappingActors 배열에 채워 넣는다.
+		//Tile.girdCoordinates를 받아서 그 타일 위에 있는 액터들을 찾는 역할을 한다.
 		
-		for (AActor* Actor : OverlappingActors) {
-			if (!Tile.occupyingActor)
+		for (AActor* Actor : OverlappingActors) { // OverlappingActors배열을 순회하면서 해당 타일에 겹쳐 있는 모든 액터들을 하나씩 처리합니다.
+			if (!Tile.occupyingActor) // 현재 타일에 오브젝트가 할당되지 않은 경우(occupyingActor가 nullptr인 경우)만 오브젝트를 할당
 			{
-				Tile.occupyingActor = Actor;
-				Tile.bIsOccupied = true;
-				GridManager->SetObjectAtGridCell(Tile.gridCoordinates, Actor);
+				Tile.occupyingActor = Actor; // 현재 타일에 겹쳐 있는 첫 번째 액터를 occupyingActor로 설정해서 그 타일 위를 점령한다.
+				Tile.bIsOccupied = true; // true로 만들어서 타일이 점령 되어있다는 것을 알림.
+				GridManager->SetObjectAtGridCell(Tile.gridCoordinates, Actor); // 그리드 매니저에서 현재 타일 좌표에 해당하는 그리드 셀에 액터를 할당한다. 그리드 시스템 내에서 해당 셀에 어떤 오브젝트가 배치되었는지 기록하는 역할을 한다.
 			}
 		}
 		
@@ -152,8 +154,5 @@ void AJS_LandGridActor::FindActorsOnTile(FVector2D GridCoordinates, TArray<AActo
 
 			UE_LOG(LogTemp, Warning, TEXT("Found %d overlapping actors on tile at (%f, %f)"), OutOverlappingActors.Num(), GridCoordinates.X, GridCoordinates.Y);
 		}
-		/*else {
-			UE_LOG(LogTemp, Warning, TEXT("TileActor or landTileComp is null at (%f, %f)"), GridCoordinates.X, GridCoordinates.Y);
-		}*/
 	}
 }

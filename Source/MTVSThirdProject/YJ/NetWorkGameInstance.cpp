@@ -89,7 +89,6 @@ void UNetWorkGameInstance::OnCreatedSession(FName sessionName, bool bWasSuccessf
 	//멀티플레이를 할 맵으로 이동한다. 맵의 경로 작성해주기
 	///Script/Engine.World'/Game/Maps/BattleMap.BattleMap' 에서 상대 경로 만 넣어주면 됨
 	
-	// 룸이름에 따라서 이동할 맵도 다 다르게
 	GetWorld()->ServerTravel("/Game/YJ/MainGameMap?Listen",true);
 	//지금현재 리슨서버이기때문에  ?listen 으로 설정 
 }
@@ -160,41 +159,6 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 	
 	UE_LOG(LogTemp, Warning, TEXT("Find Results: %s"), bwasSuccessful ? *FString("Success!") : *FString("Failed..."));
 	
-	/*for (int32 i = 0; i < results.Num(); i++)
-	{
-		FString foundRoomName;
-		results[i].Session.SessionSettings.Get(FName("Room Name"), foundRoomName);
-		FString foundHostName;
-		results[i].Session.SessionSettings.Get(FName("Host Name"), foundHostName);
-
-		int32 maxPlayerCount = results[i].Session.SessionSettings.NumPublicConnections;
-		int32 currentPlayerCount = maxPlayerCount - results[i].Session.NumOpenPublicConnections;
-
-		int32 pingSpeed = results[i].PingInMs;
-
-		// 로그로 확인하기
-		UE_LOG(LogTemp, Warning, TEXT("Room Name: %s\nHost Name: %s\nPlayer Count: (%d/%d)\nPing: %d ms\n\n"),
-		       *foundRoomName, *foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed);
-
-		// 델리게이트 이벤트 실행하기
-		onCreateSlot.Broadcast(foundRoomName, foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed, i);
-
-		//sessionInterface->AddOnJoinSessionCompleteDelegate_Handle
-
-		if(foundRoomName == ClickedroomName ) 
-		{
-			const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
-
-			const FOnlineSessionSearchResult* realSession = &results[i];
-
-			if (!sessionInterface.IsValid()) return;
-			sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, *realSession);
-			break;
-		}
-		// 모든 for 문을 반복해서 검색했는데 없는경우 create !! 
-	}
-	CreateMySession(ClickedroomName,ClickedhostName,ClickedplayerCount);*/
-	//onFindButtonToggle.Broadcast(true);
 }
 
 void UNetWorkGameInstance::JoinMySession(int32 roomNumber)
