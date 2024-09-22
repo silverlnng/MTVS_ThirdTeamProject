@@ -34,7 +34,7 @@ public:
 	IOnlineSessionPtr sessionInterface;
 	//세션에 관련된 모든 컨트롤을 하는 기본클래스
 	
-	void CreateMySession(FString roomName,FString hostName, int32 playerCount);		// 요청한 결과를 받기 위한 함수
+	void CreateMySession();		// 요청한 결과를 받기 위한 함수
 	void FindMySession();
 	void JoinMySession(int32 roomNumber);
 	void ExitMySession();
@@ -55,6 +55,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
 	int32 meshNum;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
+	TArray<FName> AllSessionNames;
+	void OnDestroyAllSessions();
 private:
 	FName mySessionName = FName("first Session");
 	TSharedPtr<class FOnlineSessionSearch> sessionSearch;	//OnlineSessionSearch 는 

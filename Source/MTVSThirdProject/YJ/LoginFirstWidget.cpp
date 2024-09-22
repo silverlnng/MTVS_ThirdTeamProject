@@ -7,14 +7,14 @@
 #include "Components/ComboBoxString.h"
 #include "Components/EditableText.h"
 #include "Components/HorizontalBox.h"
-#include "MTVSThirdProject/YJ/LoginWidget.h"
-#include "MTVSThirdProject/YJ/NetWorkGameInstance.h"
+#include "NetWorkGameInstance.h"
 
 void ULoginFirstWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	gi = GetGameInstance<UNetWorkGameInstance>();
 	btn_findSessions->OnClicked.AddDynamic(this, &ULoginFirstWidget::OnClickedFindSessionsButton);
+	ResetButton->OnClicked.AddDynamic(this, &ULoginFirstWidget::OnClickedResetButton);
 	ComboBoxStr_Char->OnSelectionChanged.AddDynamic(this,&ULoginFirstWidget::SelectCharacter);
 	HBox_char->SetVisibility(ESlateVisibility::Hidden);
 }
@@ -32,6 +32,16 @@ void ULoginFirstWidget::OnClickedFindSessionsButton()
 		gi->UserNickName=eText_hostName->GetText().ToString();
 		gi->FindMySession();
 	}
+}
+
+void ULoginFirstWidget::OnClickedResetButton()
+{
+	// 지금현재있는 방들 삭제 하고
+	// 내가 속해있는 세션도 나가고
+	gi->ExitMySession();
+	// 룸만들기
+	//gi->CreateMySession();
+	gi->OnDestroyAllSessions();
 }
 
 void ULoginFirstWidget::SelectCharacter(FString SelectedItem, ESelectInfo::Type SelectionType)

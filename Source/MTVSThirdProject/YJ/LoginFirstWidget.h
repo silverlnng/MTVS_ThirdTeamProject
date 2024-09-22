@@ -34,8 +34,13 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	class UNetWorkGameInstance* gi;
 
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "MySettings")
+	class UButton* ResetButton;
+	
 	UFUNCTION()
 	void OnClickedFindSessionsButton();
+	UFUNCTION()
+	void OnClickedResetButton();
 	UFUNCTION()
 	void SelectCharacter(FString SelectedItem, ESelectInfo::Type SelectionType);
 };

@@ -31,7 +31,7 @@ void ULoginWidget::OnClickedCreateButton()
 	{
 		gi->SetSessionName(eText_roomName->GetText().ToString(),eText_roomName->GetText().ToString(), eText_hostName->GetText().ToString(), 7);
 		
-		gi->CreateMySession(eText_roomName->GetText().ToString(), eText_hostName->GetText().ToString(), 7);
+		//gi->CreateMySession(eText_roomName->GetText().ToString(), eText_hostName->GetText().ToString(), 7);
 	}
 }
 

@@ -38,7 +38,7 @@ void UNetWorkGameInstance::SetSessionName(FString name,FString ClickedroomName_,
 	ClickedplayerCount =ClickedplayerCount_;
 }
 
-void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, int32 playerCount)
+void UNetWorkGameInstance::CreateMySession()
 {
 
     if (!sessionInterface.IsValid())
@@ -63,19 +63,19 @@ void UNetWorkGameInstance::CreateMySession(FString roomName, FString hostName, i
 	SessionSettings->bUsesPresence =true;
 	SessionSettings->bShouldAdvertise = true; //다른사람이 세션검색할경우 노출되도록 ( 검색이 가능하도록 )
 	SessionSettings->bUseLobbiesIfAvailable=true;  //로비의 사용여부
-	SessionSettings->NumPublicConnections=ClickedplayerCount;
-	//SessionSettings.NumPrivateConnections //호스트가 초대를 해야만 입장가능
+	SessionSettings->NumPublicConnections=10;
 	
-	SessionSettings->Set(FName("MatchType"), FString("FreeForAll"), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing); // 세션의 MatchType을 모두에게 열림, 온라인서비스와 핑을 통해 세션 홍보 옵션으로 설정
+	FName SessionName = FName(*FString::Printf(TEXT("MySession_%d"), FDateTime::Now().GetTicks()));
 	
 	//커스텀 설정값을 추가하기
-	SessionSettings->Set(FName("Room Name"),ClickedroomName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
-	SessionSettings->Set(FName("Host Name"),ClickedhostName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
+	//SessionSettings->Set(FName("Room Name"),SessionName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
+	
+	//SessionSettings->Set(FName("Host Name"),ClickedhostName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
 	
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	
-	sessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName,*SessionSettings);
-	
+	sessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(), SessionName,*SessionSettings);
+	AllSessionNames.Add(SessionName);
 	//서버에  이런 세팅값으로 만들어달라는 요청 ( 호출시점 에 session이 완성된게 아님 )
 	UE_LOG(LogTemp,Warning,TEXT("Try to create Session"));
 	UE_LOG(LogTemp,Warning,TEXT("current platform : %s"),*IOnlineSubsystem::Get()->GetSubsystemName().ToString());
@@ -153,7 +153,7 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 		}
 		else
 		{
-			CreateMySession(ClickedroomName,ClickedhostName,ClickedplayerCount);
+			CreateMySession();
 		}
 	}
 	
@@ -244,6 +244,14 @@ void UNetWorkGameInstance::OnDestroyedSesssion(FName sessionName, bool bwasSucce
 			pc->ClientTravel(FString("/Game/Maps/LobbyLevel"), ETravelType::TRAVEL_Absolute);
 			// 
 		}
+	}
+}
+
+void UNetWorkGameInstance::OnDestroyAllSessions()
+{
+	for (const FName& SessionName : AllSessionNames)
+	{
+		sessionInterface->DestroySession(SessionName);
 	}
 }
 
