@@ -44,7 +44,7 @@ public:
 	void CreateOrFindMySession();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
-	FString ClickedroomName = FString("FirstRoom");
+	FString ClickedroomName = FString("YJRoom");
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")
 	FString ClickedhostName= FString("FirstHost");;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings")

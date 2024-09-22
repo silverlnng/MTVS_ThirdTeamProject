@@ -68,7 +68,7 @@ void UNetWorkGameInstance::CreateMySession()
 	FName SessionName = FName(*FString::Printf(TEXT("MySession_%d"), FDateTime::Now().GetTicks()));
 	
 	//커스텀 설정값을 추가하기
-	//SessionSettings->Set(FName("Room Name"),SessionName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
+	SessionSettings->Set(FName("Room Name"),ClickedroomName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
 	
 	//SessionSettings->Set(FName("Host Name"),ClickedhostName,EOnlineDataAdvertisementType::Type::ViaOnlineServiceAndPing);
 	
@@ -129,7 +129,33 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 
 		// 어차피 방은 1개
 		// 있으면 참여 , 없으면 만들기
-		if( results.Num()>0)
+		for (auto Result : results)
+		{
+			FString roomName;
+			Result.Session.SessionSettings.Get(FName("Room Name"), roomName);
+			
+			if (roomName == FString("YJRoom"))
+			{
+				if (GEngine)
+				{
+					GEngine->AddOnScreenDebugMessage(
+						-1,
+						15.f,
+						FColor::Cyan,
+						FString::Printf(TEXT("Joining Match Type: %s"), *roomName)
+					);
+				}
+				if (!sessionInterface.IsValid()) return;
+				FName SessionName = FName(*FString::Printf(TEXT("MySession_%d"), FDateTime::Now().GetTicks()));
+				const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+				sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), SessionName, Result);
+				return;
+			}	
+		}
+		
+		CreateMySession();
+		
+		/*if( results.Num()>0)
 		{
 			FString foundRoomName;
 			results[0].Session.SessionSettings.Get(FName("Room Name"), foundRoomName);
@@ -144,17 +170,15 @@ void UNetWorkGameInstance::OnFoundSession(bool bwasSuccessful)
 			// 로그로 확인하기
 			UE_LOG(LogTemp, Warning, TEXT("Room Name: %s\nHost Name: %s\nPlayer Count: (%d/%d)\nPing: %d ms\n\n"),
 				   *foundRoomName, *foundHostName, currentPlayerCount, maxPlayerCount, pingSpeed);
+			
 			const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
-
+			
 			const FOnlineSessionSearchResult* realSession = &results[0];
 
 			if (!sessionInterface.IsValid()) return;
 			sessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), mySessionName, *realSession);
-		}
-		else
-		{
-			CreateMySession();
-		}
+		}*/
+		
 	}
 	
 	UE_LOG(LogTemp, Warning, TEXT("Find Results: %s"), bwasSuccessful ? *FString("Success!") : *FString("Failed..."));
