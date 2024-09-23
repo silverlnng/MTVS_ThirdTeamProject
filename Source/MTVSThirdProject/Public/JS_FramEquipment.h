@@ -65,9 +65,9 @@ public:
 	void GetHaveWater();
 
 	UFUNCTION(Server, Reliable)
-	void Server_OverlapBegin(AActor* OtherActor);
+	void Server_OverlapBegin(AActor* OtherActor, bool bIsBeginOverlap);
 	UFUNCTION(NetMulticast, Reliable)
-	void Multicast_OverlapBegin(AActor* OtherActor);
+	void Multicast_OverlapBegin(AActor* OtherActor, bool bIsBeginOverlap);
 
 	UFUNCTION(Server, Reliable)
 	void Server_StartFishing();

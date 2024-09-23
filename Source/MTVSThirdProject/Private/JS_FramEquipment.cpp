@@ -23,6 +23,7 @@ AJS_FramEquipment::AJS_FramEquipment()
 	framEquipmentComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Ignore);
 
 	bReplicates = true;
+	bAlwaysRelevant = true;
 }
 
 void AJS_FramEquipment::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -44,8 +45,9 @@ void AJS_FramEquipment::BeginPlay()
 	Super::BeginPlay();
 
 	APlayerController* playerController = GetWorld()->GetFirstPlayerController();
-	if ( playerController ) {
+	if ( playerController) {
 		SetOwner(playerController);
+		UE_LOG(LogTemp,Warning,TEXT("playerController : %s"),*playerController->GetName());
 	}
 
 	boxComp->OnComponentBeginOverlap.AddDynamic(this, &AJS_FramEquipment::OnOverlapBegin);
@@ -60,7 +62,7 @@ void AJS_FramEquipment::Tick(float DeltaTime)
 
 void AJS_FramEquipment::StartFishing()
 {
-	if(HasAuthority()) Server_StartFishing();
+	Server_StartFishing();
 }
 
 void AJS_FramEquipment::Server_StartFishing_Implementation()
@@ -88,7 +90,7 @@ void AJS_FramEquipment::Multicast_StartFishing_Implementation()
 
 void AJS_FramEquipment::GetHaveWater()
 {
-	if ( HasAuthority() ) Server_GetHaveWater();
+	Server_GetHaveWater();
 }
 
 void AJS_FramEquipment::Server_GetHaveWater_Implementation()
@@ -106,42 +108,65 @@ void AJS_FramEquipment::Multicast_GetHaveWater_Implementation()
 
 void AJS_FramEquipment::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if(HasAuthority()) Server_OverlapBegin(OtherActor);
+	if(!OtherActor) return;
+	Server_OverlapBegin(OtherActor, true);
 }
-void AJS_FramEquipment::Server_OverlapBegin_Implementation(AActor* OtherActor)
+void AJS_FramEquipment::Server_OverlapBegin_Implementation(AActor* OtherActor, bool bIsBeginOverlap)
 {
-	Multicast_OverlapBegin(OtherActor);
-}
-void AJS_FramEquipment::Multicast_OverlapBegin_Implementation(AActor* OtherActor)
-{
-	//괭이질
-	if ( OtherActor && OtherActor->ActorHasTag(TEXT("LandTile")) && this->ActorHasTag(TEXT("Hoe")) ) {
-		//괭이질 할때 불값 받아서 땅 작물 심을 수 있게 처리
-		tileActor->canFraming = true;
+	
+	if ( !OtherActor )
+	{
+		UE_LOG(LogTemp , Warning , TEXT("ServerBeginOverlap : null"));
+		return;
 	}
-	//양동이 물채우기
-	if ( OtherActor && OtherActor->ActorHasTag(TEXT("Well")) && this->ActorHasTag(TEXT("Pail")) ) {
-		GetHaveWater();
-	}
-	//낚시
-	if ( OtherActor && OtherActor->ActorHasTag(TEXT("Fishing_Spot")) && this->ActorHasTag(TEXT("Fishing_Rod")) ) {
-		StartFishing();
-	}
-	// 충돌한 액터가 나무, 돌, 풀 태그를 가진 장애물인 경우
-	if ( OtherActor && (OtherActor->ActorHasTag(TEXT("Tree")) || OtherActor->ActorHasTag(TEXT("Rock")) || OtherActor->ActorHasTag(TEXT("Gress"))) ) {
-		AJS_ObstacleActor* obstacleActor = Cast<AJS_ObstacleActor>(OtherActor);
-		if ( obstacleActor ) {
-			// 장비가 Axe, Pick, Sickle 중 하나일 때 처리
-			if ( this->ActorHasTag(TEXT("Axe")) && OtherActor->ActorHasTag(TEXT("Tree")) ) {
-				obstacleActor->GetDamage_Implementation(true);
-			}
-			else if ( this->ActorHasTag(TEXT("Pick")) && OtherActor->ActorHasTag(TEXT("Rock")) ) {
-				obstacleActor->GetDamage_Implementation(true);
-			}
-			else if ( this->ActorHasTag(TEXT("Sickle")) && OtherActor->ActorHasTag(TEXT("Gress")) ) {
-				UE_LOG(LogTemp , Warning , TEXT("hit gress"));
-				obstacleActor->GetDamage_Implementation(true);
+	if ( bIsBeginOverlap ) {
+		//괭이질
+		UE_LOG(LogTemp , Warning , TEXT("bIsBeginOverlap In"));
+		if ( OtherActor && OtherActor->ActorHasTag(TEXT("LandTile")) && this->ActorHasTag(TEXT("Hoe")) ) {
+			//괭이질 할때 불값 받아서 땅 작물 심을 수 있게 처리
+			tileActor->canFraming = true;
+		}
+		//양동이 물채우기
+		if ( OtherActor && OtherActor->ActorHasTag(TEXT("Well")) && this->ActorHasTag(TEXT("Pail")) ) {
+			GetHaveWater();
+		}
+		//낚시
+		if ( OtherActor && OtherActor->ActorHasTag(TEXT("Fishing_Spot")) && this->ActorHasTag(TEXT("Fishing_Rod")) ) {
+			StartFishing();
+		}
+		// 충돌한 액터가 나무, 돌, 풀 태그를 가진 장애물인 경우
+		if ( OtherActor && (OtherActor->ActorHasTag(TEXT("Tree")) || OtherActor->ActorHasTag(TEXT("Rock")) || OtherActor->ActorHasTag(TEXT("Gress"))) ) {
+			AJS_ObstacleActor* obstacleActor = Cast<AJS_ObstacleActor>(OtherActor);
+			if ( obstacleActor ) {
+				UE_LOG(LogTemp , Warning , TEXT("Overlap Tree, Rock, Gress"));
+				// 장비가 Axe, Pick, Sickle 중 하나일 때 처리
+				if ( this->ActorHasTag(TEXT("Axe")) && OtherActor->ActorHasTag(TEXT("Tree")) ) {
+					obstacleActor->GetDamage_Implementation(true);
+				}
+				else if ( this->ActorHasTag(TEXT("Pick")) && OtherActor->ActorHasTag(TEXT("Rock")) ) {
+					obstacleActor->GetDamage_Implementation(true);
+				}
+				else if ( this->ActorHasTag(TEXT("Sickle")) && OtherActor->ActorHasTag(TEXT("Gress")) ) {
+					UE_LOG(LogTemp , Warning , TEXT("hit gress"));
+					obstacleActor->GetDamage_Implementation(true);
+				}
 			}
 		}
+		Multicast_OverlapBegin(OtherActor, bIsBeginOverlap);
+	}
+}
+void AJS_FramEquipment::Multicast_OverlapBegin_Implementation(AActor* OtherActor, bool bIsBeginOverlap)
+{
+	if ( !OtherActor )
+	{
+		UE_LOG(LogTemp , Warning , TEXT("MulticastBeginOverlap: null"));
+		return;
+	}
+
+	// 클라이언트에서도 동기화할 로직만 처리 (애니메이션, 시각적 피드백 등)
+	if ( bIsBeginOverlap )
+	{
+		// 여기에서는 주로 클라이언트 쪽에서만 필요한 처리를 넣음
+		UE_LOG(LogTemp , Warning , TEXT("Multicast: Overlap with %s") , *OtherActor->GetName());
 	}
 }
