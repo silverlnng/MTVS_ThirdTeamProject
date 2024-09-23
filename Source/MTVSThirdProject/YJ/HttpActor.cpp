@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "HttpActor.h"
@@ -38,7 +38,7 @@ void AHttpActor::BeginPlay()
 			player->HttpUI->SetHttpActor(this);
 		}*/
 		pc->SetShowMouseCursor(true);
-		pc->SetInputMode(FInputModeUIOnly());
+		pc->SetInputMode(FInputModeGameAndUI());
 	}
 }
 

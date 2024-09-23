@@ -13,15 +13,6 @@
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Jin/Blueprints/BP_Player.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Jin/Blueprints/BP_Player.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Jin/Blueprints/UI/WBP_Main.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Jin/Blueprints/UI/WBP_Main.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Master/AlphaMap_.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Master/AlphaMap_.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/BP/BP_TestYJ_GM.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/BP/BP_TestYJ_GM.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/UI/WBP_HttpWidget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/UI/WBP_HttpWidget.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_MainWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_MainWidget.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_Player.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_Player.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/AJH_MainWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/AJH_MainWidget.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpActor.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -581,7 +572,7 @@
       <workItem from="1727005591624" duration="4124000" />
       <workItem from="1727048335488" duration="943000" />
       <workItem from="1727049386483" duration="4471000" />
-      <workItem from="1727056466396" duration="2037000" />
+      <workItem from="1727056466396" duration="2831000" />
     </task>
     <servers />
   </component>
