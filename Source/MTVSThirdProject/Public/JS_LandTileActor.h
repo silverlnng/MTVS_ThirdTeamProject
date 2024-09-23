@@ -46,10 +46,10 @@ public:
 
 	//물에 타일이 젖어있는지 확인하는 변수
 	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite)
-	bool bIsWet = false;
+	bool bIsWet = true;
 	//괭이질을 했는지 확인하는 변수
 	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite)
-	bool canFraming = false;
+	bool canFraming = true;
 	//땅이 건조해지는 걸 체크하는 변수
 	float checkDeltaTime = 0;
 	// 21600델타타임 == 6분
