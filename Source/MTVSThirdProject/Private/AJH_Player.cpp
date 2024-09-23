@@ -186,7 +186,7 @@ void AAJH_Player::OnMyActionInteration(const FInputActionValue& value)
 
 void AAJH_Player::OnMyAction(const FInputActionValue& value)
 {
-
+	if(HasAuthority())
 	ServerOnMyAction();
 	/*if ( outHit.GetComponent()->GetCollisionResponseToChannel(ECC_Visibility) == ECR_Block )
 	{
@@ -205,18 +205,13 @@ void AAJH_Player::OnMyActionTap()
 
 void AAJH_Player::ServerOnMyAction_Implementation()
 {
-	if ( HasAuthority() )
-	{
-		MultiOnMyAction();
-	}
+	MultiOnMyAction();
 }
 
 void AAJH_Player::MultiOnMyAction_Implementation()
 {
-	if ( IsLocallyControlled() )
-	{
-		InteractionLineTraceFuntion();
-	}
+
+	InteractionLineTraceFuntion();
 
 	// Tag : Tree, Rock, Gress
 	if ( bHit && outHit.GetActor()->ActorHasTag(TEXT("Tree")) && selectedSeedType == ESeedType::None && anim && anim->bAttackAnimation == false )
@@ -276,6 +271,8 @@ void AAJH_Player::MultiOnMyAction_Implementation()
 		FString objectName = outHit.GetActor()->GetName();
 		GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 	}
+
+	
 }
 
 void AAJH_Player::MouseCusorEvent()
@@ -290,16 +287,20 @@ void AAJH_Player::MouseCusorEvent()
 
 void AAJH_Player::InteractionLineTraceFuntion()
 {
-	// 
-	UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectMousePositionToWorld(worldLoc, worldDir);
-	// 
-	start = worldLoc;
-	// 
-	end = start + worldDir * 2000;
-	// 
-	param;
-	param.AddIgnoredActor(this);
-	bHit = GetWorld()->LineTraceSingleByChannel(outHit, start, end, ECC_Visibility, param);
+	if ( HasAuthority() )
+	{
+		// 
+		UGameplayStatics::GetPlayerController(GetWorld() , 0)->DeprojectMousePositionToWorld(worldLoc , worldDir);
+		// 
+		start = worldLoc;
+		// 
+		end = start + worldDir * 2000;
+		// 
+		param;
+		param.AddIgnoredActor(this);
+		bHit = GetWorld()->LineTraceSingleByChannel(outHit , start , end , ECC_Visibility , param);
+	}
+	
 }
 
 void AAJH_Player::OnMySelectedSeed(ESeedType newSeedType)
