@@ -35,9 +35,9 @@ void AJS_LandGridActor::BeginPlay()
 		SetOwner(playerController);
 	}
 
-	if (!GridManager) {
+	/*if (!GridManager) {
 		GridManager = GetWorld()->SpawnActor<AJS_GridManager>(AJS_GridManager::StaticClass());
-	}
+	}*/
 	if (GridManager) {
 		//그리드 관리 시스템 초기화
 		GridManager->InitializeGrid(gridSize, gridSize);
