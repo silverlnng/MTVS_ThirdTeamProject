@@ -7,13 +7,7 @@
 
 void UAJH_MainWidget::NativeConstruct()
 {
-	Btn_Http->OnClicked.AddDynamic(this, &UAJH_MainWidget::OnClickedBtn_Http);
+	Super::NativeConstruct();
+	Button_35->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UAJH_MainWidget::OnClickedBtn_Http()
-{
-	FActorSpawnParameters params;
-	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	GetWorld()->SpawnActor<AAJH_WeatherHttpActor>(httpFactory, params);
-	UE_LOG(LogTemp, Warning, TEXT("Click"));
-}

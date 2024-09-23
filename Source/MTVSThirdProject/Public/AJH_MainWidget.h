@@ -18,14 +18,5 @@ public:
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* Button_35;
-	
-public:
-	virtual void NativeConstruct() override;
 
-	UPROPERTY(meta=(BindWidget))
-	class UButton* Btn_Http;
-	UFUNCTION()
-	void OnClickedBtn_Http();
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class AAJH_WeatherHttpActor> httpFactory;
 };
