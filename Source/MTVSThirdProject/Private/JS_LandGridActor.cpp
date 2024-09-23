@@ -1,10 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JS_LandGridActor.h"
 #include "JS_LandTileActor.h"
 #include "Components/BoxComponent.h"
 #include "JS_ObstacleActor.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AJS_LandGridActor::AJS_LandGridActor()
@@ -12,6 +13,16 @@ AJS_LandGridActor::AJS_LandGridActor()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	bReplicates = true;
+}
+
+void AJS_LandGridActor::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//ë³€ìˆ˜ì— replicatedë¥¼ ì‚¬ìš©í•œë‹¤ë©´ ë“±ë¡í•´ì•¼í•¨.
+	DOREPLIFETIME (AJS_LandGridActor, gridSize);
+	DOREPLIFETIME (AJS_LandGridActor, landSpacing);
 }
 
 // Called when the game starts or when spawned
@@ -19,15 +30,19 @@ void AJS_LandGridActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	APlayerController* playerController = GetWorld()->GetFirstPlayerController();
+	if ( playerController ) {
+		SetOwner(playerController);
+	}
+
 	if (!GridManager) {
 		GridManager = GetWorld()->SpawnActor<AJS_GridManager>(AJS_GridManager::StaticClass());
 	}
 	if (GridManager) {
-		//±×¸®µå °ü¸® ½Ã½ºÅÛ ÃÊ±âÈ­
+		//ê·¸ë¦¬ë“œ ê´€ë¦¬ ì‹œìŠ¤í…œ ì´ˆê¸°í™”
 		GridManager->InitializeGrid(gridSize, gridSize);
 		SetGridTile();
 	}
-
 }
 
 // Called every frame
@@ -38,121 +53,131 @@ void AJS_LandGridActor::Tick(float DeltaTime)
 	if (!GridManager) return;
 	if (GridManager->Grid.Num() == 0) return;
 
-	FVector2D queryCoordinates(0, 0);
+	/*FVector2D queryCoordinates(0, 0);
 	AActor* objectAtTile = GridManager->GetObjectAtGridCell(queryCoordinates);
-	bool checkTile = GridManager->IsCellOccupied(queryCoordinates);
+	bool checkTile = GridManager->IsCellOccupied(queryCoordinates);*/
 	
-	//±×¸®µå ¹è¿­ ¼øÈ¸
-	for (auto& Elem : GridManager->Grid) { //Elem °¢ ±×¸®µå ¿ä¼Ò Elem.Value´Â Å¸ÀÏ Á¤º¸¸¦ °¡Á®¿Â´Ù(FGridTile)
-		FGridTile& Tile = Elem.Value;// Elem.Value¸¦ ÂüÁ¶ÇØ¼­ ÇöÀç Å¸ÀÏ(FGridTile)À» °¡Á®¿È. Tileº¯¼ö´Â ÇöÀç Ã³¸® ÁßÀÎ Å¸ÀÏ¿¡ ´ëÇÑ ÂüÁ¶
+	//ê·¸ë¦¬ë“œ ë°°ì—´ ìˆœíšŒ
+	for (auto& Elem : GridManager->Grid) { //Elem ê° ê·¸ë¦¬ë“œ ìš”ì†Œ Elem.ValueëŠ” íƒ€ì¼ ì •ë³´ë¥¼ ê°€ì ¸ì˜¨ë‹¤(FGridTile)
+		FGridTile& Tile = Elem.Value;// Elem.Valueë¥¼ ì°¸ì¡°í•´ì„œ í˜„ì¬ íƒ€ì¼(FGridTile)ì„ ê°€ì ¸ì˜´. Tileë³€ìˆ˜ëŠ” í˜„ì¬ ì²˜ë¦¬ ì¤‘ì¸ íƒ€ì¼ì— ëŒ€í•œ ì°¸ì¡°
 		
-		TArray<AActor*> OverlappingActors; // ÇöÀç Å¸ÀÏ°ú °ãÄ¡´Â ¾×ÅÍµéÀ» ÀúÀåÇÏ±â À§ÇÑ ¹è¿­
-		FindActorsOnTile(Tile.gridCoordinates, OverlappingActors); //Å¸ÀÏ ÁÂÇ¥¿¡ ÇØ´çÇÏ´Â Å¸ÀÏ¿¡ °ãÄ¡´Â ¾×ÅÍµéÀ» Ã£°í ±× ¾×ÅÍµéÀ» OverlappingActors ¹è¿­¿¡ Ã¤¿ö ³Ö´Â´Ù.
-		//Tile.girdCoordinates¸¦ ¹Ş¾Æ¼­ ±× Å¸ÀÏ À§¿¡ ÀÖ´Â ¾×ÅÍµéÀ» Ã£´Â ¿ªÇÒÀ» ÇÑ´Ù.
+		TArray<AActor*> OverlappingActors; // í˜„ì¬ íƒ€ì¼ê³¼ ê²¹ì¹˜ëŠ” ì•¡í„°ë“¤ì„ ì €ì¥í•˜ê¸° ìœ„í•œ ë°°ì—´
+		FindActorsOnTile(Tile.gridCoordinates, OverlappingActors); //íƒ€ì¼ ì¢Œí‘œì— í•´ë‹¹í•˜ëŠ” íƒ€ì¼ì— ê²¹ì¹˜ëŠ” ì•¡í„°ë“¤ì„ ì°¾ê³  ê·¸ ì•¡í„°ë“¤ì„ OverlappingActors ë°°ì—´ì— ì±„ì›Œ ë„£ëŠ”ë‹¤.
+		//Tile.girdCoordinatesë¥¼ ë°›ì•„ì„œ ê·¸ íƒ€ì¼ ìœ„ì— ìˆëŠ” ì•¡í„°ë“¤ì„ ì°¾ëŠ” ì—­í• ì„ í•œë‹¤.
 		
-		for (AActor* Actor : OverlappingActors) { // OverlappingActors¹è¿­À» ¼øÈ¸ÇÏ¸é¼­ ÇØ´ç Å¸ÀÏ¿¡ °ãÃÄ ÀÖ´Â ¸ğµç ¾×ÅÍµéÀ» ÇÏ³ª¾¿ Ã³¸®ÇÕ´Ï´Ù.
-			if (!Tile.occupyingActor) // ÇöÀç Å¸ÀÏ¿¡ ¿ÀºêÁ§Æ®°¡ ÇÒ´çµÇÁö ¾ÊÀº °æ¿ì(occupyingActor°¡ nullptrÀÎ °æ¿ì)¸¸ ¿ÀºêÁ§Æ®¸¦ ÇÒ´ç
+		for (AActor* Actor : OverlappingActors) { // OverlappingActorsë°°ì—´ì„ ìˆœíšŒí•˜ë©´ì„œ í•´ë‹¹ íƒ€ì¼ì— ê²¹ì³ ìˆëŠ” ëª¨ë“  ì•¡í„°ë“¤ì„ í•˜ë‚˜ì”© ì²˜ë¦¬í•©ë‹ˆë‹¤.
+			if (!Tile.occupyingActor) // í˜„ì¬ íƒ€ì¼ì— ì˜¤ë¸Œì íŠ¸ê°€ í• ë‹¹ë˜ì§€ ì•Šì€ ê²½ìš°(occupyingActorê°€ nullptrì¸ ê²½ìš°)ë§Œ ì˜¤ë¸Œì íŠ¸ë¥¼ í• ë‹¹
 			{
-				Tile.occupyingActor = Actor; // ÇöÀç Å¸ÀÏ¿¡ °ãÃÄ ÀÖ´Â Ã¹ ¹øÂ° ¾×ÅÍ¸¦ occupyingActor·Î ¼³Á¤ÇØ¼­ ±× Å¸ÀÏ À§¸¦ Á¡·ÉÇÑ´Ù.
-				Tile.bIsOccupied = true; // true·Î ¸¸µé¾î¼­ Å¸ÀÏÀÌ Á¡·É µÇ¾îÀÖ´Ù´Â °ÍÀ» ¾Ë¸².
-				GridManager->SetObjectAtGridCell(Tile.gridCoordinates, Actor); // ±×¸®µå ¸Å´ÏÀú¿¡¼­ ÇöÀç Å¸ÀÏ ÁÂÇ¥¿¡ ÇØ´çÇÏ´Â ±×¸®µå ¼¿¿¡ ¾×ÅÍ¸¦ ÇÒ´çÇÑ´Ù. ±×¸®µå ½Ã½ºÅÛ ³»¿¡¼­ ÇØ´ç ¼¿¿¡ ¾î¶² ¿ÀºêÁ§Æ®°¡ ¹èÄ¡µÇ¾ú´ÂÁö ±â·ÏÇÏ´Â ¿ªÇÒÀ» ÇÑ´Ù.
+				Tile.occupyingActor = Actor; // í˜„ì¬ íƒ€ì¼ì— ê²¹ì³ ìˆëŠ” ì²« ë²ˆì§¸ ì•¡í„°ë¥¼ occupyingActorë¡œ ì„¤ì •í•´ì„œ ê·¸ íƒ€ì¼ ìœ„ë¥¼ ì ë ¹í•œë‹¤.
+				Tile.bIsOccupied = true; // trueë¡œ ë§Œë“¤ì–´ì„œ íƒ€ì¼ì´ ì ë ¹ ë˜ì–´ìˆë‹¤ëŠ” ê²ƒì„ ì•Œë¦¼.
+				GridManager->SetObjectAtGridCell(Tile.gridCoordinates, Actor); // ê·¸ë¦¬ë“œ ë§¤ë‹ˆì €ì—ì„œ í˜„ì¬ íƒ€ì¼ ì¢Œí‘œì— í•´ë‹¹í•˜ëŠ” ê·¸ë¦¬ë“œ ì…€ì— ì•¡í„°ë¥¼ í• ë‹¹í•œë‹¤. ê·¸ë¦¬ë“œ ì‹œìŠ¤í…œ ë‚´ì—ì„œ í•´ë‹¹ ì…€ì— ì–´ë–¤ ì˜¤ë¸Œì íŠ¸ê°€ ë°°ì¹˜ë˜ì—ˆëŠ”ì§€ ê¸°ë¡í•˜ëŠ” ì—­í• ì„ í•œë‹¤.
 			}
 		}
 		
 	}
 }
+
+//bool AJS_LandGridActor::IsActorOutOfBounds(AActor* Actor)
+//{
+//	if (GridManager) {
+//		FVector ActorLocation = Actor->GetActorLocation();
+//
+//		float MinX = GridManager->MinGridBounds.X;
+//		float MinY = GridManager->MinGridBounds.Y;
+//		float MaxX = GridManager->MaxGridBounds.X;
+//		float MaxY = GridManager->MaxGridBounds.Y;
+//
+//		//íƒ€ì¼ ë²”ìœ„ ì¡°ê±´ì„ ì„¤ì •í•˜ì—¬ ì•¡í„°ê°€ ë²”ìœ„ë¥¼ ë²—ì–´ë‚¬ëŠ”ì§€ í™•ì¸
+//		return (ActorLocation.X < MinX || ActorLocation.X > MaxX || ActorLocation.Y  < MinY || ActorLocation.Y > MaxY);
+//	}
+//	return true; // GridManagerê°€ ì—†ìœ¼ë©´ ê¸°ë³¸ì ìœ¼ë¡œ ë²”ìœ„ë¥¼ ë²—ì–´ë‚œ ê²ƒìœ¼ë¡œ ê°„ì£¼
+//	
+//}
+
+//void AJS_LandGridActor::PlaceActorOnTile(FVector2D GridCoordinates, AActor* ActorToPlace)
+//{
+//	if (GridManager && ActorToPlace) {
+//		FVector TileLocation = GridManager->GetTileLocation(GridCoordinates); //íƒ€ì¼ ìœ„ì¹˜ ì–»ê¸°
+//		ActorToPlace->SetActorLocation(TileLocation);
+//		GridManager->SetObjectAtGridCell(GridCoordinates, ActorToPlace); // ê·¸ë¦¬ë“œì— ë“±ë¡
+//	}
+//}
 
 void AJS_LandGridActor::SetGridTile()
 {
-	//GridManager¸¦ °¡Á®¿Í¼­ ±×¸®µå Å©±â ÃÊ±âÈ­
-		//½ºÆùµÈ ¿ÀºêÁ§Æ®¸¦ ÀúÀåÇÑ º¯¼ö ¼±¾ğ.
-	for (int32 x = 0; x < gridSize; ++x) {
-		for (int32 y = 0; y < gridSize; ++y) {
-			FVector location = GetActorLocation() + FVector(x * landSpacing, y * landSpacing, 0.0f);
+	Server_SetGridTile();
+}
 
-			if (TileFactory) {
+void AJS_LandGridActor::Server_SetGridTile_Implementation()
+{
+	Multicast_SetGridTile();
+}
+
+void AJS_LandGridActor::Multicast_SetGridTile_Implementation()
+{
+	//GridManagerë¥¼ ê°€ì ¸ì™€ì„œ ê·¸ë¦¬ë“œ í¬ê¸° ì´ˆê¸°í™”
+		//ìŠ¤í°ëœ ì˜¤ë¸Œì íŠ¸ë¥¼ ì €ì¥í•œ ë³€ìˆ˜ ì„ ì–¸.
+	for ( int32 x = 0; x < gridSize; ++x ) {
+		for ( int32 y = 0; y < gridSize; ++y ) {
+			FVector location = GetActorLocation() + FVector(x * landSpacing , y * landSpacing , 0.0f);
+
+			if ( TileFactory ) {
 				FActorSpawnParameters spawnParams;
-				spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding; // ¾×ÅÍ°¡ ÀÖÀ¸¸é ½ºÆù ¾È½ÃÅ°´Â ÆÄ¶ó¹ÌÅÍ
-				AJS_LandTileActor* spawnedTile = GetWorld()->SpawnActor<AJS_LandTileActor>(TileFactory, location, FRotator::ZeroRotator, spawnParams);
+				spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding; // ì•¡í„°ê°€ ìˆìœ¼ë©´ ìŠ¤í° ì•ˆì‹œí‚¤ëŠ” íŒŒë¼ë¯¸í„°
+				AJS_LandTileActor* spawnedTile = GetWorld()->SpawnActor<AJS_LandTileActor>(TileFactory , location , FRotator::ZeroRotator , spawnParams);
 
-				if (spawnedTile) {
-					spawnedTile->SetGridCoordinates(FVector2D(x, y));
+				if ( spawnedTile ) {
+					spawnedTile->SetGridCoordinates(FVector2D(x , y));
 
-					int randomChoice = FMath::RandRange(0, 399);
+					int randomChoice = FMath::RandRange(0 , 399);
 
-					AActor* spawnedObject = nullptr; //½ºÆùµÈ ¿ÀºêÁ§Æ®¸¦ ÀúÀåÇÒ º¯¼ö
+					AActor* spawnedObject = nullptr; //ìŠ¤í°ëœ ì˜¤ë¸Œì íŠ¸ë¥¼ ì €ì¥í•  ë³€ìˆ˜
 
-					if (randomChoice < 10 && randomChoice > 0) {
-						spawnedObject = GetWorld()->SpawnActor<AJS_ObstacleActor>(TreeFactory, spawnedTile->GetActorLocation() + (GetActorUpVector() * 50), FRotator::ZeroRotator, spawnParams);
+					if ( randomChoice < 10 && randomChoice > 0 ) {
+						spawnedObject = GetWorld()->SpawnActor<AJS_ObstacleActor>(TreeFactory , spawnedTile->GetActorLocation() + (GetActorUpVector() * 50) , FRotator::ZeroRotator , spawnParams);
 					}
-					else if (randomChoice < 20 && randomChoice >= 10) {
-						spawnedObject = GetWorld()->SpawnActor<AJS_ObstacleActor>(RockFactory, spawnedTile->GetActorLocation() + (GetActorUpVector() * 50), FRotator::ZeroRotator, spawnParams);
-						if (spawnedObject)
+					else if ( randomChoice < 20 && randomChoice >= 10 ) {
+						spawnedObject = GetWorld()->SpawnActor<AJS_ObstacleActor>(RockFactory , spawnedTile->GetActorLocation() + (GetActorUpVector() * 50) , FRotator::ZeroRotator , spawnParams);
+						if ( spawnedObject )
 						{
-							UE_LOG(LogTemp, Warning, TEXT("Not null to spawnRock"));
+							UE_LOG(LogTemp , Warning , TEXT("Not null to spawnRock"));
 							spawnedObject;
 						}
 						else {
-							UE_LOG(LogTemp, Warning, TEXT("Failed to spawn Rock"));
+							UE_LOG(LogTemp , Warning , TEXT("Failed to spawn Rock"));
 						}
 					}
-					else if (randomChoice < 40 && randomChoice > 20) {
-						 spawnedObject = GetWorld()->SpawnActor<AJS_ObstacleActor>(GressFactory, spawnedTile->GetActorLocation() + (GetActorUpVector() * 50), FRotator::ZeroRotator, spawnParams);
+					else if ( randomChoice < 40 && randomChoice > 20 ) {
+						spawnedObject = GetWorld()->SpawnActor<AJS_ObstacleActor>(GressFactory , spawnedTile->GetActorLocation() + (GetActorUpVector() * 50) , FRotator::ZeroRotator , spawnParams);
 					}
 
-					//¿ÀºêÁ§Æ®°¡ ½ºÆùµÈ °æ¿ì ±×¸®µå¿¡ ±â·Ï
-					if (spawnedObject && GridManager) {
-						FVector2D gridCoordinates(x, y);
-						GridManager->SetObjectAtGridCell(gridCoordinates, spawnedObject);
+					//ì˜¤ë¸Œì íŠ¸ê°€ ìŠ¤í°ëœ ê²½ìš° ê·¸ë¦¬ë“œì— ê¸°ë¡
+					if ( spawnedObject && GridManager ) {
+						FVector2D gridCoordinates(x , y);
+						GridManager->SetObjectAtGridCell(gridCoordinates , spawnedObject);
 					}
 				}
 				else {
-					UE_LOG(LogTemp, Warning, TEXT("Failed to spawn tile at coordinates: (%d, %d)"), x, y);
+					UE_LOG(LogTemp , Warning , TEXT("Failed to spawn tile at coordinates: (%d, %d)") , x , y);
 				}
 			}
 		}
 	}
 }
 
-bool AJS_LandGridActor::IsActorOutOfBounds(AActor* Actor)
+void AJS_LandGridActor::FindActorsOnTile(FVector2D GridCoordinates , TArray<AActor*>& OutOverlappingActors)
 {
-	if (GridManager) {
-		FVector ActorLocation = Actor->GetActorLocation();
-
-		float MinX = GridManager->MinGridBounds.X;
-		float MinY = GridManager->MinGridBounds.Y;
-		float MaxX = GridManager->MaxGridBounds.X;
-		float MaxY = GridManager->MaxGridBounds.Y;
-
-		//Å¸ÀÏ ¹üÀ§ Á¶°ÇÀ» ¼³Á¤ÇÏ¿© ¾×ÅÍ°¡ ¹üÀ§¸¦ ¹ş¾î³µ´ÂÁö È®ÀÎ
-		return (ActorLocation.X < MinX || ActorLocation.X > MaxX || ActorLocation.Y  < MinY || ActorLocation.Y > MaxY);
-	}
-	return true; // GridManager°¡ ¾øÀ¸¸é ±âº»ÀûÀ¸·Î ¹üÀ§¸¦ ¹ş¾î³­ °ÍÀ¸·Î °£ÁÖ
-	
-}
-
-void AJS_LandGridActor::PlaceActorOnTile(FVector2D GridCoordinates, AActor* ActorToPlace)
-{
-	if (GridManager && ActorToPlace) {
-		FVector TileLocation = GridManager->GetTileLocation(GridCoordinates); //Å¸ÀÏ À§Ä¡ ¾ò±â
-		ActorToPlace->SetActorLocation(TileLocation);
-		GridManager->SetObjectAtGridCell(GridCoordinates, ActorToPlace); // ±×¸®µå¿¡ µî·Ï
-	}
-}
-
-void AJS_LandGridActor::FindActorsOnTile(FVector2D GridCoordinates, TArray<AActor*>& OutOverlappingActors)
-{
-	if (GridManager) {
+	if ( GridManager ) {
 		FVector TileLocation = GridManager->GetTileLocation(GridCoordinates);
 
-		// Å¸ÀÏÀÇ À§Ä¡¿¡¼­ ÇØ´ç Å¸ÀÏ ¾×ÅÍ¸¦ Ã£½À´Ï´Ù.
+		// íƒ€ì¼ì˜ ìœ„ì¹˜ì—ì„œ í•´ë‹¹ íƒ€ì¼ ì•¡í„°ë¥¼ ì°¾ìŠµë‹ˆë‹¤.
 		TileActor = Cast<AJS_LandTileActor>(GridManager->GetObjectAtGridCell(GridCoordinates));
-		if (TileActor && TileActor->boxComp) {
-			//Å¸ÀÏ ÄÄÆ÷³ÍÆ®¿¡¼­ °ãÄ¡´Â ¾×ÅÍ¸¦ °Ë»ö
-			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Blue, TEXT("Checking for overlapping actors..."));
+		if ( TileActor && TileActor->boxComp ) {
+			//íƒ€ì¼ ì»´í¬ë„ŒíŠ¸ì—ì„œ ê²¹ì¹˜ëŠ” ì•¡í„°ë¥¼ ê²€ìƒ‰
+			GEngine->AddOnScreenDebugMessage(-1 , 3.f , FColor::Blue , TEXT("Checking for overlapping actors..."));
 			TileActor->boxComp->GetOverlappingActors(OutOverlappingActors);
 
-			UE_LOG(LogTemp, Warning, TEXT("Found %d overlapping actors on tile at (%f, %f)"), OutOverlappingActors.Num(), GridCoordinates.X, GridCoordinates.Y);
+			UE_LOG(LogTemp , Warning , TEXT("Found %d overlapping actors on tile at (%f, %f)") , OutOverlappingActors.Num() , GridCoordinates.X , GridCoordinates.Y);
 		}
 	}
 }

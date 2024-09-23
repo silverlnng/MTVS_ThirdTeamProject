@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -24,9 +24,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// ¸î °öÇÏ±â ¸îÀ¸·Î ÇÒÁö gridSize ¼³Á¤.
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+
+	// ëª‡ ê³±í•˜ê¸° ëª‡ìœ¼ë¡œ í• ì§€ gridSize ì„¤ì •.
+	UPROPERTY(Replicated, BlueprintReadWrite, Category = "Grid")
 	int32 gridSize = 20;
-	// °¢ ¾×ÅÍ¸¶´Ù ¾ó¸¶³ª ¶³¾îÁ® ÀÖÀ» °ÇÁö ¼³Á¤.
+	// ê° ì•¡í„°ë§ˆë‹¤ ì–¼ë§ˆë‚˜ ë–¨ì–´ì ¸ ìˆì„ ê±´ì§€ ì„¤ì •.
+	UPROPERTY(Replicated, BlueprintReadWrite, Category = "Grid")
 	float landSpacing = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -42,7 +46,12 @@ public:
 	AJS_LandTileActor* TileActor;
 
 	void SetGridTile();
-	bool IsActorOutOfBounds(AActor* Actor);
-	void PlaceActorOnTile(FVector2D GridCoordinates, AActor* ActorToPlace);
+	//bool IsActorOutOfBounds(AActor* Actor);
+	//void PlaceActorOnTile(FVector2D GridCoordinates, AActor* ActorToPlace);
 	void FindActorsOnTile(FVector2D GridCoordinates, TArray<AActor*>& OutOverlappingActors);
+
+	UFUNCTION(Server, Reliable)
+	void Server_SetGridTile();
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_SetGridTile();
 };

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -23,38 +23,86 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* boxComp;
 	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* seedMeshComp;
 
-	//ÇÑ Å¬·¡½º¿¡¼­ ¿©·¯ BP¾×ÅÍ¸¦ ½ºÆùÇÒ ¼ö ÀÖ°Ô ¼±¾ğ
+	//í•œ í´ë˜ìŠ¤ì—ì„œ ì—¬ëŸ¬ BPì•¡í„°ë¥¼ ìŠ¤í°í•  ìˆ˜ ìˆê²Œ ì„ ì–¸
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FirstPlant")
 	TSubclassOf<class AJS_FirstRicePlant> SpawnFirstRicePlant;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FirstPlant")
 	TSubclassOf<class AJS_FirstRicePlant> SpawnFirstPumpkinPlant;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FirstPlant")
 	TSubclassOf<class AJS_FirstRicePlant> SpawnFirstCarrotPlant;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FirstPlant")
+	TSubclassOf<class AJS_FirstRicePlant> SpawnFirstStrawberryPlant;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FirstPlant")
+	TSubclassOf<class AJS_FirstRicePlant> SpawnFirstWatermelonPlant;
 
-	//¼ÒÈ¯µÉ ³à¼®À» ´ã´Â º¯¼ö
+	//ì†Œí™˜ë  ë…€ì„ì„ ë‹´ëŠ” ë³€ìˆ˜
+	UPROPERTY(Replicated)
 	UClass* PlantClassToSpawn = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Seed")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Seed")
 	int32 maxHP = 1;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Seed")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Seed")
 	int32 curHP = maxHP;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Seed")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Seed")
 	float checkDeltaTime = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Seed")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Seed")
 	float growTime = 5;
 	
-	int32 riceID = 11010;
-	int32 pumpKinID = 11014;
-	int32 carrotID = 11013;
+	// ìˆ˜í™•í•  ë•Œ í€˜ìŠ¤íŠ¸ì—ì„œ ì¦ê°€í•´ì•¼í•  ê°’
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "SeedCount")
+	int32 planting_Wheat_SeedCount = 0;
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "SeedCount")
+	int32 planting_Pumpkin_SeedCount = 0;
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "SeedCount")
+	int32 planting_Carrot_SeedCount = 0;
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "SeedCount")
+	int32 planting_Strawberry_SeedCount = 0;
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "SeedCount")
+	int32 planting_Watermelon_SeedCount = 0;
+
+
+	//ì”¨ì•—ì˜ IDê°’
+	const int32 riceID = 11010;
+	const int32 watermelonID = 11011;
+	const int32 strawberryID = 11012;
+	const int32 carrotID = 11013;
+	const int32 pumpKinID = 11014;
+	
 
 
 	virtual void GetDamage_Implementation(bool damage) override;
 	virtual void SetCurHP_Implementation(float amount) override;
 	virtual void SpawnNextPlant_Implementation(int32 index) override;
 	virtual void Death_Implementation() override;
+
+	//GetDamage RPC
+	UFUNCTION(Server, Reliable)
+	void Server_GetDamageRPC(bool damage);
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_GetDamageRPC(bool damage);
+
+	//SetCurHP RPC
+	UFUNCTION(Server, Reliable)
+	void Server_SetCurHPRPC(float amount);
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_SetCurHPRPC(float amount);
+
+	//Spawn RPC
+	UFUNCTION(Server, Reliable)
+	void Server_SpawnNextPlantRPC(int32 index);
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_SpawnNextPlantRPC(int32 index);
+
+	UFUNCTION(Server, Reliable)
+	void Server_DeathRPC();
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_DeathRPC();
+
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 };

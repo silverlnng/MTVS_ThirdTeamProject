@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+Ôªø// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -24,15 +24,22 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "SetPlant")
 	int32 maxHP = 1;
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "SetPlant")
 	int32 curHP = maxHP;
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "SetPlant")
 	float checkDeltaTime = 0;
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "SetPlant")
 	float growTime = 5;
 
+	//Ï§ÑÍ∏∞Ïùò IDÍ∞í
 	int32 ricePlantID = 11210;
-	int32 pumpKinPlantID = 11214;
+	int32 watermelonPlantID = 11211;
+	int32 strawberryPlantID = 11212;
 	int32 carrotPlantID = 11213;
+	int32 pumpKinPlantID = 11214;
+
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* boxComp;
 	UPROPERTY(EditAnywhere)
@@ -44,7 +51,12 @@ public:
 	TSubclassOf<class AJS_SecondRicePlant> SpawnSecondPumpkinPlant;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SecondPlant")
 	TSubclassOf<class AJS_SecondRicePlant> SpawnSecondCarrotPlant;
-	//º“»Øµ… ≥‡ºÆ¿ª ¥„¥¬ ∫Øºˆ
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SecondPlant")
+	TSubclassOf<class AJS_SecondRicePlant> SpawnSecondStrawberryPlant;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SecondPlant")
+	TSubclassOf<class AJS_SecondRicePlant> SpawnSecondWatermelonPlant;
+	//ÏÜåÌôòÎê† ÎÖÄÏÑùÏùÑ Îã¥Îäî Î≥ÄÏàò
+	UPROPERTY(Replicated)
 	UClass* PlantClassToSpawn = nullptr;
 
 	virtual void GetDamage_Implementation(bool damage) override;
@@ -52,4 +64,28 @@ public:
 	virtual void SpawnNextPlant_Implementation(int32 index) override;
 	virtual void Death_Implementation() override;
 	
+	//GetDamage RPC
+	UFUNCTION(Server, Reliable)
+	void Server_GetDamageRPC(bool damage);
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_GetDamageRPC(bool damage);
+
+	//SetCurHP RPC
+	UFUNCTION(Server, Reliable)
+	void Server_SetCurHPRPC(float amount);
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_SetCurHPRPC(float amount);
+
+	//Spawn RPC
+	UFUNCTION(Server, Reliable)
+	void Server_SpawnNextPlantRPC(int32 index);
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_SpawnNextPlantRPC(int32 index);
+
+	UFUNCTION(Server, Reliable)
+	void Server_DeathRPC();
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_DeathRPC();
+
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 };

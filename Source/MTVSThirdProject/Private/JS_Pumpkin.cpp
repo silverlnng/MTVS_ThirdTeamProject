@@ -1,9 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JS_Pumpkin.h"
 #include "Components/SphereComponent.h"
-
+#include "AJH_Player.h"
 // Sets default values
 AJS_Pumpkin::AJS_Pumpkin()
 {
@@ -20,10 +20,8 @@ AJS_Pumpkin::AJS_Pumpkin()
 	pumpkinMeshComp->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
 	pumpkinMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Ignore);
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh> sphereMeshTemp(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
-	if (sphereMeshTemp.Succeeded()) {
-		pumpkinMeshComp->SetStaticMesh(sphereMeshTemp.Object);
-	}
+	bReplicates = true;
+	SetReplicateMovement(true);
 }
 
 // Called when the game starts or when spawned
@@ -31,6 +29,11 @@ void AJS_Pumpkin::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	APlayerController* playerController = GetWorld()->GetFirstPlayerController();
+	if ( playerController ) {
+		SetOwner(playerController);
+	}
+	sphereComp->OnComponentBeginOverlap.AddDynamic(this , &AJS_Pumpkin::OnOverlapBegin);
 }
 
 // Called every frame
@@ -40,3 +43,33 @@ void AJS_Pumpkin::Tick(float DeltaTime)
 
 }
 
+void AJS_Pumpkin::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent , AActor* OtherActor , UPrimitiveComponent* OtherComp , int32 OtherBodyIndex , bool bFromSweep , const FHitResult& SweepResult)
+{
+	Server_OnOverlapBegin(OtherActor , true);
+}
+
+void AJS_Pumpkin::Server_OnOverlapBegin_Implementation(AActor* OtherActor , bool bOverlapBegin)
+{
+	if ( !OtherActor ) {
+		UE_LOG(LogTemp , Warning , TEXT("Strawberry Actor ServerBeginOverlap : null"));
+		return;
+	}
+
+	if ( bOverlapBegin && OtherActor->IsA(AAJH_Player::StaticClass()) ) {
+		UE_LOG(LogTemp , Warning , TEXT("Strawberry Actor Overlap With Player"));
+		Multicast_OnOverlapBegin(OtherActor , true);
+	}
+}
+
+void AJS_Pumpkin::Multicast_OnOverlapBegin_Implementation(AActor* OtherActor , bool bOverlapBegin)
+{
+	if ( !OtherActor ) {
+		UE_LOG(LogTemp , Warning , TEXT("Strawberry Actor MultiBeginOverlap : null"));
+		return;
+	}
+	if ( bOverlapBegin ) {
+		//플레이어에 값을 만들어서 삭제되면 값이 1증가 하도록 설정
+		UE_LOG(LogTemp , Warning , TEXT("Strawberry Actor MultiOverlap In"));
+		this->Destroy();
+	}
+}
