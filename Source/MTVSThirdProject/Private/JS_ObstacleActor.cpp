@@ -59,17 +59,17 @@ void AJS_ObstacleActor::Tick(float DeltaTime)
 
 void AJS_ObstacleActor::GetDamage_Implementation(bool damage)
 {
-	if(HasAuthority()) Server_GetDamage(damage);
+	Server_GetDamage(damage);
 }
 
 void AJS_ObstacleActor::SetCurHP_Implementation(float amount)
 {
-	if(HasAuthority()) Server_SetCurHP(amount);
+	Server_SetCurHP(amount);
 }
 
 void AJS_ObstacleActor::Death_Implementation()
 {
-	if(HasAuthority()) Server_Death();
+	Server_Death();
 }
 
 void AJS_ObstacleActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

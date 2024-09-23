@@ -105,7 +105,7 @@ void AJS_LandGridActor::Tick(float DeltaTime)
 
 void AJS_LandGridActor::SetGridTile()
 {
-	if ( HasAuthority() ) Server_SetGridTile();
+	Server_SetGridTile();
 }
 
 void AJS_LandGridActor::Server_SetGridTile_Implementation()

@@ -109,7 +109,7 @@ void AJS_SecondRicePlant::SetCurHP_Implementation(float amount)
 
 void AJS_SecondRicePlant::SpawnNextPlant_Implementation(int32 index)
 {
-	if(HasAuthority()) Server_SpawnNextPlantRPC(index);
+	Server_SpawnNextPlantRPC(index);
 }
 
 void AJS_SecondRicePlant::Death_Implementation()
@@ -143,7 +143,7 @@ void AJS_SecondRicePlant::Multicast_SetCurHPRPC_Implementation(float amount)
 // SpawnNextPlantRPC ------------------------------------------------------------------
 void AJS_SecondRicePlant::Server_SpawnNextPlantRPC_Implementation(int32 index)
 {
-	if ( HasAuthority() ) Multicast_SpawnNextPlantRPC(index);
+	Multicast_SpawnNextPlantRPC(index);
 }
 void AJS_SecondRicePlant::Multicast_SpawnNextPlantRPC_Implementation(int32 index)
 {

@@ -106,7 +106,7 @@ void AJS_SeedActor::SetCurHP_Implementation(float amount)
 
 void AJS_SeedActor::SpawnNextPlant_Implementation(int32 index)
 {
-	if (HasAuthority()) Server_SpawnNextPlantRPC(index);
+	Server_SpawnNextPlantRPC(index);
 }
 
 void AJS_SeedActor::Death_Implementation()
@@ -140,7 +140,7 @@ void AJS_SeedActor::Multicast_SetCurHPRPC_Implementation(float amount)
 // SpawnNextPlantRPC ------------------------------------------------------------------
 void AJS_SeedActor::Server_SpawnNextPlantRPC_Implementation(int32 index)
 {
-	if(HasAuthority()) Multicast_SpawnNextPlantRPC(index);
+	Multicast_SpawnNextPlantRPC(index);
 }
 void AJS_SeedActor::Multicast_SpawnNextPlantRPC_Implementation(int32 index)
 {
