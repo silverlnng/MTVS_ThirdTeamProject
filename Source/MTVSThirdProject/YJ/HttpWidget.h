@@ -61,6 +61,9 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	class UImage* Img_WeatherImage;
 
+	UPROPERTY(meta=(BindWidget))
+	class UCanvasPanel* TodayPanel;
+
 	UFUNCTION()
 	void SetWeatherImage(FString str);
 

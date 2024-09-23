@@ -5,6 +5,7 @@
 
 #include "HttpActor.h"
 #include "Components/Button.h"
+#include "Components/CanvasPanel.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 
@@ -14,7 +15,10 @@ void UHttpWidget::NativeConstruct()
 	Btn_JsonRequest->OnClicked.AddDynamic(this,&UHttpWidget::OnMyClickSend);
 	Btn_JsonPost->OnClicked.AddDynamic(this,&UHttpWidget::OnMyClickPost);
 	Btn_GetWebImage->OnClicked.AddDynamic(this,&UHttpWidget::OnMyClickGetWebImage);
-	
+	Btn_JsonPost->SetVisibility(ESlateVisibility::Hidden);
+	Btn_GetWebImage->SetVisibility(ESlateVisibility::Hidden);
+	TextLog->SetVisibility(ESlateVisibility::Hidden);
+	TodayPanel->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UHttpWidget::OnMyClickSend()
@@ -24,6 +28,16 @@ void UHttpWidget::OnMyClickSend()
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *fullURL);
 
 	httpActor->ReqStorageInfo(fullURL);
+	
+	if(TodayPanel->IsVisible())
+	{
+		TodayPanel->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		TodayPanel->SetVisibility(ESlateVisibility::Visible);
+	}
+	
 }
 
 void UHttpWidget::OnMyClickPost()
@@ -64,10 +78,14 @@ void UHttpWidget::SetHttpActor(class AHttpActor* actor)
 
 void UHttpWidget::SetWeatherImage(FString str)
 {
-	UTexture2D* img=WeatherData[str];
-	if(img==nullptr){return;}
+	UTexture2D** FoundValue = WeatherData.Find(str);
+	if(FoundValue==nullptr){return;}
+	UTexture2D* img = WeatherData[str];
 	if (img)
 	{
 		Img_WeatherImage->SetBrushFromTexture(img);
 	}
+	//WeatherData.Contains()
+	
+	
 }

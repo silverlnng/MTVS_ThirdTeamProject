@@ -23,6 +23,7 @@
 #include "JS_SeedActor.h"
 #include "JS_ObstacleActor.h"
 #include "AJH_PlayerAnimInstance.h"
+#include "MTVSThirdProject/YJ/HttpWidget.h"
 
 
 // Sets default values
@@ -89,6 +90,15 @@ void AAJH_Player::BeginPlay()
 	
 	UserNameUI = Cast<UUserNameWidget>(UserNameWidgetComp->GetWidget());
 
+	if(GetController() && GetController()->IsLocalController())
+	{
+		HttpUI = CreateWidget<UHttpWidget>(GetWorld(), HttpUI_factory);
+		if(HttpUI)
+		{
+			HttpUI->AddToViewport();
+		}
+	}
+	
 	gi =GetGameInstance<UNetWorkGameInstance>();
 
 	//로컬플레이어만 ServerChange 실행

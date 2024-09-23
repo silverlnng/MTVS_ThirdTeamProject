@@ -186,6 +186,12 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	class UAJH_WeatherWidget* httpWeatherUI;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UHttpWidget> HttpUI_factory;
+	UPROPERTY(EditDefaultsOnly)
+	class UHttpWidget* HttpUI;
+	
+	
 	/************************************************
 			UI ����
 	************************************************/
