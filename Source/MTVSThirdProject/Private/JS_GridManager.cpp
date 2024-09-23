@@ -1,7 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JS_GridManager.h"
+#include "JS_LandTileActor.h"
 
 // Sets default values
 AJS_GridManager::AJS_GridManager()
@@ -9,6 +10,7 @@ AJS_GridManager::AJS_GridManager()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned
@@ -30,8 +32,8 @@ void AJS_GridManager::InitializeGrid(int32 InGridSizeX, int32 InGridSizeY)
 	gridSizeX = InGridSizeX;
 	gridSizeY = InGridSizeY;
 
-	MinGridBounds = FVector2D(0, 0); //ÃÖ¼Ò ÁÂÇ¥´Â (0, 0)À¸·Î ¼³Á¤
-	MaxGridBounds = FVector2D(gridSizeX - 1, gridSizeY - 1); // ÃÖ´ë ÁÂÇ¥´Â ±×¸®µå Å©±â ±â¹İÀ¸·Î ¼³Á¤
+	MinGridBounds = FVector2D(0, 0); //ìµœì†Œ ì¢Œí‘œëŠ” (0, 0)ìœ¼ë¡œ ì„¤ì •
+	MaxGridBounds = FVector2D(gridSizeX - 1, gridSizeY - 1); // ìµœëŒ€ ì¢Œí‘œëŠ” ê·¸ë¦¬ë“œ í¬ê¸° ê¸°ë°˜ìœ¼ë¡œ ì„¤ì •
 
 	for (int32 x = 0; x < gridSizeX; ++x) {
 		for (int32 y = 0; y < gridSizeY; ++y) {
@@ -47,7 +49,7 @@ void AJS_GridManager::SetObjectAtGridCell(FVector2D gridCoordinates, AActor* Obj
 {
 	if (Grid.Contains(gridCoordinates)) {
 		FGridTile& tile = Grid[gridCoordinates];
-		//Å¸ÀÏÀÌ ÀÌ¹Ì Á¡À¯µÈ °æ¿ì
+		//íƒ€ì¼ì´ ì´ë¯¸ ì ìœ ëœ ê²½ìš°
 		if (tile.bIsOccupied) {
 			UE_LOG(LogTemp, Warning, TEXT("Tile at (%f, %f) is already occupied by %s"),gridCoordinates.X, gridCoordinates.Y,tile.occupyingActor ? *tile.occupyingActor->GetName() : TEXT("Unknown Actor"));
 			return;
@@ -65,7 +67,7 @@ AActor* AJS_GridManager::GetObjectAtGridCell(FVector2D gridCoordinates)
 	}
 	return nullptr;
 }
-// ÁÖ¾îÁø 2D ÁÂÇ¥°¡ ±×¸®µå¿¡ ÀÖ´ÂÁö È®ÀÎÇÏ°í, ±× ÁÂÇ¥°¡ Á¸ÀçÇÏ¸é ÇØ´ç ¼¿ÀÌ Á¡À¯µÇ¾ú´ÂÁö¸¦ ¹İÈ¯ÇÑ´Ù. Á¸ÀçÇÏÁö ¾ÊÀ¸¸é ±âº»ÀûÀ¸·Î Á¡À¯µÇÁö ¾ÊÀº °ÍÀ¸·Î °£ÁÖÇÏ¿© false¸¦ ¹İÈ¯
+// ì£¼ì–´ì§„ 2D ì¢Œí‘œê°€ ê·¸ë¦¬ë“œì— ìˆëŠ”ì§€ í™•ì¸í•˜ê³ , ê·¸ ì¢Œí‘œê°€ ì¡´ì¬í•˜ë©´ í•´ë‹¹ ì…€ì´ ì ìœ ë˜ì—ˆëŠ”ì§€ë¥¼ ë°˜í™˜í•œë‹¤. ì¡´ì¬í•˜ì§€ ì•Šìœ¼ë©´ ê¸°ë³¸ì ìœ¼ë¡œ ì ìœ ë˜ì§€ ì•Šì€ ê²ƒìœ¼ë¡œ ê°„ì£¼í•˜ì—¬ falseë¥¼ ë°˜í™˜
 bool AJS_GridManager::IsCellOccupied(FVector2D gridCoordinates)
 {
 	if (Grid.Contains(gridCoordinates)) {
@@ -73,7 +75,7 @@ bool AJS_GridManager::IsCellOccupied(FVector2D gridCoordinates)
 	}
 	return false;
 }
-
+//ê·¸ë¦¬ë“œë¥¼ ì´ˆê¸°í™” ì‹œí‚¤ëŠ” í•¨ìˆ˜
 void AJS_GridManager::ClearGridCell(FVector2D gridCoordinates)
 {
 	if (Grid.Contains(gridCoordinates)) {
@@ -85,14 +87,13 @@ void AJS_GridManager::ClearGridCell(FVector2D gridCoordinates)
 
 FVector AJS_GridManager::GetTileLocation(FVector2D GridCoordinates)
 {
-	//±×¸®µå ÁÂÇ¥¸¦ ¿ùµå ÁÂÇ¥·Î º¯È¯ÇÏ´Â ·ÎÁ÷
-	float TileSize = 100.0f; // Å¸ÀÏ °£ °£°İ SetGridTiledptj landSpacing °ª°ú µ¿ÀÏÇØ¾ßÇÑ´Ù.
-	FVector Origin = GetActorLocation(); // ±×¸®µåÀÇ ½ÃÀÛÁ¡ LandGridActorÀÇ À§Ä¡¸¦ ±âÁØÀ¸·Î ÇÒ ¼ö ÀÖ´Ù.
+	//ê·¸ë¦¬ë“œ ì¢Œí‘œë¥¼ ì›”ë“œ ì¢Œí‘œë¡œ ë³€í™˜í•˜ëŠ” ë¡œì§
+	float TileSize = 100.0f; // íƒ€ì¼ ê°„ ê°„ê²© SetGridTiledptj landSpacing ê°’ê³¼ ë™ì¼í•´ì•¼í•œë‹¤.
+	FVector Origin = GetActorLocation(); // ê·¸ë¦¬ë“œì˜ ì‹œì‘ì  LandGridActorì˜ ìœ„ì¹˜ë¥¼ ê¸°ì¤€ìœ¼ë¡œ í•  ìˆ˜ ìˆë‹¤.
 
-	//±×¸®µå ÁÂÇ¥¸¦ »ç¿ëÇØ ¿ùµå À§Ä¡ °è»ê
+	//ê·¸ë¦¬ë“œ ì¢Œí‘œë¥¼ ì‚¬ìš©í•´ ì›”ë“œ ìœ„ì¹˜ ê³„ì‚°
 	float X = Origin.X + GridCoordinates.X * TileSize;
 	float Y = Origin.Y + GridCoordinates.Y * TileSize;
 
 	return FVector(X, Y, Origin.Z);
 }
-

@@ -1,9 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JS_LandTileActor.h"
 #include "JS_GridManager.h"
 #include "Components/BoxComponent.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AJS_LandTileActor::AJS_LandTileActor()
@@ -18,16 +19,17 @@ AJS_LandTileActor::AJS_LandTileActor()
 	boxComp->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
 	boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Block);
 
-	/*landTileComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("landTileComp"));
-	landTileComp->SetupAttachment(boxComp);
-	landTileComp->SetRelativeScale3D(FVector(1, 1, 0.01f));
-	
+	bReplicates = true;
+}
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh> landTileMeshTemp(TEXT("/ Script / Engine.StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
+void AJS_LandTileActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	if (landTileMeshTemp.Succeeded()) {
-		landTileComp->SetStaticMesh(landTileMeshTemp.Object);
-	}*/
+	//ë³€ìˆ˜ì— replicatedë¥¼ ì‚¬ìš©í•œë‹¤ë©´ ë“±ë¡í•´ì•¼í•¨.
+	DOREPLIFETIME (AJS_LandTileActor , bIsWet);
+	DOREPLIFETIME (AJS_LandTileActor , canFraming);
+
 }
 
 // Called when the game starts or when spawned
@@ -35,6 +37,10 @@ void AJS_LandTileActor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	APlayerController* playerController = GetWorld()->GetFirstPlayerController();
+	if ( playerController ) {
+		SetOwner(playerController);
+	}
 	boxComp->OnComponentBeginOverlap.AddDynamic(this, &AJS_LandTileActor::OnOverlapBegin);
 }
 
@@ -42,18 +48,23 @@ void AJS_LandTileActor::BeginPlay()
 void AJS_LandTileActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	//Æ½¿¡¼­ ·¹ÀÌ¸¦ ¸Â¾Ò´ÂÁö °è¼Ó Ã¼Å©ÇØ¼­ 
-	//ÇÃ·¹ÀÌ¾î°¡ »óÈ£ÀÛ¿ëÀ» Çß´Ù¸é
-			//GetDamager(true);
-	//if (Tile.occupyingActor->ActorHasTag("Tree")) {
-	//	//GetDamager(true);
-	//}
-	//else if (Tile.occupyingActor->ActorHasTag("Gress")) {
-	//	//GetDamager(true);
-	//}
-	//else if (Tile.occupyingActor->ActorHasTag("Rock")) {
-	//	//GetDamager(true);
+	//ì –ì–´ ìžˆì§€ ì•Šìœ¼ë©´ ë¸íƒ€íƒ€ìž„ì„ ì•ˆë”í•¨.
+	if(bIsWet != false) checkDeltaTime += DeltaTime;
+	//ì‹œê°„ì´ 6ë¶„ì´ ì§€ë‚˜ë©´ ë§ˆë¥´ëŠ” ê±¸ ì²´í¬
+	if (checkDeltaTime == dryingTime) {
+		checkDeltaTime = 0;
+		bIsWet = false;
+	}
+}
+
+void AJS_LandTileActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Overlap Detected in boxComp!"));
+
+	//// ë””ë²„ê·¸ ë©”ì‹œì§€ë¡œ ì–´ë–¤ ì•¡í„°ê°€ ê²¹ì³¤ëŠ”ì§€ ì¶œë ¥
+	//if (OtherActor) {
+	//	FString actorName = OtherActor->GetName();
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Overlapping with Actor: %s"), *actorName));
 	//}
 }
 
@@ -61,56 +72,74 @@ void AJS_LandTileActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	if (GridManager) {
+	if(HasAuthority()) Server_EndPlay(EndPlayReason);
+}
+
+void AJS_LandTileActor::Server_EndPlay_Implementation(const EEndPlayReason::Type EndPlayReason)
+{
+	Multicast_EndPlay(EndPlayReason);
+}
+
+void AJS_LandTileActor::Multicast_EndPlay_Implementation(const EEndPlayReason::Type EndPlayReason)
+{
+	if ( GridManager ) {
 		FVector2D gridCoordinates = GetGridCoordinates();
 		GridManager->ClearGridCell(gridCoordinates);
-	}
-}
-void AJS_LandTileActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Overlap Detected in boxComp!"));
-
-	// µð¹ö±× ¸Þ½ÃÁö·Î ¾î¶² ¾×ÅÍ°¡ °ãÃÆ´ÂÁö Ãâ·Â
-	if (OtherActor) {
-		FString actorName = OtherActor->GetName();
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Overlapping with Actor: %s"), *actorName));
 	}
 }
 
 void AJS_LandTileActor::SpawnCrops(int32 id)
 {
-	if(!GridManager) return;
+	if(HasAuthority()) Server_SpawnCrops(id);
+}
 
+void AJS_LandTileActor::Server_SpawnCrops_Implementation(int32 id)
+{
+	Multicast_SpawnCrops(id);
+}
+
+void AJS_LandTileActor::Multicast_SpawnCrops_Implementation(int32 id)
+{
+	if ( !GridManager ) return;
+	if ( canFraming == false || bIsWet == false ) return;
+
+	//íƒ€ì¼ ì ìœ  ë˜ì—ˆëŠ”ì§€ í™•ì¸
 	FVector2D tileCoords = GetGridCoordinates();
-
-	//Å¸ÀÏ Á¡À¯ µÇ¾ú´ÂÁö È®ÀÎ
-	if (GridManager->IsCellOccupied(tileCoords)) {
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Tile is already occupied!"));
+	if ( GridManager->IsCellOccupied(tileCoords) ) {
+		GEngine->AddOnScreenDebugMessage(-1 , 5.f , FColor::Red , TEXT("Tile is already occupied!"));
 		return;
 	}
 
 	FActorSpawnParameters spawnParmas;
 	spawnParmas.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	//¼±ÅÃÇÑ ÀÛ¹°ÀÌ ÀÖÀ¸¸é ½ºÆù
-	AActor* spawnedCrop = nullptr;  
-	switch (id)
+	//ì„ íƒí•œ ìž‘ë¬¼ì´ ìžˆìœ¼ë©´ ìŠ¤í°
+	AActor* spawnedCrop = nullptr;
+	switch ( id )
 	{
-		case 0:
-			spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(wheatSeedFactroy, GetActorLocation(), FRotator::ZeroRotator, spawnParmas);
-			break;
-		case 1:
-			spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(pumpKinSeedFactroy, GetActorLocation(), FRotator::ZeroRotator, spawnParmas);
-			break;
-		case 2:
-			spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(carrotSeedFactroy, GetActorLocation(), FRotator::ZeroRotator, spawnParmas);
-			break;
+	case 11010:
+		spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(wheatSeedFactroy , GetActorLocation() , FRotator::ZeroRotator , spawnParmas);
+		break;
+	case 11011:
+		spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(watermelonSeedFactroy , GetActorLocation() , FRotator::ZeroRotator , spawnParmas);
+		break;
+	case 11012:
+		spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(strawberrySeedFactroy , GetActorLocation() , FRotator::ZeroRotator , spawnParmas);
+		break;
+	case 11013:
+		spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(carrotSeedFactroy , GetActorLocation() , FRotator::ZeroRotator , spawnParmas);
+		break;
+	case 11014:
+		spawnedCrop = GetWorld()->SpawnActor<AJS_SeedActor>(pumpKinSeedFactroy , GetActorLocation() , FRotator::ZeroRotator , spawnParmas);
+		break;
+	default:
+		break;
 	}
-	
-	if (spawnedCrop) {
-		GridManager->SetObjectAtGridCell(tileCoords, spawnedCrop);
+
+	if ( spawnedCrop ) {
+		GridManager->SetObjectAtGridCell(tileCoords , spawnedCrop);
 	}
 	else {
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to spawn crop!"));
+		GEngine->AddOnScreenDebugMessage(-1 , 5.f , FColor::Red , TEXT("Failed to spawn crop!"));
 	}
 }

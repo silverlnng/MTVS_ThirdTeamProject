@@ -58,5 +58,4 @@ public:
 	bool IsCellOccupied(FVector2D gridCoordinates);
 	void ClearGridCell(FVector2D gridCoordinates);
 	FVector GetTileLocation(FVector2D GridCoordinates);
-
 };
