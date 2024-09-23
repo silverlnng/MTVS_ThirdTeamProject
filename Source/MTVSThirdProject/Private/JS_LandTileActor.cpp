@@ -72,7 +72,7 @@ void AJS_LandTileActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	if(HasAuthority()) Server_EndPlay(EndPlayReason);
+	Server_EndPlay(EndPlayReason);
 }
 
 void AJS_LandTileActor::Server_EndPlay_Implementation(const EEndPlayReason::Type EndPlayReason)
@@ -90,7 +90,7 @@ void AJS_LandTileActor::Multicast_EndPlay_Implementation(const EEndPlayReason::T
 
 void AJS_LandTileActor::SpawnCrops(int32 id)
 {
-	if(HasAuthority()) Server_SpawnCrops(id);
+	Server_SpawnCrops(id);
 }
 
 void AJS_LandTileActor::Server_SpawnCrops_Implementation(int32 id)
