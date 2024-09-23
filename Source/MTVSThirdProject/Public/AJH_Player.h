@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -60,7 +60,14 @@ public:
 	void OnMyActionInteration(const FInputActionValue& value);
 	void OnMyAction(const FInputActionValue& value);
 	void OnMyActionTap();
-
+	/************************************************
+			InputAction_RPC 함수 모음
+	************************************************/
+	UFUNCTION(Server, Reliable)
+	void ServerOnMyAction();
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiOnMyAction();
+	
 	/************************************************
 			마우스 포인트 상호작용
 	************************************************/
