@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "AJH_Player.h"
@@ -176,70 +176,11 @@ void AAJH_Player::OnMyActionInteration(const FInputActionValue& value)
 
 void AAJH_Player::OnMyAction(const FInputActionValue& value)
 {
-	InteractionLineTraceFuntion();
 
-	if (outHit.GetComponent()->GetCollisionResponseToChannel(ECC_Visibility) == ECR_Block)
+	ServerOnMyAction();
+	/*if ( outHit.GetComponent()->GetCollisionResponseToChannel(ECC_Visibility) == ECR_Block )
 	{
-		// Tag : Tree, Rock, Gress
-		if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Tree")) && selectedSeedType == ESeedType::None && anim && anim->bAttackAnimation == false)
-		{
-			// 몽타주 재생
-			anim->PlayMeleeAttackMontage();
-
-			object = Cast<AJS_ObstacleActor>(outHit.GetActor());
-			object->GetDamage_Implementation(true);
-			// hp 체크용
-			int32 hp = object->curHP;
-			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
-		}
-		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Rock")) && selectedSeedType == ESeedType::None && anim && anim->bAttackAnimation == false)
-		{
-			// 몽타주 재생
-			anim->PlayMeleeAttackMontage();
-
-			object = Cast<AJS_ObstacleActor>(outHit.GetActor());
-			object->GetDamage_Implementation(true);
-			int32 hp = object->curHP;
-			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
-		}
-		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Gress")) && selectedSeedType == ESeedType::None && anim && anim->bAttackAnimation == false)
-		{
-			// 몽타주 재생
-			anim->PlayMeleeAttackMontage();
-
-			object = Cast<AJS_ObstacleActor>(outHit.GetActor());
-			object->GetDamage_Implementation(true);
-			int32 hp = object->curHP;
-			UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
-		}
-		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("LandTile")))
-		{
-			switch (selectedSeedType)
-			{
-			case ESeedType::None:
-				ActionNone();
-				break;
-			case ESeedType::RiceSeed:
-				ActionRice();
-				break;
-			case ESeedType::PumpkinSeed:
-				ActionPumpkin();
-				break;
-			case ESeedType::CarrotSeed:
-				ActionCarrot();
-				break;
-			default:
-				break;
-			}
-		}
-		else if (bHit && outHit.GetActor()->ActorHasTag(TEXT("Seed")))
-		{
-			outHit.GetActor()->GetName();
-			FString objectName = outHit.GetActor()->GetName();
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, objectName);
-		}
-	}
-
+	}*/
 }
 
 void AAJH_Player::OnMyActionTap()
@@ -250,6 +191,81 @@ void AAJH_Player::OnMyActionTap()
 		httpWeatherUI->AddToViewport();
 		httpWeatherUI->SetPlayerHttp(this);
 	}*/
+}
+
+void AAJH_Player::ServerOnMyAction_Implementation()
+{
+	if ( HasAuthority() )
+	{
+		MultiOnMyAction();
+	}
+}
+
+void AAJH_Player::MultiOnMyAction_Implementation()
+{
+	if ( IsLocallyControlled() )
+	{
+		InteractionLineTraceFuntion();
+	}
+
+	// Tag : Tree, Rock, Gress
+	if ( bHit && outHit.GetActor()->ActorHasTag(TEXT("Tree")) && selectedSeedType == ESeedType::None && anim && anim->bAttackAnimation == false )
+	{
+		// 몽타주 재생
+		anim->PlayMeleeAttackMontage();
+
+		object = Cast<AJS_ObstacleActor>(outHit.GetActor());
+		object->GetDamage_Implementation(true);
+		// hp 체크용
+		int32 hp = object->curHP;
+		UE_LOG(LogTemp , Warning , TEXT("hp : %d") , hp);
+	}
+	else if ( bHit && outHit.GetActor()->ActorHasTag(TEXT("Rock")) && selectedSeedType == ESeedType::None && anim && anim->bAttackAnimation == false )
+	{
+		// 몽타주 재생
+		anim->PlayMeleeAttackMontage();
+
+		object = Cast<AJS_ObstacleActor>(outHit.GetActor());
+		object->GetDamage_Implementation(true);
+		int32 hp = object->curHP;
+		UE_LOG(LogTemp , Warning , TEXT("hp : %d") , hp);
+	}
+	else if ( bHit && outHit.GetActor()->ActorHasTag(TEXT("Gress")) && selectedSeedType == ESeedType::None && anim && anim->bAttackAnimation == false )
+	{
+		// 몽타주 재생
+		anim->PlayMeleeAttackMontage();
+
+		object = Cast<AJS_ObstacleActor>(outHit.GetActor());
+		object->GetDamage_Implementation(true);
+		int32 hp = object->curHP;
+		UE_LOG(LogTemp , Warning , TEXT("hp : %d") , hp);
+	}
+	else if ( bHit && outHit.GetActor()->ActorHasTag(TEXT("LandTile")) )
+	{
+		switch ( selectedSeedType )
+		{
+		case ESeedType::None:
+			ActionNone();
+			break;
+		case ESeedType::RiceSeed:
+			ActionRice();
+			break;
+		case ESeedType::PumpkinSeed:
+			ActionPumpkin();
+			break;
+		case ESeedType::CarrotSeed:
+			ActionCarrot();
+			break;
+		default:
+			break;
+		}
+	}
+	else if ( bHit && outHit.GetActor()->ActorHasTag(TEXT("Seed")) )
+	{
+		outHit.GetActor()->GetName();
+		FString objectName = outHit.GetActor()->GetName();
+		GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
+	}
 }
 
 void AAJH_Player::MouseCusorEvent()
@@ -404,6 +420,9 @@ void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool 
 			if (object->boxComp)
 			{
 				object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+				OtherActor->GetName();
+				FString objectName = OtherActor->GetName();
+				GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 			}
 			if (object->staticMeshComp)
 			{
@@ -412,15 +431,26 @@ void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool 
 		}
 		if (object && OtherActor->ActorHasTag(TEXT("Rock")))
 		{
-			if(object->boxComp)
-			object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+			if ( object->boxComp )
+			{
+				object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+				OtherActor->GetName();
+				FString objectName = OtherActor->GetName();
+				GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
+			}
+
 			if(object->staticMeshComp)
 			object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 		}
 		if (object && OtherActor->ActorHasTag(TEXT("Gress")))
 		{
-			if (object->boxComp)
-			object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+			if ( object->boxComp )
+			{
+				object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+				OtherActor->GetName();
+				FString objectName = OtherActor->GetName();
+				GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
+			}
 			if(object->staticMeshComp)
 			object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 		}

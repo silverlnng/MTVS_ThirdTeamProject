@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -29,18 +29,20 @@ public:
 	class AAJH_Player* player;
 	
 	/***********************************************
-			¾Ö´Ï¸ŞÀÌ¼Ç ¸ğÀ½
+			ì• ë‹ˆë©”ì´ì…˜ ëª¨ìŒ
 	***********************************************/
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite)
 	class UAnimMontage* meleeAttackMontage;
 	void PlayMeleeAttackMontage();
-	// ³ëÆ¼ÆÄÀÌ·Î Á¦¾î ÇØº¸ÀÚ ½ºÅ¸Æ®¸é inptÀÔ·Â ¹ŞÁö ¾Ê°Ô ¿£µå¸é inputÀÔ·Â ¹Ş°Ô
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	// ë…¸í‹°íŒŒì´ë¡œ ì œì–´ í•´ë³´ì ìŠ¤íƒ€íŠ¸ë©´ inptì…ë ¥ ë°›ì§€ ì•Šê²Œ ì—”ë“œë©´ inputì…ë ¥ ë°›ê²Œ
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite)
 	bool bEndAnimation;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite)
 	bool bAttackAnimation = false;
 	UFUNCTION(BlueprintCallable)
 	void OnEndAnim();
+
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
 };

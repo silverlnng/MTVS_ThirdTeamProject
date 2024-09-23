@@ -1,9 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "AJH_PlayerAnimInstance.h"
 #include "AJH_Player.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Net/UnrealNetwork.h"
 
 void UAJH_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
@@ -29,7 +30,7 @@ void UAJH_PlayerAnimInstance::PlayMeleeAttackMontage()
 {
 	bEndAnimation = true;
 	bAttackAnimation = true;
-	if (meleeAttackMontage)
+	if (meleeAttackMontage && player->HasAuthority())
 	{
 		Montage_Play(meleeAttackMontage);
 		player->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
@@ -41,5 +42,13 @@ void UAJH_PlayerAnimInstance::OnEndAnim()
 	bEndAnimation = false;
 	bAttackAnimation = false;
 	player->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+}
+
+void UAJH_PlayerAnimInstance::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UAJH_PlayerAnimInstance , bEndAnimation);
+	DOREPLIFETIME(UAJH_PlayerAnimInstance , bAttackAnimation);
+	DOREPLIFETIME(UAJH_PlayerAnimInstance , meleeAttackMontage);
 }
 
