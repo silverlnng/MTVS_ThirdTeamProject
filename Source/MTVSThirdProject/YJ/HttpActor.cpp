@@ -2,6 +2,8 @@
 
 
 #include "HttpActor.h"
+
+#include "AJH_Player.h"
 #include "HttpModule.h"
 #include "HttpWidget.h"
 #include "ImageUtils.h"
@@ -28,8 +30,16 @@ void AHttpActor::BeginPlay()
 	}
 
 	auto* pc = GetWorld()->GetFirstPlayerController();
-	pc->SetShowMouseCursor(true);
-	pc->SetInputMode(FInputModeUIOnly());
+	if(pc&&pc->IsLocalController())
+	{
+		/*AAJH_Player* player =Cast<AAJH_Player>(pc->GetPawn());
+		if(player&&player->HttpUI)
+		{
+			player->HttpUI->SetHttpActor(this);
+		}*/
+		pc->SetShowMouseCursor(true);
+		pc->SetInputMode(FInputModeUIOnly());
+	}
 }
 
 // Called every frame

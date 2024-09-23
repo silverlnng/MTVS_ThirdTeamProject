@@ -89,14 +89,14 @@ void AAJH_Player::BeginPlay()
 	anim = CastChecked<UAJH_PlayerAnimInstance>(GetMesh()->GetAnimInstance());
 	
 	UserNameUI = Cast<UUserNameWidget>(UserNameWidgetComp->GetWidget());
-
+	
 	if(GetController() && GetController()->IsLocalController())
 	{
-		HttpUI = CreateWidget<UHttpWidget>(GetWorld(), HttpUI_factory);
+		/*HttpUI = CreateWidget<UHttpWidget>(GetWorld(), HttpUI_factory);
 		if(HttpUI)
 		{
 			HttpUI->AddToViewport();
-		}
+		}*/
 	}
 	
 	gi =GetGameInstance<UNetWorkGameInstance>();

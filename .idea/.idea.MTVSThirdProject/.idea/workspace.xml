@@ -13,12 +13,15 @@
   <component name="ChangeListManager">
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Jin/Blueprints/BP_Player.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Jin/Blueprints/BP_Player.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Jin/Blueprints/UI/WBP_Main.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Jin/Blueprints/UI/WBP_Main.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Master/AlphaMap_.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Master/AlphaMap_.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/YJ/BP/BP_TestYJ_GM.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/BP/BP_TestYJ_GM.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/YJ/UI/WBP_HttpWidget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/UI/WBP_HttpWidget.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_MainWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_MainWidget.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_Player.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_Player.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/AJH_Player.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/AJH_Player.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpWidget.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpWidget.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/AJH_MainWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Public/AJH_MainWidget.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/HttpActor.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +55,7 @@
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Kismet/KismetMathLibrary.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/Kismet/KismetMathLibrary.inl" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/Components/PawnMovementComponent.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/GameplayStatics.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/KismetSystemLibrary.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/LocalPlayer.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/Pawn.cpp" root0="FORCE_HIGHLIGHTING" />
@@ -61,9 +65,7 @@
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Public/Components/Image.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Public/Components/TextBlock.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_Player.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/Private/MainWidget.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/Public/AJH_Player.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/Public/MainWidget.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/LoginGameMode.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/MTVSThirdProject/YJ/NPCCharacter.h" root0="FORCE_HIGHLIGHTING" />
@@ -280,6 +282,18 @@
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
       </configuration_15>
+      <configuration_16>
+        <option name="CONFIGURATION" value="" />
+        <option name="PLATFORM" value="" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/MTVSThirdProject.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
+        <option name="EXE_PATH" value="$(TargetPath)" />
+        <option name="PROGRAM_PARAMETERS" value="" />
+        <option name="WORKING_DIRECTORY" value="$(ProjectDir)" />
+        <option name="PASS_PARENT_ENVS" value="1" />
+        <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
+      </configuration_16>
       <option name="DEFAULT_PROJECT_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/MTVSThirdProject.vcxproj" />
       <option name="AUTO_SELECT_PRIORITY" value="10010" />
       <method v="2">
@@ -566,7 +580,8 @@
       <workItem from="1727003449531" duration="2077000" />
       <workItem from="1727005591624" duration="4124000" />
       <workItem from="1727048335488" duration="943000" />
-      <workItem from="1727049386483" duration="4283000" />
+      <workItem from="1727049386483" duration="4471000" />
+      <workItem from="1727056466396" duration="2037000" />
     </task>
     <servers />
   </component>

@@ -3,3 +3,10 @@
 
 #include "AJH_MainWidget.h"
 
+#include "Components/Button.h"
+
+void UAJH_MainWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+	Button_35->SetVisibility(ESlateVisibility::Hidden);
+}
