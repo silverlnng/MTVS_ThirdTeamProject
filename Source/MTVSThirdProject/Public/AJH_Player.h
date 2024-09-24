@@ -166,6 +166,14 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	class AJS_SeedActor* seed;
 
+	/***********************************************
+			미니맵 카메라
+	***********************************************/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TSubclassOf<class ASceneCapture2D> miniMapCamera;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class ASceneCapture2D* miniMapClass;
+
 	/************************************************
 			오버랩 이벤트 함수
 	************************************************/
@@ -185,7 +193,7 @@ public:
 	/************************
 			애니메이션
 	*************************/
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	class UAJH_PlayerAnimInstance* anim;
 
 	/************************************************

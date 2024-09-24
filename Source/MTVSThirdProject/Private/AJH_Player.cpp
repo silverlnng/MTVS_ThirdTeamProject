@@ -24,6 +24,7 @@
 #include "JS_ObstacleActor.h"
 #include "AJH_PlayerAnimInstance.h"
 #include "MTVSThirdProject/YJ/HttpWidget.h"
+#include "Engine/SceneCapture2D.h"
 
 
 // Sets default values
@@ -87,17 +88,38 @@ void AAJH_Player::BeginPlay()
 	httpWeatherUI = Cast<UAJH_WeatherWidget>(UGameplayStatics::GetActorOfClass(GetWorld(), UAJH_WeatherWidget::StaticClass()));
 	object = Cast<AJS_ObstacleActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_ObstacleActor::StaticClass()));
 	anim = CastChecked<UAJH_PlayerAnimInstance>(GetMesh()->GetAnimInstance());
+
+	if ( GetLocalRole() == ROLE_AutonomousProxy || IsLocallyControlled())
+	{
+		miniMapClass = GetWorld()->SpawnActor<ASceneCapture2D>(miniMapCamera);
+
+		if ( miniMapClass )
+		{
+			miniMapClass->SetReplicates(false);  // 리플리케이션 비활성화
+			UCameraComponent* SceneComp = FindComponentByClass<UCameraComponent>();
+			if ( SceneComp )
+			{
+				miniMapClass->SetActorLocation(SceneComp->GetComponentLocation() + FVector(0, 0, 2000));
+				miniMapClass->SetActorRotation(FRotator(-90, 0, 0));
+			}
+		}
+	}
+
+	if ( IsLocallyControlled() && GetNetMode() == NM_ListenServer )
+	{
+		miniMapClass = GetWorld()->SpawnActor<ASceneCapture2D>(miniMapCamera);
+
+		if ( miniMapClass )
+		{
+			miniMapClass->SetReplicates(false);  // 서버 플레이어 전용
+			miniMapClass->AttachToActor(this , FAttachmentTransformRules::KeepRelativeTransform);
+			miniMapClass->SetActorLocation(GetActorLocation() + FVector(0 , 0 , 2000));
+			miniMapClass->SetActorRotation(FRotator(-90.0f , 0.0f , 0.0f));
+		}
+	}
+
 	
 	UserNameUI = Cast<UUserNameWidget>(UserNameWidgetComp->GetWidget());
-	
-	if(GetController() && GetController()->IsLocalController())
-	{
-		/*HttpUI = CreateWidget<UHttpWidget>(GetWorld(), HttpUI_factory);
-		if(HttpUI)
-		{
-			HttpUI->AddToViewport();
-		}*/
-	}
 	
 	gi =GetGameInstance<UNetWorkGameInstance>();
 
@@ -119,7 +141,16 @@ void AAJH_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//MouseCusorEvent();
+	// 미니맵 카메라 회전 고정
+	if ( miniMapClass )
+	{
+		FRotator fixedRotation = FRotator(-90.0f , 0.0f , 0.0f);  // 위에서 아래로 고정된 회전
+		miniMapClass->SetActorRotation(fixedRotation);
+		// 플레이어 위치에 맞춰 미니맵 카메라 위치 업데이트
+		FVector playerLocation = GetActorLocation();
+		FVector miniMapLocation = playerLocation + FVector(0 , 0 , 2000);  // 플레이어 위에 고정된 위치
+		miniMapClass->SetActorLocation(miniMapLocation);
+	}
 
 	
 }
@@ -205,14 +236,15 @@ void AAJH_Player::OnMyActionTap()
 void AAJH_Player::ServerOnMyAction_Implementation(const FHitResult& outHit_)
 {
 	// Tag : Tree, Rock, Gress
-	if (outHit_.GetActor()->ActorHasTag(TEXT("Tree")))
+	if (outHit_.GetActor()->ActorHasTag(TEXT("Tree")) && anim && anim->bAttackAnimation == false || outHit_.GetActor()->ActorHasTag(TEXT("Rock")) && anim && anim->bAttackAnimation == false || outHit_.GetActor()->ActorHasTag(TEXT("Gress")) && anim && anim->bAttackAnimation == false)
 	{
+		MultiOnMyActionPlayAnim();
+
 		outHit_.GetActor()->GetName();
 		FString objectName = outHit_.GetActor()->GetName();
 		GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 		// 몽타주 재생
 		//anim->PlayMeleeAttackMontage();
-		MultiOnMyActionPlayAnim();
 		object = Cast<AJS_ObstacleActor>(outHit_.GetActor());
 		object->GetDamage_Implementation(true);
 		//GetDamage_Implementation : 서버 rpc
@@ -290,6 +322,7 @@ void AAJH_Player::MultiOnMyAction_Implementation()
 
 void AAJH_Player::MultiOnMyActionPlayAnim_Implementation()
 {
+	if ( anim && anim->bAttackAnimation == false )
 	anim->PlayMeleeAttackMontage();
 }
 
