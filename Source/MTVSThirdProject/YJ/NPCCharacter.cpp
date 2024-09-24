@@ -85,7 +85,7 @@ void ANPCCharacter::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
 {
 	// OtherActor 가 플레이어 일때 그 플레이어의 로컬에게만
 	player = Cast<AAJH_Player>(OtherActor);
-	//ATP_ThirdPersonCharacter* player = Cast<ATP_ThirdPersonCharacter>(OtherActor);
+	//ATP_ThirdPersonCharacter* player_ = Cast<ATP_ThirdPersonCharacter>(OtherActor);
 	if(player && player->IsLocallyControlled())
 	{
 		pc = player->GetController<AYJPlayerController>();
@@ -107,7 +107,7 @@ void ANPCCharacter::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
 			pc->SetInputMode(FInputModeUIOnly());
 			pc->SetShowMouseCursor(true);
 		}
-		
+		MakeEachCSVLines(QuestNum); // QuestNum 을 달성하면 올려야함
 		// csvmanager 를 통해 읽어오기, 
 		ReadEachLinesNum(0);
 		// NPCUI 가 나오도록 하고 처음 부터 나오도록 하기
@@ -122,15 +122,21 @@ void ANPCCharacter::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
 
 void ANPCCharacter::ReadCSV()
 {
-	FString CSVPath = FPaths::ProjectDir() / TEXT("NPCData.csv");
+	FString CSVNPCInfoPath = FPaths::ProjectDir() / TEXT("NPCData.csv");
+	FString CSVNPCGoalPath = FPaths::ProjectDir() / TEXT("NPCGoal.csv");
 
 	// 파일 내용을 저장할 변수
 	FString FileContent;
-	
+	FString FileContentGoal;
 	// 파일 읽기
-	if (FFileHelper::LoadFileToString(FileContent, *CSVPath))
+	if (FFileHelper::LoadFileToString(FileContent, *CSVNPCInfoPath))
 	{
 		FileContent.ParseIntoArrayLines(TotalCSVLines);
+	}
+	
+	if (FFileHelper::LoadFileToString(FileContentGoal, *CSVNPCGoalPath))
+	{
+		FileContentGoal.ParseIntoArrayLines(GoalCSVLines);
 	}	
 }
 
@@ -148,6 +154,12 @@ void ANPCCharacter::MakeEachCSVLines(int32 num)
 	{
 		EachCSVLines.Add(TotalCSVLines[i]);
 	}
+	//EachCSVLines[start] 을 , 으로 나누고
+	if (GoalCSVLines.Num() >= 0)
+	{
+		QuestGoal=GoalCSVLines[num-1];
+	}
+	
 }
 
 void ANPCCharacter::ReadEachLinesNum(int32 num)

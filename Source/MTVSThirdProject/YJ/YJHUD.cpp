@@ -3,6 +3,7 @@
 
 #include "YJHUD.h"
 
+#include "AJH_MainWidget.h"
 #include "NPCWidget.h"
 #include "Blueprint/UserWidget.h"
 
@@ -12,6 +13,12 @@ void AYJHUD::BeginPlay()
 
 	if(GetOwningPlayerController()->IsLocalController())
 	{
+		MainUI =CreateWidget<UAJH_MainWidget>(GetWorld(),MainWidgetFactory);
+		if(MainUI)
+		{
+			MainUI->AddToViewport();
+			MainUI->SetVisibility(ESlateVisibility::Visible);
+		}
 		NPCUI =CreateWidget<UNPCWidget>(GetWorld(),NPCWidgetFactory);
 		
 		if(NPCUI)
@@ -19,6 +26,9 @@ void AYJHUD::BeginPlay()
 			NPCUI->AddToViewport();
 			NPCUI->SetVisibility(ESlateVisibility::Hidden);
 		}
+		
+	
+		
 	}
 	
 	

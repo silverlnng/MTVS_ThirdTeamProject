@@ -23,6 +23,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
 	class UNPCWidget* NPCUI;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UI)
+	TSubclassOf<class UAJH_MainWidget> MainWidgetFactory;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	class UAJH_MainWidget* MainUI;
+
 	// csv manager를 통해 text를 set하기
 	
 	

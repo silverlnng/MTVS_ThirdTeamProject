@@ -19,4 +19,8 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* Button_35;
 
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* Text_QuestInfo;
+	
+	void SetTextQuestInfo(FString str);
 };

@@ -223,6 +223,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	class UNetWorkGameInstance* gi;
+
+	UPROPERTY(VisibleAnywhere)
+	int32 CurQuestNum=1;
 	
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	

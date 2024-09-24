@@ -50,6 +50,11 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
 	TArray<FString> EachCSVLines;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	TArray<FString> GoalCSVLines;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	FString QuestGoal;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class AYJPlayerController* pc;

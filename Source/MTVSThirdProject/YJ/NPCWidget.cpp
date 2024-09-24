@@ -3,7 +3,10 @@
 
 #include "NPCWidget.h"
 
+#include "AJH_MainWidget.h"
+#include "AJH_Player.h"
 #include "NPCCharacter.h"
+#include "YJHUD.h"
 #include "YJPlayerController.h"
 #include "Components/Button.h"
 #include "Components/HorizontalBox.h"
@@ -53,8 +56,35 @@ void UNPCWidget::OnClickfrontButton()
 
 void UNPCWidget::OnClickYesBtn()
 {
+	//  퀘스트 승낙 -> 메인위젯에 퀘스트 정보나오도록 하기
+	auto* hud =YJPC->GetHUD<AYJHUD>();
+	// npc 의 QuestGoal 가져와서 넣기
+	if (hud && hud->MainUI)
+	{
+		if (YJPC->CurNPC)
+		{
+			FString str = YJPC->CurNPC->QuestGoal;
+			if (!str.IsEmpty())
+			{
+				hud->MainUI->SetTextQuestInfo(str);
+			}
+		}
+	}
+
+	AAJH_Player* player =YJPC->GetPawn<AAJH_Player>();
+	if (player)
+	{
+		player->CurQuestNum++;
+		player->EnableInput(YJPC);
+	}
+	YesNoBox->SetVisibility(ESlateVisibility::Hidden);
+	this->SetVisibility(ESlateVisibility::Hidden);
+	YJPC->SetInputMode(FInputModeGameOnly());
+	YJPC->SetShowMouseCursor(false);
 }
 
 void UNPCWidget::OnClickNoBtn()
 {
+	YesNoBox->SetVisibility(ESlateVisibility::Hidden);
+	this->SetVisibility(ESlateVisibility::Hidden);
 }
