@@ -24,18 +24,19 @@ void UAJH_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	FVector rightVector = player->GetActorRightVector();
 	direction = FVector::DotProduct(rightVector, velocity);
 
+
 }
 
 void UAJH_PlayerAnimInstance::PlayMeleeAttackMontage()
 {
-	Montage_Play(meleeAttackMontage);
-	/*bEndAnimation = true;
+	// Montage_Play(meleeAttackMontage);
+	bEndAnimation = true;
 	bAttackAnimation = true;
-	if (meleeAttackMontage && player->HasAuthority())
+	if (meleeAttackMontage)
 	{
 		Montage_Play(meleeAttackMontage);
 		player->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
-	}*/
+	}
 }
 
 void UAJH_PlayerAnimInstance::OnEndAnim()
