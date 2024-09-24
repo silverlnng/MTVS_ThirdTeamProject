@@ -28,13 +28,14 @@ void UAJH_PlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 void UAJH_PlayerAnimInstance::PlayMeleeAttackMontage()
 {
-	bEndAnimation = true;
+	Montage_Play(meleeAttackMontage);
+	/*bEndAnimation = true;
 	bAttackAnimation = true;
 	if (meleeAttackMontage && player->HasAuthority())
 	{
 		Montage_Play(meleeAttackMontage);
 		player->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
-	}
+	}*/
 }
 
 void UAJH_PlayerAnimInstance::OnEndAnim()

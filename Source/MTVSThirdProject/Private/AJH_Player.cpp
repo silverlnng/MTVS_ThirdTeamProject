@@ -74,7 +74,7 @@ AAJH_Player::AAJH_Player()
 	{
 		UserNameWidgetComp->SetWidgetClass(tempUserNameWidget.Class);
 	}
-	
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned
@@ -186,17 +186,10 @@ void AAJH_Player::OnMyActionInteration(const FInputActionValue& value)
 
 void AAJH_Player::OnMyAction(const FInputActionValue& value)
 {
-	// 클라이언트는 서버에게 액션 요청만
-	if ( !HasAuthority() )
-	{
-		// 클라이언트가 서버에게 요청
-		ServerOnMyAction();
-	}
-	else
-	{
-		// 서버에서 처리 (로컬 플레이일 때)
-		MultiOnMyAction();
-	}
+
+	InteractionLineTraceFuntion();
+	ServerOnMyAction(outHit);
+	
 }
 
 void AAJH_Player::OnMyActionTap()
@@ -209,9 +202,26 @@ void AAJH_Player::OnMyActionTap()
 	}*/
 }
 
-void AAJH_Player::ServerOnMyAction_Implementation()
+void AAJH_Player::ServerOnMyAction_Implementation(const FHitResult& outHit_)
 {
-	MultiOnMyAction();
+	// Tag : Tree, Rock, Gress
+	if (outHit_.GetActor()->ActorHasTag(TEXT("Tree")))
+	{
+		outHit_.GetActor()->GetName();
+		FString objectName = outHit_.GetActor()->GetName();
+		GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
+		// 몽타주 재생
+		//anim->PlayMeleeAttackMontage();
+		MultiOnMyActionPlayAnim();
+		object = Cast<AJS_ObstacleActor>(outHit_.GetActor());
+		object->GetDamage_Implementation(true);
+		//GetDamage_Implementation : 서버 rpc
+		// hp 체크용
+		//int32 hp = object->curHP;
+		//UE_LOG(LogTemp , Warning , TEXT("hp : %d") , hp);
+	}
+	
+	//MultiOnMyAction();
 }
 
 void AAJH_Player::MultiOnMyAction_Implementation()
@@ -276,6 +286,11 @@ void AAJH_Player::MultiOnMyAction_Implementation()
 		FString objectName = outHit.GetActor()->GetName();
 		GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 	}
+}
+
+void AAJH_Player::MultiOnMyActionPlayAnim_Implementation()
+{
+	anim->PlayMeleeAttackMontage();
 }
 
 void AAJH_Player::MouseCusorEvent()

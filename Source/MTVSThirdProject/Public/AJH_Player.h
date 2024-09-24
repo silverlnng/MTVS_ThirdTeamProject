@@ -64,9 +64,12 @@ public:
 			InputAction_RPC 함수 모음
 	************************************************/
 	UFUNCTION(Server, Reliable)
-	void ServerOnMyAction();
+	void ServerOnMyAction(const FHitResult& outHit_);
 	UFUNCTION(NetMulticast, Reliable)
 	void MultiOnMyAction();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiOnMyActionPlayAnim();
 	
 	/************************************************
 			마우스 포인트 상호작용
