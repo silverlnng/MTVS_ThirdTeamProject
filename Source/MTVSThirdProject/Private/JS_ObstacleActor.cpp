@@ -59,8 +59,7 @@ void AJS_ObstacleActor::Tick(float DeltaTime)
 
 void AJS_ObstacleActor::GetDamage_Implementation(bool damage)
 {
-	treeCurHP--;
-	//Server_GetDamage(damage);
+	Server_GetDamage(damage);
 }
 
 void AJS_ObstacleActor::SetCurHP_Implementation(float amount)
