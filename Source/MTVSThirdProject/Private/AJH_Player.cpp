@@ -186,11 +186,17 @@ void AAJH_Player::OnMyActionInteration(const FInputActionValue& value)
 
 void AAJH_Player::OnMyAction(const FInputActionValue& value)
 {
-	if(HasAuthority())
-	ServerOnMyAction();
-	/*if ( outHit.GetComponent()->GetCollisionResponseToChannel(ECC_Visibility) == ECR_Block )
+	// 클라이언트는 서버에게 액션 요청만
+	if ( !HasAuthority() )
 	{
-	}*/
+		// 클라이언트가 서버에게 요청
+		ServerOnMyAction();
+	}
+	else
+	{
+		// 서버에서 처리 (로컬 플레이일 때)
+		MultiOnMyAction();
+	}
 }
 
 void AAJH_Player::OnMyActionTap()
@@ -210,15 +216,16 @@ void AAJH_Player::ServerOnMyAction_Implementation()
 
 void AAJH_Player::MultiOnMyAction_Implementation()
 {
-
 	InteractionLineTraceFuntion();
 
 	// Tag : Tree, Rock, Gress
 	if ( bHit && outHit.GetActor()->ActorHasTag(TEXT("Tree")) && selectedSeedType == ESeedType::None && anim && anim->bAttackAnimation == false )
 	{
+		outHit.GetActor()->GetName();
+		FString objectName = outHit.GetActor()->GetName();
+		GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 		// 몽타주 재생
 		anim->PlayMeleeAttackMontage();
-
 		object = Cast<AJS_ObstacleActor>(outHit.GetActor());
 		object->GetDamage_Implementation(true);
 		// hp 체크용
@@ -229,7 +236,6 @@ void AAJH_Player::MultiOnMyAction_Implementation()
 	{
 		// 몽타주 재생
 		anim->PlayMeleeAttackMontage();
-
 		object = Cast<AJS_ObstacleActor>(outHit.GetActor());
 		object->GetDamage_Implementation(true);
 		int32 hp = object->curHP;
@@ -239,7 +245,6 @@ void AAJH_Player::MultiOnMyAction_Implementation()
 	{
 		// 몽타주 재생
 		anim->PlayMeleeAttackMontage();
-
 		object = Cast<AJS_ObstacleActor>(outHit.GetActor());
 		object->GetDamage_Implementation(true);
 		int32 hp = object->curHP;
@@ -271,8 +276,6 @@ void AAJH_Player::MultiOnMyAction_Implementation()
 		FString objectName = outHit.GetActor()->GetName();
 		GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 	}
-
-	
 }
 
 void AAJH_Player::MouseCusorEvent()
@@ -287,20 +290,29 @@ void AAJH_Player::MouseCusorEvent()
 
 void AAJH_Player::InteractionLineTraceFuntion()
 {
-	if ( HasAuthority() )
+	// 
+	//UGameplayStatics::GetPlayerController(GetWorld() , 0)->DeprojectMousePositionToWorld(worldLoc , worldDir);
+	APlayerController* playerController = Cast<APlayerController>(GetController());
+	if ( playerController )
 	{
-		// 
-		UGameplayStatics::GetPlayerController(GetWorld() , 0)->DeprojectMousePositionToWorld(worldLoc , worldDir);
+		playerController->DeprojectMousePositionToWorld(worldLoc, worldDir);
 		// 
 		start = worldLoc;
 		// 
 		end = start + worldDir * 2000;
 		// 
-		param;
 		param.AddIgnoredActor(this);
 		bHit = GetWorld()->LineTraceSingleByChannel(outHit , start , end , ECC_Visibility , param);
+		GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , FString::Printf(TEXT("SomeBool value is: %s") , bHit ? TEXT("true") : TEXT("false")));
+		if ( !HasAuthority() )
+		{
+			UE_LOG(LogTemp , Warning , TEXT("Client is executing the line trace"));
+		}
+		else
+		{
+			UE_LOG(LogTemp , Warning , TEXT("Server is executing the line trace"));
+		}
 	}
-	
 }
 
 void AAJH_Player::OnMySelectedSeed(ESeedType newSeedType)

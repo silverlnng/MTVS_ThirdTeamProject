@@ -117,7 +117,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	class AAJH_FarmTile* farmTile;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(Replicated, EditDefaultsOnly)
 	class AJS_ObstacleActor* object;
 
 
