@@ -233,7 +233,7 @@ public:
 	class UNetWorkGameInstance* gi;
 
 	UPROPERTY(VisibleAnywhere)
-	int32 CurQuestNum=1;
+	int32 CurQuestNum=0;
 	
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	
