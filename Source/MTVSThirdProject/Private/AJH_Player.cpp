@@ -25,6 +25,7 @@
 #include "AJH_PlayerAnimInstance.h"
 #include "MTVSThirdProject/YJ/HttpWidget.h"
 #include "Engine/SceneCapture2D.h"
+#include "JS_SecondRicePlant.h"
 
 
 // Sets default values
@@ -88,6 +89,7 @@ void AAJH_Player::BeginPlay()
 	httpWeatherUI = Cast<UAJH_WeatherWidget>(UGameplayStatics::GetActorOfClass(GetWorld(), UAJH_WeatherWidget::StaticClass()));
 	object = Cast<AJS_ObstacleActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_ObstacleActor::StaticClass()));
 	anim = CastChecked<UAJH_PlayerAnimInstance>(GetMesh()->GetAnimInstance());
+	harvest = Cast<AJS_SecondRicePlant>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_SecondRicePlant::StaticClass()));
 
 	UserNameUI = Cast<UUserNameWidget>(UserNameWidgetComp->GetWidget());
 	
@@ -110,7 +112,6 @@ void AAJH_Player::BeginPlay()
 void AAJH_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 	
 }
 
@@ -211,6 +212,26 @@ void AAJH_Player::ServerOnMyAction_Implementation(const FHitResult& outHit_)
 		//int32 hp = object->curHP;
 		//UE_LOG(LogTemp , Warning , TEXT("hp : %d") , hp);
 	}
+	else if ( outHit_.GetActor()->ActorHasTag(TEXT("LandTile")) )
+	{
+		switch ( selectedSeedType )
+		{
+		case ESeedType::None:
+			ActionNone();
+			break;
+		case ESeedType::RiceSeed:
+			ActionRice();
+			break;
+		case ESeedType::PumpkinSeed:
+			ActionPumpkin();
+			break;
+		case ESeedType::CarrotSeed:
+			ActionCarrot();
+			break;
+		default:
+			break;
+		}
+	}
 	
 	//MultiOnMyAction();
 }
@@ -251,26 +272,6 @@ void AAJH_Player::MultiOnMyAction_Implementation()
 		int32 hp = object->curHP;
 		UE_LOG(LogTemp , Warning , TEXT("hp : %d") , hp);
 	}
-	else if ( bHit && outHit.GetActor()->ActorHasTag(TEXT("LandTile")) )
-	{
-		switch ( selectedSeedType )
-		{
-		case ESeedType::None:
-			ActionNone();
-			break;
-		case ESeedType::RiceSeed:
-			ActionRice();
-			break;
-		case ESeedType::PumpkinSeed:
-			ActionPumpkin();
-			break;
-		case ESeedType::CarrotSeed:
-			ActionCarrot();
-			break;
-		default:
-			break;
-		}
-	}
 	else if ( bHit && outHit.GetActor()->ActorHasTag(TEXT("Seed")) )
 	{
 		outHit.GetActor()->GetName();
@@ -287,12 +288,12 @@ void AAJH_Player::MultiOnMyActionPlayAnim_Implementation()
 
 void AAJH_Player::MouseCusorEvent()
 {
-	InteractionLineTraceFuntion();
-	if (bHit)
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("Hit!!!"), bHit);
+	//InteractionLineTraceFuntion();
+	//if (bHit)
+	//{
+	//	//UE_LOG(LogTemp, Warning, TEXT("Hit!!!"), bHit);
 
-	}
+	//}
 }
 
 void AAJH_Player::InteractionLineTraceFuntion()
@@ -310,14 +311,14 @@ void AAJH_Player::InteractionLineTraceFuntion()
 		// 
 		param.AddIgnoredActor(this);
 		bHit = GetWorld()->LineTraceSingleByChannel(outHit , start , end , ECC_Visibility , param);
-		GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , FString::Printf(TEXT("SomeBool value is: %s") , bHit ? TEXT("true") : TEXT("false")));
+		//GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , FString::Printf(TEXT("SomeBool value is: %s") , bHit ? TEXT("true") : TEXT("false")));
 		if ( !HasAuthority() )
 		{
-			UE_LOG(LogTemp , Warning , TEXT("Client is executing the line trace"));
+			//UE_LOG(LogTemp , Warning , TEXT("Client is executing the line trace"));
 		}
 		else
 		{
-			UE_LOG(LogTemp , Warning , TEXT("Server is executing the line trace"));
+			//UE_LOG(LogTemp , Warning , TEXT("Server is executing the line trace"));
 		}
 	}
 }
@@ -360,23 +361,23 @@ void AAJH_Player::ActionNone()
 void AAJH_Player::ActionRice()
 {
 	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
-	// seed->SpawnNextPlant_Implementation(0);
+	GetWorld()->SpawnActor<AJS_SeedActor>(riceFactory , outHit.GetActor()->GetActorTransform(), seedParam);
+	//seed->SpawnNextPlant_Implementation(11010);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Rice"));
 }
 
 void AAJH_Player::ActionPumpkin()
 {
-	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
+	//seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	//GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
 	// seed->SpawnNextPlant_Implementation(1);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Pumpkin"));
 }
 
 void AAJH_Player::ActionCarrot()
 {
-	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
+	//seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	//GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
 	// seed->SpawnNextPlant_Implementation(2);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Carrot"));
 }
@@ -385,6 +386,7 @@ void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedCompone
 {
 	farmTile = Cast<AAJH_FarmTile>(OtherActor);
 	object = Cast<AJS_ObstacleActor>(OtherActor);
+	harvest = Cast<AJS_SecondRicePlant>(OtherActor);
 	if (HasAuthority())
 	{
 		ServerBeginOverlap(OtherActor, true);
@@ -399,6 +401,7 @@ void AAJH_Player::OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent
 {
 	farmTile = Cast<AAJH_FarmTile>(OtherActor);
 	object = Cast<AJS_ObstacleActor>(OtherActor);
+	harvest = Cast<AJS_SecondRicePlant>(OtherActor);
 	if (HasAuthority())
 	{
 		ServerEndOverlap(OtherActor, true);
@@ -413,14 +416,14 @@ void AAJH_Player::ServerBeginOverlap_Implementation(AActor* OtherActor, bool bIs
 {
 	if (!OtherActor)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : null"));
+		// UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : null"));
 		return;
 	}
 
 	if (bIsBeginOverlap)
 	{
 		MulticastBeginOverlap(OtherActor ,bIsBeginOverlap);
-		UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : Hello"));
+		// UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : Hello"));
 	}
 }
 
@@ -428,7 +431,7 @@ void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool 
 {
 	if (!OtherActor)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("MultiBeginOverlap : null"));
+		// UE_LOG(LogTemp, Warning, TEXT("MultiBeginOverlap : null"));
 		return;
 	}
 
@@ -452,7 +455,7 @@ void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool 
 				object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 				OtherActor->GetName();
 				FString objectName = OtherActor->GetName();
-				GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
+				//GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 			}
 			if (object->staticMeshComp)
 			{
@@ -466,7 +469,7 @@ void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool 
 				object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 				OtherActor->GetName();
 				FString objectName = OtherActor->GetName();
-				GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
+				//GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 			}
 
 			if(object->staticMeshComp)
@@ -479,28 +482,30 @@ void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool 
 				object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 				OtherActor->GetName();
 				FString objectName = OtherActor->GetName();
-				GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
+				//GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 			}
 			if(object->staticMeshComp)
 			object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 		}
+		if ( harvest && OtherActor->ActorHasTag(TEXT("Wheat")) )
+		{
+			harvest->bInteractSecondPlant = true;
+			UE_LOG(LogTemp, Warning, TEXT("Hello"));
+		}
 	}
-
-	
 }
 
 void AAJH_Player::ServerEndOverlap_Implementation(AActor* OtherActor, bool bIsBeginOverlap)
 {
 	if (!OtherActor)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : null"));
+		// UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : null"));
 		return;
 	}
 
 	if (bIsBeginOverlap)
 	{
 		MulticastEndOverlap(OtherActor ,bIsBeginOverlap);
-		UE_LOG(LogTemp, Warning, TEXT("ServerEndOverlap : Bey"));
 	}
 }
 
@@ -508,12 +513,12 @@ void AAJH_Player::MulticastEndOverlap_Implementation(AActor* OtherActor, bool bI
 {
 	if (!OtherActor)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("MultiEndOverlap : null"));
+		// UE_LOG(LogTemp, Warning, TEXT("MultiEndOverlap : null"));
 		return;
 	}
 	if (bIsBeginOverlap)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("MultiEndOverlap : Bye"));
+		// UE_LOG(LogTemp, Warning, TEXT("MultiEndOverlap : Bye"));
 		if (farmTile && OtherActor->ActorHasTag(TEXT("Seed")))
 		{
 			farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);

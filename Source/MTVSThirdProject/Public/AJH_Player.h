@@ -154,17 +154,24 @@ public:
 			작물 공장
 	*************************/
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class AJS_Rice> riceFactory;
+	TSubclassOf<class AJS_SeedActor> riceFactory;
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class AJS_Pumpkin> pumpkinFactory;
+	TSubclassOf<class AJS_SeedActor> pumpkinFactory;
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class AJS_Carrot> carrotFactory;
+	TSubclassOf<class AJS_SeedActor> carrotFactory;
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class AJS_SeedActor> SeedFatory;
+	TSubclassOf<class AJS_SeedActor> watermelonFatory;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class AJS_SeedActor> strawberryFatory;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class AJS_SeedActor> seedFatory;
+
 
 	FActorSpawnParameters seedParam;
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY()
 	class AJS_SeedActor* seed;
+	UPROPERTY()
+	class AJS_SecondRicePlant* harvest;
 
 	/***********************************************
 			미니맵 카메라
