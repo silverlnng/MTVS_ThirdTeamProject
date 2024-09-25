@@ -170,7 +170,15 @@ public:
 			미니맵 카메라
 	***********************************************/
 
-
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TSubclassOf<class ASceneCapture2D> miniMapCamera;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class ASceneCapture2D* miniMapClass;
+	UPROPERTY(EditDefaultsOnly)
+	class UTextureRenderTarget2D* RT_Minimap;
+	UPROPERTY(EditDefaultsOnly)
+	class UMaterialInterface* miniMapMaterial;
 	/************************************************
 			오버랩 이벤트 함수
 	************************************************/
@@ -231,6 +239,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	int32 CurQuestNum=0;
+
+	UPROPERTY(VisibleAnywhere)
+	class AYJPlayerController* pc;
 	
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	

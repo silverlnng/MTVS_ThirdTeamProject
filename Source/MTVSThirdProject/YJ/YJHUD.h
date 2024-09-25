@@ -29,6 +29,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
 	class UAJH_MainWidget* MainUI;
 
+	
 	// csv manager를 통해 text를 set하기
 	
 	

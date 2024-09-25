@@ -13,6 +13,7 @@
 #include "HttpModule.h"
 #include "AJH_WeatherWidget.h"
 #include "AJH_JsonParseLib.h"
+#include "AJH_MainWidget.h"
 #include "Net/UnrealNetwork.h"
 #include "Components/WidgetComponent.h"
 #include "MTVSThirdProject/YJ/NetWorkGameInstance.h"
@@ -23,8 +24,15 @@
 #include "JS_SeedActor.h"
 #include "JS_ObstacleActor.h"
 #include "AJH_PlayerAnimInstance.h"
+#include "MovieSceneTracksComponentTypes.h"
+#include "Components/Image.h"
+#include "Components/SceneCaptureComponent2D.h"
 #include "MTVSThirdProject/YJ/HttpWidget.h"
 #include "Engine/SceneCapture2D.h"
+#include "Engine/TextureRenderTarget2D.h"
+#include "Kismet/KismetRenderingLibrary.h"
+#include "MTVSThirdProject/YJ/YJHUD.h"
+#include "MTVSThirdProject/YJ/YJPlayerController.h"
 
 
 // Sets default values
@@ -92,7 +100,7 @@ void AAJH_Player::BeginPlay()
 	UserNameUI = Cast<UUserNameWidget>(UserNameWidgetComp->GetWidget());
 	
 	gi =GetGameInstance<UNetWorkGameInstance>();
-
+	pc = GetController<AYJPlayerController>();
 	//로컬플레이어만 ServerChange 실행
 	if(GetController() && GetController()->IsLocalController())
 	{
@@ -104,6 +112,42 @@ void AAJH_Player::BeginPlay()
 	{
 		UserNameUI->SetUserName(UserName);
 	},1.f,false);
+
+
+	if ( GetController() && GetController()->IsLocalController())
+	{
+		miniMapClass = GetWorld()->SpawnActor<ASceneCapture2D>(miniMapCamera);
+
+		if ( miniMapClass )
+		{
+			miniMapClass->SetReplicates(false);  // 리플리케이션 비활성화
+			//UCameraComponent* SceneComp = FindComponentByClass<UCameraComponent>();
+			miniMapClass->SetActorLocation(this->GetActorLocation() + FVector(0, 0, 2000));
+			miniMapClass->SetActorRotation(FRotator(-90, 0, 0));
+			miniMapClass->AttachToActor(this,FAttachmentTransformRules::KeepWorldTransform);
+			
+			UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(miniMapMaterial, this);
+			
+			//동적으로 생성
+			UTextureRenderTarget2D* MyRenderTarget = UKismetRenderingLibrary::CreateRenderTarget2D(this, 256, 256, ETextureRenderTargetFormat::RTF_RGBA32f, FLinearColor::White);
+			miniMapClass->GetCaptureComponent2D()->TextureTarget = MyRenderTarget;
+
+			DynMaterial->SetTextureParameterValue(FName("RT_Minimap"),MyRenderTarget);
+			if (pc)
+			{
+				AYJHUD* hud = pc->GetHUD<AYJHUD>();
+				if (hud)
+				{
+					hud->MainUI->Img_Minimap->SetBrushFromMaterial(DynMaterial);
+					hud->MainUI->Img_Minimap->SetBrushFromSoftMaterial(DynMaterial);
+				}
+			}
+			
+			
+			
+		}
+	}
+	
 }
 
 // Called every frame
@@ -111,7 +155,10 @@ void AAJH_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	
+	if (miniMapClass)
+	{
+		miniMapClass->SetActorRotation(FRotator(-90, 0, 0));
+	}
 }
 
 // Called to bind functionality to input
@@ -119,11 +166,11 @@ void AAJH_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	auto pc = Cast<APlayerController>(Controller);
-	if (pc)
+	auto pc_ = Cast<APlayerController>(Controller);
+	if (pc_)
 	{
-		pc->SetShowMouseCursor(true);
-		UEnhancedInputLocalPlayerSubsystem* subSys = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(pc->GetLocalPlayer());
+		pc_->SetShowMouseCursor(true);
+		UEnhancedInputLocalPlayerSubsystem* subSys = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(pc_->GetLocalPlayer());
 		if (subSys)
 		{
 			subSys->AddMappingContext(IMC_Operation, 0);
