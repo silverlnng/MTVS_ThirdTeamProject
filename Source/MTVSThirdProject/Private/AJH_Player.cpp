@@ -89,36 +89,6 @@ void AAJH_Player::BeginPlay()
 	object = Cast<AJS_ObstacleActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_ObstacleActor::StaticClass()));
 	anim = CastChecked<UAJH_PlayerAnimInstance>(GetMesh()->GetAnimInstance());
 
-	if ( GetLocalRole() == ROLE_AutonomousProxy || IsLocallyControlled())
-	{
-		miniMapClass = GetWorld()->SpawnActor<ASceneCapture2D>(miniMapCamera);
-
-		if ( miniMapClass )
-		{
-			miniMapClass->SetReplicates(false);  // 리플리케이션 비활성화
-			UCameraComponent* SceneComp = FindComponentByClass<UCameraComponent>();
-			if ( SceneComp )
-			{
-				miniMapClass->SetActorLocation(SceneComp->GetComponentLocation() + FVector(0, 0, 2000));
-				miniMapClass->SetActorRotation(FRotator(-90, 0, 0));
-			}
-		}
-	}
-
-	if ( IsLocallyControlled() && GetNetMode() == NM_ListenServer )
-	{
-		miniMapClass = GetWorld()->SpawnActor<ASceneCapture2D>(miniMapCamera);
-
-		if ( miniMapClass )
-		{
-			miniMapClass->SetReplicates(false);  // 서버 플레이어 전용
-			miniMapClass->AttachToActor(this , FAttachmentTransformRules::KeepRelativeTransform);
-			miniMapClass->SetActorLocation(GetActorLocation() + FVector(0 , 0 , 2000));
-			miniMapClass->SetActorRotation(FRotator(-90.0f , 0.0f , 0.0f));
-		}
-	}
-
-	
 	UserNameUI = Cast<UUserNameWidget>(UserNameWidgetComp->GetWidget());
 	
 	gi =GetGameInstance<UNetWorkGameInstance>();
@@ -140,17 +110,6 @@ void AAJH_Player::BeginPlay()
 void AAJH_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	// 미니맵 카메라 회전 고정
-	if ( miniMapClass )
-	{
-		FRotator fixedRotation = FRotator(-90.0f , 0.0f , 0.0f);  // 위에서 아래로 고정된 회전
-		miniMapClass->SetActorRotation(fixedRotation);
-		// 플레이어 위치에 맞춰 미니맵 카메라 위치 업데이트
-		FVector playerLocation = GetActorLocation();
-		FVector miniMapLocation = playerLocation + FVector(0 , 0 , 2000);  // 플레이어 위에 고정된 위치
-		miniMapClass->SetActorLocation(miniMapLocation);
-	}
 
 	
 }
