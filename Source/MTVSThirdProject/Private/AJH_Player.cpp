@@ -455,7 +455,6 @@ void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool 
 				object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 				OtherActor->GetName();
 				FString objectName = OtherActor->GetName();
-				//GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 			}
 			if (object->staticMeshComp)
 			{
@@ -469,7 +468,6 @@ void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool 
 				object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 				OtherActor->GetName();
 				FString objectName = OtherActor->GetName();
-				//GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 			}
 
 			if(object->staticMeshComp)
@@ -482,16 +480,15 @@ void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool 
 				object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 				OtherActor->GetName();
 				FString objectName = OtherActor->GetName();
-				//GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 			}
 			if(object->staticMeshComp)
 			object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 		}
-		if ( harvest && OtherActor->ActorHasTag(TEXT("Wheat")) )
+		if ( (harvest && OtherActor->ActorHasTag(TEXT("Wheat"))) || (harvest && OtherActor->ActorHasTag(TEXT("PumpKin"))) || (harvest && OtherActor->ActorHasTag(TEXT("Carrot"))) || (harvest && OtherActor->ActorHasTag(TEXT("Strawberry"))) || (harvest && OtherActor->ActorHasTag(TEXT("Watermelon"))) )
 		{
 			harvest->bInteractSecondPlant = true;
-			UE_LOG(LogTemp, Warning, TEXT("Hello"));
 		}
+
 	}
 }
 
