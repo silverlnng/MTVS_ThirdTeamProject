@@ -21,6 +21,9 @@ public:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* Text_QuestInfo;
+
+	UPROPERTY(meta=(BindWidget))
+	class UImage* Img_Minimap;
 	
 	void SetTextQuestInfo(FString str);
 };
