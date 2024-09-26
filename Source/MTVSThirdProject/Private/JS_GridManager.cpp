@@ -3,12 +3,18 @@
 
 #include "JS_GridManager.h"
 #include "JS_LandTileActor.h"
+#include "EngineUtils.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 AJS_GridManager::AJS_GridManager()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	boxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("boxComp"));
+	SetRootComponent(boxComp);
+	boxComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 
 	bReplicates = true;
 }
@@ -25,6 +31,27 @@ void AJS_GridManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AJS_GridManager::FindOwner()
+{
+	if ( HasAuthority() ) {
+		AActor* newOwner = nullptr;
+		float minDist = searchDistance;
+
+		for ( TActorIterator<AJS_GridManager> it(GetWorld()); it; ++it ) {
+			AActor* otherActor = *it;
+			float dist = GetDistanceTo(otherActor);
+
+			if ( dist < minDist ) {
+				minDist = dist;
+				newOwner = otherActor;
+			}
+		}
+		if ( GetOwner() != newOwner ) {
+			SetOwner(newOwner);
+		}
+	}
 }
 
 void AJS_GridManager::InitializeGrid(int32 InGridSizeX, int32 InGridSizeY)

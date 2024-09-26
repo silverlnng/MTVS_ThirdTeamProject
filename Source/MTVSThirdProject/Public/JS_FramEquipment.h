@@ -46,33 +46,39 @@ public:
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Pail")
 	int32 haveWater = 0;
 
-	//낚시
-	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Fishing")
-	float currentTime = 0;
-	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Fishing")
-	int32 fishingCount = 0;
-	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Fishing")
-	int32 jewelCount = 0;
-	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Fishing")
-	int32 fishCount = 0;
-	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Fishing")
-	int32 trashCount = 0;
+	//낚시 드롭
+	//UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Fishing")
+	//float currentTime = 0;
+	//UPROPERTY(Replicated , EditAnywhere , BlueprintReadWrite , Category = "Fishing")
+	//int32 fishingCount = 0;
+	//UPROPERTY(Replicated , EditAnywhere , BlueprintReadWrite , Category = "Fishing")
+	//int32 jewelCount = 0;
+	//UPROPERTY(Replicated , EditAnywhere , BlueprintReadWrite , Category = "Fishing")
+	//int32 fishCount = 0;
+	//UPROPERTY(Replicated , EditAnywhere , BlueprintReadWrite , Category = "Fishing")
+	//int32 trashCount = 0;
+
+	//오너 설정
+	/*float searchDistance = 200;
+	void FindOwner();*/
+	
 
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	void StartFishing();
-	void GetHaveWater();
-
-	UFUNCTION(Server, Reliable)
-	void Server_OverlapBegin(AActor* OtherActor, bool bIsBeginOverlap);
-	UFUNCTION(NetMulticast, Reliable)
-	void Multicast_OverlapBegin(AActor* OtherActor, bool bIsBeginOverlap);
-
+	/*void StartFishing();
 	UFUNCTION(Server, Reliable)
 	void Server_StartFishing();
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_StartFishing();
+	*/
+
+	void GetHaveWater();
+
+	UFUNCTION(Server, Reliable)
+	void Server_OverlapBegin(AActor* OtherActor);
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_OverlapBegin(AActor* OtherActor);
 
 	UFUNCTION(Server, Reliable)
 	void Server_GetHaveWater();
