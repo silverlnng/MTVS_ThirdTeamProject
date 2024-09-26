@@ -80,6 +80,7 @@ void UNPCWidget::OnClickYesBtn()
 		player->CurQuestNum++;
 		player->EnableInput(YJPC);
 	}
+	curCount=0;
 }
 
 void UNPCWidget::OnClickNoBtn()

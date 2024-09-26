@@ -174,7 +174,7 @@ void ANPCCharacter::ReadEachLinesNum(int32 num)
 	if(num>=EachCSVLines.Num())
 	{
 		NPC_UI->YesNoBox->SetVisibility(ESlateVisibility::Visible);
-		return;
+		return; 
 	}
 	FString str = EachCSVLines[num];
 	//이걸 ui 에 나오게 해야함

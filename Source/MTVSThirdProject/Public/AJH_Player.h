@@ -259,6 +259,11 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	class AYJPlayerController* pc;
 	
+	UPROPERTY(VisibleAnywhere)
+	class AYJHUD* YJhud;
+	UFUNCTION()
+	void SuccessQuest();
+	
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	
 };

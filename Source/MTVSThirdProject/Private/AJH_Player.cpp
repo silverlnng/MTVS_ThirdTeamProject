@@ -38,6 +38,8 @@
 #include "MovieSceneTracksComponentTypes.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "AJH_MainWidget.h"
+#include "MTVSThirdProject/YJ/NPCCharacter.h"
+#include "MTVSThirdProject/YJ/NPCWidget.h"
 
 
 // Sets default values
@@ -107,6 +109,7 @@ void AAJH_Player::BeginPlay()
 	
 	gi =GetGameInstance<UNetWorkGameInstance>();
 	pc = GetController<AYJPlayerController>();
+	YJhud = pc->GetHUD<AYJHUD>();
 	//로컬플레이어만 ServerChange 실행
 	if(GetController() && GetController()->IsLocalController())
 	{
@@ -644,6 +647,15 @@ void AAJH_Player::ServerChange_Implementation(const FString& userName_, int32 me
 	UserName = userName_;
 }
 
+void AAJH_Player::SuccessQuest()
+{
+	// 퀘스트를 달성하는 순간 호출하는 함수
+	pc->CurNPC->MakeEachCSVLines(++CurQuestNum); 
+	pc->CurNPC->ReadEachLinesNum(0);
+	
+	YJhud->NPCUI->SetVisibility(ESlateVisibility::Visible);
+}
+  
 void AAJH_Player::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

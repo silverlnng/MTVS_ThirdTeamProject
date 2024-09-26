@@ -2,6 +2,8 @@
 
 
 #include "AJH_QuestTriggerActor.h"
+
+#include "AJH_Player.h"
 #include "Components/BoxComponent.h"
 #include "../YJ/NPCWidget.h"
 #include "../YJ/YJHUD.h"
@@ -36,8 +38,14 @@ void AAJH_QuestTriggerActor::Tick(float DeltaTime)
 
 void AAJH_QuestTriggerActor::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent , AActor* OtherActor , UPrimitiveComponent* OtherComp , int32 OtherBodyIndex , bool bFromSweep , const FHitResult& SweepResult)
 {
+	player = Cast<AAJH_Player>(OtherActor);
+	if ( player && player->IsLocallyControlled())
+	{
+		player->SuccessQuest();
+		this->Destroy();
+	}
 
-
+	// 로컬플레이어 의 함수 실행시키기 
 }
 
 
