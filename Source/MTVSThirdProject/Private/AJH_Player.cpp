@@ -119,8 +119,6 @@ void AAJH_Player::BeginPlay()
 		UserNameUI->SetUserName(UserName);
 	},1.f,false);
 
-	if ( GetController() && GetController()->IsLocalController() )
-
 	if ( GetController() && GetController()->IsLocalController())
 	{
 		miniMapClass = GetWorld()->SpawnActor<ASceneCapture2D>(miniMapCamera);
@@ -140,21 +138,7 @@ void AAJH_Player::BeginPlay()
 			miniMapClass->GetCaptureComponent2D()->TextureTarget = MyRenderTarget;
 
 			DynMaterial->SetTextureParameterValue(FName("RT_Minimap") , MyRenderTarget);
-			if ( pc )
-			{
-				AYJHUD* hud = pc->GetHUD<AYJHUD>();
-				if ( hud )
-			miniMapClass->SetActorLocation(this->GetActorLocation() + FVector(0, 0, 2000));
-			miniMapClass->SetActorRotation(FRotator(-90, 0, 0));
-			miniMapClass->AttachToActor(this,FAttachmentTransformRules::KeepWorldTransform);
-			
-			UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(miniMapMaterial, this);
-			
-			//동적으로 생성
-			UTextureRenderTarget2D* MyRenderTarget = UKismetRenderingLibrary::CreateRenderTarget2D(this, 256, 256, ETextureRenderTargetFormat::RTF_RGBA32f, FLinearColor::White);
-			miniMapClass->GetCaptureComponent2D()->TextureTarget = MyRenderTarget;
 
-			DynMaterial->SetTextureParameterValue(FName("RT_Minimap"),MyRenderTarget);
 			if (pc)
 			{
 				AYJHUD* hud = pc->GetHUD<AYJHUD>();
@@ -164,9 +148,6 @@ void AAJH_Player::BeginPlay()
 					hud->MainUI->Img_Minimap->SetBrushFromSoftMaterial(DynMaterial);
 				}
 			}
-
-
-
 		}
 	}
 
