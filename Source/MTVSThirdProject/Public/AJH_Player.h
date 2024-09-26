@@ -132,6 +132,10 @@ public:
 	class UInputAction* IA_SelectPumpkinSeed;
 	UPROPERTY(EditDefaultsOnly)
 	class UInputAction* IA_SelectCarrotSeed;
+	UPROPERTY(EditDefaultsOnly)
+	class UInputAction* IA_SelectWaterMelonSeed;
+	UPROPERTY(EditDefaultsOnly)
+	class UInputAction* IA_SelectStrawBerrySeed;
 
 	ESeedType selectedSeedType;
 	/************************
@@ -142,6 +146,8 @@ public:
 	void OnMySelectRiceSeed();
 	void OnMySelectPumpkinSeed();
 	void OnMySelectCarrotSeed();
+	void OnMySelectWaterMelonSeed();
+	void OnMySelectStrawBerrySeed();
 	/************************
 			씨앗 행동
 	*************************/
@@ -149,6 +155,8 @@ public:
 	void ActionRice();
 	void ActionPumpkin();
 	void ActionCarrot();
+	void ActionWaterMelon();
+	void ActionStrawBerry();
 
 	/************************
 			작물 공장
@@ -250,5 +258,7 @@ enum class ESeedType : uint8
 	RiceSeed,
 	PumpkinSeed,
 	CarrotSeed,
+	WaterMelonSeed,
+	StrawBerrySeed,
 };
 

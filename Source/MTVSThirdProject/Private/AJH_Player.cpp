@@ -142,6 +142,8 @@ void AAJH_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		input->BindAction(IA_SelectRiceSeed, ETriggerEvent::Started, this, &AAJH_Player::OnMySelectRiceSeed);
 		input->BindAction(IA_SelectPumpkinSeed, ETriggerEvent::Started, this, &AAJH_Player::OnMySelectPumpkinSeed);
 		input->BindAction(IA_SelectCarrotSeed, ETriggerEvent::Started, this, &AAJH_Player::OnMySelectCarrotSeed);
+		input->BindAction(IA_SelectWaterMelonSeed, ETriggerEvent::Started, this, &AAJH_Player::OnMySelectWaterMelonSeed);
+		input->BindAction(IA_SelectStrawBerrySeed, ETriggerEvent::Started, this, &AAJH_Player::OnMySelectStrawBerrySeed);
 	}
 
 }
@@ -227,6 +229,12 @@ void AAJH_Player::ServerOnMyAction_Implementation(const FHitResult& outHit_)
 			break;
 		case ESeedType::CarrotSeed:
 			ActionCarrot();
+			break;
+		case ESeedType::WaterMelonSeed:
+			ActionWaterMelon();
+			break;
+		case ESeedType::StrawBerrySeed:
+			ActionStrawBerry();
 			break;
 		default:
 			break;
@@ -352,6 +360,18 @@ void AAJH_Player::OnMySelectCarrotSeed()
 	UE_LOG(LogTemp, Warning, TEXT("Selected Seed : Carrrot"));
 }
 
+void AAJH_Player::OnMySelectWaterMelonSeed()
+{
+	OnMySelectedSeed(ESeedType::WaterMelonSeed);
+	UE_LOG(LogTemp , Warning , TEXT("Selected Seed : WaterMelon"));
+}
+
+void AAJH_Player::OnMySelectStrawBerrySeed()
+{
+	OnMySelectedSeed(ESeedType::StrawBerrySeed);
+	UE_LOG(LogTemp , Warning , TEXT("Selected Seed : StrawBerry"));
+}
+
 void AAJH_Player::ActionNone()
 {
 	
@@ -361,25 +381,48 @@ void AAJH_Player::ActionNone()
 void AAJH_Player::ActionRice()
 {
 	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-	GetWorld()->SpawnActor<AJS_SeedActor>(riceFactory , outHit.GetActor()->GetActorTransform(), seedParam);
+	FVector loc = outHit.GetActor()->GetActorLocation();
+	loc.Z += 50;
+	GetWorld()->SpawnActor<AJS_SeedActor>(riceFactory , loc , outHit.GetActor()->GetActorRotation(), seedParam);
 	//seed->SpawnNextPlant_Implementation(11010);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Rice"));
 }
 
 void AAJH_Player::ActionPumpkin()
 {
-	//seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-	//GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	FVector loc = outHit.GetActor()->GetActorLocation();
+	loc.Z += 20;
+	GetWorld()->SpawnActor<AJS_SeedActor>(pumpkinFactory , loc , outHit.GetActor()->GetActorRotation(), seedParam);
 	// seed->SpawnNextPlant_Implementation(1);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Pumpkin"));
 }
 
 void AAJH_Player::ActionCarrot()
 {
-	//seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-	//GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	FVector loc = outHit.GetActor()->GetActorLocation();
+	GetWorld()->SpawnActor<AJS_SeedActor>(carrotFactory , loc , outHit.GetActor()->GetActorRotation(), seedParam);
 	// seed->SpawnNextPlant_Implementation(2);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Carrot"));
+}
+
+void AAJH_Player::ActionWaterMelon()
+{
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	FVector loc = outHit.GetActor()->GetActorLocation();
+	loc.Z += 25;
+	GetWorld()->SpawnActor<AJS_SeedActor>(watermelonFatory , loc , outHit.GetActor()->GetActorRotation() , seedParam);
+	UE_LOG(LogTemp , Warning , TEXT("Action : WaterMelon"));
+}
+
+void AAJH_Player::ActionStrawBerry()
+{
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	FVector loc = outHit.GetActor()->GetActorLocation();
+	loc.Z += 10;
+	GetWorld()->SpawnActor<AJS_SeedActor>(strawberryFatory , loc , outHit.GetActor()->GetActorRotation() , seedParam);
+	UE_LOG(LogTemp , Warning , TEXT("Action : StrawBerry"));
 }
 
 void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
