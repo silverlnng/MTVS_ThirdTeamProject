@@ -41,6 +41,7 @@ void AAJH_QuestTriggerActor::OnBeginOverlap(UPrimitiveComponent* OverlappedCompo
 	player = Cast<AAJH_Player>(OtherActor);
 	if ( player && player->IsLocallyControlled())
 	{
+		if (player->CurQuestNum==0){return;}
 		player->SuccessQuest();
 		this->Destroy();
 	}
