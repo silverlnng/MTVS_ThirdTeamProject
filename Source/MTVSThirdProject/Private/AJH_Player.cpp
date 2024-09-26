@@ -28,11 +28,16 @@
 #include "Components/Image.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "MTVSThirdProject/YJ/HttpWidget.h"
-#include "Engine/SceneCapture2D.h"
-#include "Engine/TextureRenderTarget2D.h"
+#include "JS_SecondRicePlant.h"
 #include "Kismet/KismetRenderingLibrary.h"
+#include "Engine/TextureRenderTarget2D.h"
 #include "MTVSThirdProject/YJ/YJHUD.h"
 #include "MTVSThirdProject/YJ/YJPlayerController.h"
+#include "Engine/SceneCapture2D.h"
+#include "Components/Image.h"
+#include "MovieSceneTracksComponentTypes.h"
+#include "Components/SceneCaptureComponent2D.h"
+#include "AJH_MainWidget.h"
 
 
 // Sets default values
@@ -96,6 +101,7 @@ void AAJH_Player::BeginPlay()
 	httpWeatherUI = Cast<UAJH_WeatherWidget>(UGameplayStatics::GetActorOfClass(GetWorld(), UAJH_WeatherWidget::StaticClass()));
 	object = Cast<AJS_ObstacleActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_ObstacleActor::StaticClass()));
 	anim = CastChecked<UAJH_PlayerAnimInstance>(GetMesh()->GetAnimInstance());
+	harvest = Cast<AJS_SecondRicePlant>(UGameplayStatics::GetActorOfClass(GetWorld(), AJS_SecondRicePlant::StaticClass()));
 
 	UserNameUI = Cast<UUserNameWidget>(UserNameWidgetComp->GetWidget());
 	
@@ -113,6 +119,7 @@ void AAJH_Player::BeginPlay()
 		UserNameUI->SetUserName(UserName);
 	},1.f,false);
 
+	if ( GetController() && GetController()->IsLocalController() )
 
 	if ( GetController() && GetController()->IsLocalController())
 	{
@@ -122,6 +129,21 @@ void AAJH_Player::BeginPlay()
 		{
 			miniMapClass->SetReplicates(false);  // 리플리케이션 비활성화
 			//UCameraComponent* SceneComp = FindComponentByClass<UCameraComponent>();
+			miniMapClass->SetActorLocation(this->GetActorLocation() + FVector(0 , 0 , 2000));
+			miniMapClass->SetActorRotation(FRotator(-90 , 0 , 0));
+			miniMapClass->AttachToActor(this , FAttachmentTransformRules::KeepWorldTransform);
+
+			UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(miniMapMaterial , this);
+
+			//동적으로 생성
+			UTextureRenderTarget2D* MyRenderTarget = UKismetRenderingLibrary::CreateRenderTarget2D(this , 256 , 256 , ETextureRenderTargetFormat::RTF_RGBA32f , FLinearColor::White);
+			miniMapClass->GetCaptureComponent2D()->TextureTarget = MyRenderTarget;
+
+			DynMaterial->SetTextureParameterValue(FName("RT_Minimap") , MyRenderTarget);
+			if ( pc )
+			{
+				AYJHUD* hud = pc->GetHUD<AYJHUD>();
+				if ( hud )
 			miniMapClass->SetActorLocation(this->GetActorLocation() + FVector(0, 0, 2000));
 			miniMapClass->SetActorRotation(FRotator(-90, 0, 0));
 			miniMapClass->AttachToActor(this,FAttachmentTransformRules::KeepWorldTransform);
@@ -142,23 +164,24 @@ void AAJH_Player::BeginPlay()
 					hud->MainUI->Img_Minimap->SetBrushFromSoftMaterial(DynMaterial);
 				}
 			}
-			
-			
-			
+
+
+
 		}
 	}
-	
+
 }
 
 // Called every frame
 void AAJH_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (miniMapClass)
+	
+	if ( miniMapClass )
 	{
-		miniMapClass->SetActorRotation(FRotator(-90, 0, 0));
+		miniMapClass->SetActorRotation(FRotator(-90 , 0 , 0));
 	}
+
 }
 
 // Called to bind functionality to input
@@ -167,13 +190,13 @@ void AAJH_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	auto pc_ = Cast<APlayerController>(Controller);
-	if (pc_)
+	if ( pc_ )
 	{
 		pc_->SetShowMouseCursor(true);
 		UEnhancedInputLocalPlayerSubsystem* subSys = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(pc_->GetLocalPlayer());
-		if (subSys)
+		if ( subSys )
 		{
-			subSys->AddMappingContext(IMC_Operation, 0);
+			subSys->AddMappingContext(IMC_Operation , 0);
 		}
 	}
 
@@ -188,6 +211,8 @@ void AAJH_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		input->BindAction(IA_SelectRiceSeed, ETriggerEvent::Started, this, &AAJH_Player::OnMySelectRiceSeed);
 		input->BindAction(IA_SelectPumpkinSeed, ETriggerEvent::Started, this, &AAJH_Player::OnMySelectPumpkinSeed);
 		input->BindAction(IA_SelectCarrotSeed, ETriggerEvent::Started, this, &AAJH_Player::OnMySelectCarrotSeed);
+		input->BindAction(IA_SelectWaterMelonSeed, ETriggerEvent::Started, this, &AAJH_Player::OnMySelectWaterMelonSeed);
+		input->BindAction(IA_SelectStrawBerrySeed, ETriggerEvent::Started, this, &AAJH_Player::OnMySelectStrawBerrySeed);
 	}
 
 }
@@ -258,6 +283,32 @@ void AAJH_Player::ServerOnMyAction_Implementation(const FHitResult& outHit_)
 		//int32 hp = object->curHP;
 		//UE_LOG(LogTemp , Warning , TEXT("hp : %d") , hp);
 	}
+	else if ( outHit_.GetActor()->ActorHasTag(TEXT("LandTile")) )
+	{
+		switch ( selectedSeedType )
+		{
+		case ESeedType::None:
+			ActionNone();
+			break;
+		case ESeedType::RiceSeed:
+			ActionRice();
+			break;
+		case ESeedType::PumpkinSeed:
+			ActionPumpkin();
+			break;
+		case ESeedType::CarrotSeed:
+			ActionCarrot();
+			break;
+		case ESeedType::WaterMelonSeed:
+			ActionWaterMelon();
+			break;
+		case ESeedType::StrawBerrySeed:
+			ActionStrawBerry();
+			break;
+		default:
+			break;
+		}
+	}
 	
 	//MultiOnMyAction();
 }
@@ -298,26 +349,6 @@ void AAJH_Player::MultiOnMyAction_Implementation()
 		int32 hp = object->curHP;
 		UE_LOG(LogTemp , Warning , TEXT("hp : %d") , hp);
 	}
-	else if ( bHit && outHit.GetActor()->ActorHasTag(TEXT("LandTile")) )
-	{
-		switch ( selectedSeedType )
-		{
-		case ESeedType::None:
-			ActionNone();
-			break;
-		case ESeedType::RiceSeed:
-			ActionRice();
-			break;
-		case ESeedType::PumpkinSeed:
-			ActionPumpkin();
-			break;
-		case ESeedType::CarrotSeed:
-			ActionCarrot();
-			break;
-		default:
-			break;
-		}
-	}
 	else if ( bHit && outHit.GetActor()->ActorHasTag(TEXT("Seed")) )
 	{
 		outHit.GetActor()->GetName();
@@ -334,12 +365,12 @@ void AAJH_Player::MultiOnMyActionPlayAnim_Implementation()
 
 void AAJH_Player::MouseCusorEvent()
 {
-	InteractionLineTraceFuntion();
-	if (bHit)
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("Hit!!!"), bHit);
+	//InteractionLineTraceFuntion();
+	//if (bHit)
+	//{
+	//	//UE_LOG(LogTemp, Warning, TEXT("Hit!!!"), bHit);
 
-	}
+	//}
 }
 
 void AAJH_Player::InteractionLineTraceFuntion()
@@ -357,14 +388,14 @@ void AAJH_Player::InteractionLineTraceFuntion()
 		// 
 		param.AddIgnoredActor(this);
 		bHit = GetWorld()->LineTraceSingleByChannel(outHit , start , end , ECC_Visibility , param);
-		GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , FString::Printf(TEXT("SomeBool value is: %s") , bHit ? TEXT("true") : TEXT("false")));
+		//GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , FString::Printf(TEXT("SomeBool value is: %s") , bHit ? TEXT("true") : TEXT("false")));
 		if ( !HasAuthority() )
 		{
-			UE_LOG(LogTemp , Warning , TEXT("Client is executing the line trace"));
+			//UE_LOG(LogTemp , Warning , TEXT("Client is executing the line trace"));
 		}
 		else
 		{
-			UE_LOG(LogTemp , Warning , TEXT("Server is executing the line trace"));
+			//UE_LOG(LogTemp , Warning , TEXT("Server is executing the line trace"));
 		}
 	}
 }
@@ -398,6 +429,18 @@ void AAJH_Player::OnMySelectCarrotSeed()
 	UE_LOG(LogTemp, Warning, TEXT("Selected Seed : Carrrot"));
 }
 
+void AAJH_Player::OnMySelectWaterMelonSeed()
+{
+	OnMySelectedSeed(ESeedType::WaterMelonSeed);
+	UE_LOG(LogTemp , Warning , TEXT("Selected Seed : WaterMelon"));
+}
+
+void AAJH_Player::OnMySelectStrawBerrySeed()
+{
+	OnMySelectedSeed(ESeedType::StrawBerrySeed);
+	UE_LOG(LogTemp , Warning , TEXT("Selected Seed : StrawBerry"));
+}
+
 void AAJH_Player::ActionNone()
 {
 	
@@ -407,15 +450,19 @@ void AAJH_Player::ActionNone()
 void AAJH_Player::ActionRice()
 {
 	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
-	// seed->SpawnNextPlant_Implementation(0);
+	FVector loc = outHit.GetActor()->GetActorLocation();
+	loc.Z += 50;
+	GetWorld()->SpawnActor<AJS_SeedActor>(riceFactory , loc , outHit.GetActor()->GetActorRotation(), seedParam);
+	//seed->SpawnNextPlant_Implementation(11010);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Rice"));
 }
 
 void AAJH_Player::ActionPumpkin()
 {
 	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
+	FVector loc = outHit.GetActor()->GetActorLocation();
+	loc.Z += 20;
+	GetWorld()->SpawnActor<AJS_SeedActor>(pumpkinFactory , loc , outHit.GetActor()->GetActorRotation(), seedParam);
 	// seed->SpawnNextPlant_Implementation(1);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Pumpkin"));
 }
@@ -423,15 +470,35 @@ void AAJH_Player::ActionPumpkin()
 void AAJH_Player::ActionCarrot()
 {
 	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-	GetWorld()->SpawnActor<AJS_SeedActor>(SeedFatory, outHit.GetActor()->GetActorTransform(), seedParam);
+	FVector loc = outHit.GetActor()->GetActorLocation();
+	GetWorld()->SpawnActor<AJS_SeedActor>(carrotFactory , loc , outHit.GetActor()->GetActorRotation(), seedParam);
 	// seed->SpawnNextPlant_Implementation(2);
 	UE_LOG(LogTemp, Warning, TEXT("Action : Carrot"));
+}
+
+void AAJH_Player::ActionWaterMelon()
+{
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	FVector loc = outHit.GetActor()->GetActorLocation();
+	loc.Z += 25;
+	GetWorld()->SpawnActor<AJS_SeedActor>(watermelonFatory , loc , outHit.GetActor()->GetActorRotation() , seedParam);
+	UE_LOG(LogTemp , Warning , TEXT("Action : WaterMelon"));
+}
+
+void AAJH_Player::ActionStrawBerry()
+{
+	seedParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	FVector loc = outHit.GetActor()->GetActorLocation();
+	loc.Z += 10;
+	GetWorld()->SpawnActor<AJS_SeedActor>(strawberryFatory , loc , outHit.GetActor()->GetActorRotation() , seedParam);
+	UE_LOG(LogTemp , Warning , TEXT("Action : StrawBerry"));
 }
 
 void AAJH_Player::OnMyBoxCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	farmTile = Cast<AAJH_FarmTile>(OtherActor);
 	object = Cast<AJS_ObstacleActor>(OtherActor);
+	harvest = Cast<AJS_SecondRicePlant>(OtherActor);
 	if (HasAuthority())
 	{
 		ServerBeginOverlap(OtherActor, true);
@@ -446,6 +513,7 @@ void AAJH_Player::OnMyBoxCompEndOverlap(UPrimitiveComponent* OverlappedComponent
 {
 	farmTile = Cast<AAJH_FarmTile>(OtherActor);
 	object = Cast<AJS_ObstacleActor>(OtherActor);
+	harvest = Cast<AJS_SecondRicePlant>(OtherActor);
 	if (HasAuthority())
 	{
 		ServerEndOverlap(OtherActor, true);
@@ -460,14 +528,14 @@ void AAJH_Player::ServerBeginOverlap_Implementation(AActor* OtherActor, bool bIs
 {
 	if (!OtherActor)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : null"));
+		// UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : null"));
 		return;
 	}
 
 	if (bIsBeginOverlap)
 	{
 		MulticastBeginOverlap(OtherActor ,bIsBeginOverlap);
-		UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : Hello"));
+		// UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : Hello"));
 	}
 }
 
@@ -475,7 +543,7 @@ void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool 
 {
 	if (!OtherActor)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("MultiBeginOverlap : null"));
+		// UE_LOG(LogTemp, Warning, TEXT("MultiBeginOverlap : null"));
 		return;
 	}
 
@@ -499,7 +567,6 @@ void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool 
 				object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 				OtherActor->GetName();
 				FString objectName = OtherActor->GetName();
-				GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 			}
 			if (object->staticMeshComp)
 			{
@@ -513,7 +580,6 @@ void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool 
 				object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 				OtherActor->GetName();
 				FString objectName = OtherActor->GetName();
-				GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 			}
 
 			if(object->staticMeshComp)
@@ -526,28 +592,29 @@ void AAJH_Player::MulticastBeginOverlap_Implementation(AActor* OtherActor, bool 
 				object->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 				OtherActor->GetName();
 				FString objectName = OtherActor->GetName();
-				GEngine->AddOnScreenDebugMessage(-1 , 2.f , FColor::Red , objectName);
 			}
 			if(object->staticMeshComp)
 			object->staticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 		}
-	}
+		if ( (harvest && OtherActor->ActorHasTag(TEXT("Wheat"))) || (harvest && OtherActor->ActorHasTag(TEXT("PumpKin"))) || (harvest && OtherActor->ActorHasTag(TEXT("Carrot"))) || (harvest && OtherActor->ActorHasTag(TEXT("Strawberry"))) || (harvest && OtherActor->ActorHasTag(TEXT("Watermelon"))) )
+		{
+			harvest->bInteractSecondPlant = true;
+		}
 
-	
+	}
 }
 
 void AAJH_Player::ServerEndOverlap_Implementation(AActor* OtherActor, bool bIsBeginOverlap)
 {
 	if (!OtherActor)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : null"));
+		// UE_LOG(LogTemp, Warning, TEXT("ServerBeginOverlap : null"));
 		return;
 	}
 
 	if (bIsBeginOverlap)
 	{
 		MulticastEndOverlap(OtherActor ,bIsBeginOverlap);
-		UE_LOG(LogTemp, Warning, TEXT("ServerEndOverlap : Bey"));
 	}
 }
 
@@ -555,12 +622,12 @@ void AAJH_Player::MulticastEndOverlap_Implementation(AActor* OtherActor, bool bI
 {
 	if (!OtherActor)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("MultiEndOverlap : null"));
+		// UE_LOG(LogTemp, Warning, TEXT("MultiEndOverlap : null"));
 		return;
 	}
 	if (bIsBeginOverlap)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("MultiEndOverlap : Bye"));
+		// UE_LOG(LogTemp, Warning, TEXT("MultiEndOverlap : Bye"));
 		if (farmTile && OtherActor->ActorHasTag(TEXT("Seed")))
 		{
 			farmTile->boxComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);

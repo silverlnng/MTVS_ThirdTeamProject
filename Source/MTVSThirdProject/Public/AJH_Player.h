@@ -132,6 +132,10 @@ public:
 	class UInputAction* IA_SelectPumpkinSeed;
 	UPROPERTY(EditDefaultsOnly)
 	class UInputAction* IA_SelectCarrotSeed;
+	UPROPERTY(EditDefaultsOnly)
+	class UInputAction* IA_SelectWaterMelonSeed;
+	UPROPERTY(EditDefaultsOnly)
+	class UInputAction* IA_SelectStrawBerrySeed;
 
 	ESeedType selectedSeedType;
 	/************************
@@ -142,6 +146,8 @@ public:
 	void OnMySelectRiceSeed();
 	void OnMySelectPumpkinSeed();
 	void OnMySelectCarrotSeed();
+	void OnMySelectWaterMelonSeed();
+	void OnMySelectStrawBerrySeed();
 	/************************
 			씨앗 행동
 	*************************/
@@ -149,22 +155,31 @@ public:
 	void ActionRice();
 	void ActionPumpkin();
 	void ActionCarrot();
+	void ActionWaterMelon();
+	void ActionStrawBerry();
 
 	/************************
 			작물 공장
 	*************************/
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class AJS_Rice> riceFactory;
+	TSubclassOf<class AJS_SeedActor> riceFactory;
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class AJS_Pumpkin> pumpkinFactory;
+	TSubclassOf<class AJS_SeedActor> pumpkinFactory;
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class AJS_Carrot> carrotFactory;
+	TSubclassOf<class AJS_SeedActor> carrotFactory;
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class AJS_SeedActor> SeedFatory;
+	TSubclassOf<class AJS_SeedActor> watermelonFatory;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class AJS_SeedActor> strawberryFatory;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class AJS_SeedActor> seedFatory;
+
 
 	FActorSpawnParameters seedParam;
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY()
 	class AJS_SeedActor* seed;
+	UPROPERTY()
+	class AJS_SecondRicePlant* harvest;
 
 	/***********************************************
 			미니맵 카메라
@@ -179,6 +194,7 @@ public:
 	class UTextureRenderTarget2D* RT_Minimap;
 	UPROPERTY(EditDefaultsOnly)
 	class UMaterialInterface* miniMapMaterial;
+
 	/************************************************
 			오버랩 이벤트 함수
 	************************************************/
@@ -254,5 +270,7 @@ enum class ESeedType : uint8
 	RiceSeed,
 	PumpkinSeed,
 	CarrotSeed,
+	WaterMelonSeed,
+	StrawBerrySeed,
 };
 
