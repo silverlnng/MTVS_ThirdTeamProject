@@ -17,6 +17,7 @@ AAJH_QuestTriggerActor::AAJH_QuestTriggerActor()
 
 	boxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
 	SetRootComponent(boxComp);
+	boxComp->SetCollisionProfileName(TEXT("Pawn"));
 
 }
 
