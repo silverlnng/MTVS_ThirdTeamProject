@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -12,13 +12,13 @@ struct FGridTile
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D gridCoordinates; // Å¸ÀÏÀÇ ÁÂÇ¥¸¦ ³ªÅ¸³½´Ù.
+	FVector2D gridCoordinates; // íƒ€ì¼ì˜ ì¢Œí‘œë¥¼ ë‚˜íƒ€ë‚¸ë‹¤.
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* occupyingActor; // Å¸ÀÏ¿¡ ¹èÄ¡µÈ ¾×ÅÍ
+	AActor* occupyingActor; // íƒ€ì¼ì— ë°°ì¹˜ëœ ì•¡í„°
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bIsOccupied; // Å¸ÀÏÀÌ ÇöÀç Á¡À¯µÇ¾ú´ÂÁö ¿©ºÎ¸¦ ³ªÅ¸³½´Ù.
+	bool bIsOccupied; // íƒ€ì¼ì´ í˜„ì¬ ì ìœ ë˜ì—ˆëŠ”ì§€ ì—¬ë¶€ë¥¼ ë‚˜íƒ€ë‚¸ë‹¤.
 
 	FGridTile() : gridCoordinates(FVector2D::ZeroVector), occupyingActor(nullptr), bIsOccupied(false) {}
 };
@@ -40,6 +40,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere)
+	class UBoxComponent* boxComp;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<FVector2D, FGridTile> Grid;
 
@@ -47,6 +50,10 @@ public:
 	int32 gridSizeY;
 	FVector2D MinGridBounds;
 	FVector2D MaxGridBounds;
+
+	//ì˜¤ë„ˆ ì„¤ì •
+	float searchDistance = 200;
+	void FindOwner();
 
 	UFUNCTION(BlueprintCallable)
 	void InitializeGrid(int32 InGridSizeX, int32 InGridSizeY);
