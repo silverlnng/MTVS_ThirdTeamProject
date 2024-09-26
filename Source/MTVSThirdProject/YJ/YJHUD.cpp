@@ -5,6 +5,7 @@
 
 #include "AJH_MainWidget.h"
 #include "NPCWidget.h"
+#include "SelectRegionWidget.h"
 #include "Blueprint/UserWidget.h"
 
 void AYJHUD::BeginPlay()
@@ -27,7 +28,14 @@ void AYJHUD::BeginPlay()
 			NPCUI->SetVisibility(ESlateVisibility::Hidden);
 		}
 		
-	
+		
+		SelectRegionUI =CreateWidget<USelectRegionWidget>(GetWorld(),SelectRegionWidgetFactory);
+		
+		if(SelectRegionUI)
+		{
+			SelectRegionUI->AddToViewport();
+			SelectRegionUI->SetVisibility(ESlateVisibility::Hidden);
+		}
 		
 	}
 	

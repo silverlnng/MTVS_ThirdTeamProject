@@ -29,6 +29,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
 	class UAJH_MainWidget* MainUI;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UI)
+	TSubclassOf<class USelectRegionWidget> SelectRegionWidgetFactory;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	class USelectRegionWidget* SelectRegionUI;
 	
 	// csv manager를 통해 text를 set하기
 	
