@@ -112,7 +112,7 @@ void AAJH_Player::BeginPlay()
 	{
 		ServerChange(gi->UserNickName,gi->meshNum);
 	}
-	// 모든플레이어가 change실행
+	// 모든플레이어가 change 실행
 	FTimerHandle TimerHandle;
 	GetWorldTimerManager().SetTimer(TimerHandle,[this]()
 	{
@@ -162,7 +162,7 @@ void AAJH_Player::Tick(float DeltaTime)
 	{
 		miniMapClass->SetActorRotation(FRotator(-90 , 0 , 0));
 	}
-
+	
 }
 
 // Called to bind functionality to input
@@ -247,7 +247,12 @@ void AAJH_Player::OnMyActionTap()
 
 void AAJH_Player::ServerOnMyAction_Implementation(const FHitResult& outHit_)
 {
-	// Tag : Tree, Rock, Gress
+	if ( !outHit_.bBlockingHit )
+	{
+		return;
+	}
+
+	// Tag : Tree, Rock, Gressa
 	if (outHit_.GetActor()->ActorHasTag(TEXT("Tree")) && anim && anim->bAttackAnimation == false || outHit_.GetActor()->ActorHasTag(TEXT("Rock")) && anim && anim->bAttackAnimation == false || outHit_.GetActor()->ActorHasTag(TEXT("Gress")) && anim && anim->bAttackAnimation == false)
 	{
 		MultiOnMyActionPlayAnim();
