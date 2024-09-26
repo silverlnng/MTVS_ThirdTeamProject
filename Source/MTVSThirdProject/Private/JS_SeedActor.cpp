@@ -6,6 +6,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Net/UnrealNetwork.h"
+#include "Sound/SoundBase.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AJS_SeedActor::AJS_SeedActor()
@@ -22,6 +24,9 @@ AJS_SeedActor::AJS_SeedActor()
 	seedMeshComp->SetupAttachment(boxComp);
 	seedMeshComp->SetRelativeScale3D(FVector(1, 1, 0.1f));
 	seedMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECollisionResponse::ECR_Ignore);
+
+	ConstructorHelpers::FObjectFinder<USoundBase> plantASeedSoundTemp(TEXT("/Script/Engine.SoundWave'/Game/JS/Sound/InteractSound/PlantASeed.PlantASeed'"));
+	if ( plantASeedSoundTemp.Succeeded() ) plantASeedSound = plantASeedSoundTemp.Object;
 
 	bReplicates = true;
 }
@@ -175,6 +180,7 @@ void AJS_SeedActor::Multicast_SpawnNextPlantRPC_Implementation(int32 index)
 			//선택된 블루프린트 클래스로 액터 스폰
 			AJS_FirstRicePlant* SpawnPlant = GetWorld()->SpawnActor<AJS_FirstRicePlant>(PlantClassToSpawn , GetActorLocation() , FRotator::ZeroRotator);
 			if ( SpawnPlant ) {
+				UGameplayStatics::PlaySoundAtLocation(this, plantASeedSound, GetActorLocation());
 				SpawnPlant;
 			}
 			else UE_LOG(LogTemp , Warning , TEXT("Failed to spawn AJS_FirstRicePlant"));

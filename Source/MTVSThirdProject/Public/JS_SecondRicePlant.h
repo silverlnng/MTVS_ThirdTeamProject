@@ -40,6 +40,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "fruit")
 	TSubclassOf<class AJS_Watermelon> WatermelonFactory;
 	
+	// interact------------------------------------------------
+	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category = "Sound")
+	class USoundBase* getActorSound;
+	// interact------------------------------------------------
+	
 	//소환될 녀석을 담는 변수
 	UPROPERTY(Replicated)
 	UClass* PlantClassToSpawn = nullptr;
