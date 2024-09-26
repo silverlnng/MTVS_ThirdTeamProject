@@ -12,7 +12,7 @@ AJS_ObstacleActor::AJS_ObstacleActor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	boxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("boxComp"));
-	boxComp->SetupAttachment(RootComponent);
+	SetRootComponent(boxComp);
 	boxComp->SetBoxExtent(FVector(50));
 	boxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	boxComp->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
