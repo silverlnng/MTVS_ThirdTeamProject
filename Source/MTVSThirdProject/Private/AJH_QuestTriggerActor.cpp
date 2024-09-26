@@ -6,6 +6,7 @@
 #include "../YJ/NPCWidget.h"
 #include "../YJ/YJHUD.h"
 #include "../YJ/YJPlayerController.h"
+#include "AJH_Player.h"
 
 // Sets default values
 AAJH_QuestTriggerActor::AAJH_QuestTriggerActor()
@@ -36,7 +37,11 @@ void AAJH_QuestTriggerActor::Tick(float DeltaTime)
 
 void AAJH_QuestTriggerActor::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent , AActor* OtherActor , UPrimitiveComponent* OtherComp , int32 OtherBodyIndex , bool bFromSweep , const FHitResult& SweepResult)
 {
-
+	player = Cast<AAJH_Player>(OtherActor);
+	if ( player && player->IsLocallyControlled())
+	{
+		
+	}
 
 }
 
