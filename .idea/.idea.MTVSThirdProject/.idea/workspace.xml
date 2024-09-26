@@ -11,11 +11,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Master/AlphaMap_.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Master/AlphaMap_.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_QuestTriggerActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_QuestTriggerActor.cpp" afterDir="false" />
-    </list>
+    <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -598,7 +594,7 @@
       <workItem from="1727336611512" duration="2712000" />
       <workItem from="1727341290097" duration="9278000" />
       <workItem from="1727352310150" duration="2045000" />
-      <workItem from="1727391249259" duration="603000" />
+      <workItem from="1727391249259" duration="972000" />
     </task>
     <servers />
   </component>
