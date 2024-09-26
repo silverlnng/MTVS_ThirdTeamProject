@@ -37,7 +37,7 @@ void USelectRegionWidget::OnClickedBtnMove()
 		AYJHUD* hud = pc->GetHUD<AYJHUD>();
 		if (hud)
 		{
-			hud->MainUI->SetVisibility(ESlateVisibility::Hidden); 
+			hud->MainUI->SetVisibility(ESlateVisibility::Visible); 
 		}
 	}
 	this->SetVisibility(ESlateVisibility::Hidden);

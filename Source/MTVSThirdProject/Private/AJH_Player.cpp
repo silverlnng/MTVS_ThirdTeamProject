@@ -117,7 +117,7 @@ void AAJH_Player::BeginPlay()
 	GetWorldTimerManager().SetTimer(TimerHandle,[this]()
 	{
 		UserNameUI->SetUserName(UserName);
-	},1.f,false);
+	},0.3f,false);
 
 	if ( GetController() && GetController()->IsLocalController())
 	{

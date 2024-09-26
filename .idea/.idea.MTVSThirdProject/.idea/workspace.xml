@@ -14,9 +14,10 @@
     <list default="true" id="89e22042-3592-48d0-bc46-2e8ef315c37a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MTVSThirdProject/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Master/AlphaMap_.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Master/AlphaMap_.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/YJ/WeatherTestYJMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/WeatherTestYJMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/YJ/BP/BP_YJHUD.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/BP/BP_YJHUD.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/YJ/UI/WBP_SelectRegion.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/YJ/UI/WBP_SelectRegion.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_Player.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/Private/AJH_Player.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJHUD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJHUD.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJHUD.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MTVSThirdProject/YJ/YJHUD.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -596,6 +597,7 @@
       <workItem from="1727240859928" duration="1286000" />
       <workItem from="1727242654146" duration="14291000" />
       <workItem from="1727329733836" duration="4558000" />
+      <workItem from="1727336611512" duration="1266000" />
     </task>
     <servers />
   </component>

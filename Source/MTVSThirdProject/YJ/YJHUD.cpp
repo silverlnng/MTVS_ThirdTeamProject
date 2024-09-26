@@ -18,7 +18,7 @@ void AYJHUD::BeginPlay()
 		if(MainUI)
 		{
 			MainUI->AddToViewport();
-			MainUI->SetVisibility(ESlateVisibility::Visible);
+			MainUI->SetVisibility(ESlateVisibility::Hidden);
 		}
 		NPCUI =CreateWidget<UNPCWidget>(GetWorld(),NPCWidgetFactory);
 		
@@ -34,7 +34,7 @@ void AYJHUD::BeginPlay()
 		if(SelectRegionUI)
 		{
 			SelectRegionUI->AddToViewport();
-			SelectRegionUI->SetVisibility(ESlateVisibility::Hidden);
+			SelectRegionUI->SetVisibility(ESlateVisibility::Visible);
 		}
 		
 	}
