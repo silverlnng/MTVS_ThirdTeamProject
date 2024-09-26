@@ -9,7 +9,6 @@
 void UAJH_MainWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	Button_35->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UAJH_MainWidget::SetTextQuestInfo(FString str)

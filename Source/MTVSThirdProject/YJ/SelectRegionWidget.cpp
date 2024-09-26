@@ -24,11 +24,11 @@ void USelectRegionWidget::OnClickedBtnMove()
 	// 현재 ComboBox_Region에 있는 값을 가져와서 regionMap 에서 찾아서
 	auto value=regionMap.Find(RegionString);
 	if(value==nullptr) {return;}
-
-	AYJPlayerController* pc =GetOwningPlayer<AYJPlayerController>();
-	if (pc)
+	AYJPlayerController* pc =GetWorld()->GetFirstPlayerController<AYJPlayerController>();
+	if (pc&&pc->IsLocalController())
 	{
 		AAJH_Player* palyer =pc->GetPawn<AAJH_Player>();
+		pc->SetInputMode(FInputModeGameAndUI());
 		if (palyer)
 		{
 			palyer->SetActorLocation(*value);

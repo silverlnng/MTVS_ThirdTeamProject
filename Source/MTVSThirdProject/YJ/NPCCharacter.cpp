@@ -73,11 +73,16 @@ void ANPCCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 void ANPCCharacter::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	player->EnableInput(pc);
-	pc->SetInputMode(FInputModeGameOnly());
-	pc->SetShowMouseCursor(false);
-	NPC_UI->SetVisibility(ESlateVisibility::Hidden);
-	NPC_UI->YesNoBox->SetVisibility(ESlateVisibility::Hidden);
+	player = Cast<AAJH_Player>(OtherActor);
+	//ATP_ThirdPersonCharacter* player_ = Cast<ATP_ThirdPersonCharacter>(OtherActor);
+	if(player && player->IsLocallyControlled())
+	{
+		player->EnableInput(pc);
+		pc->SetInputMode(FInputModeGameAndUI());
+		NPC_UI->SetVisibility(ESlateVisibility::Hidden);
+		NPC_UI->YesNoBox->SetVisibility(ESlateVisibility::Hidden);
+		bisEndOverlap=true;
+	}
 }
 
 void ANPCCharacter::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -86,8 +91,9 @@ void ANPCCharacter::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
 	// OtherActor 가 플레이어 일때 그 플레이어의 로컬에게만
 	player = Cast<AAJH_Player>(OtherActor);
 	//ATP_ThirdPersonCharacter* player_ = Cast<ATP_ThirdPersonCharacter>(OtherActor);
-	if(player && player->IsLocallyControlled())
+	if(player && player->IsLocallyControlled()&&bisEndOverlap)
 	{
+		bisEndOverlap=false;
 		pc = player->GetController<AYJPlayerController>();
 		
 		if (pc)

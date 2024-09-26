@@ -72,19 +72,24 @@ void UNPCWidget::OnClickYesBtn()
 	}
 
 	AAJH_Player* player =YJPC->GetPawn<AAJH_Player>();
+	YesNoBox->SetVisibility(ESlateVisibility::Hidden);
+	this->SetVisibility(ESlateVisibility::Hidden);
+	YJPC->SetInputMode(FInputModeGameAndUI());
 	if (player)
 	{
 		player->CurQuestNum++;
 		player->EnableInput(YJPC);
 	}
-	YesNoBox->SetVisibility(ESlateVisibility::Hidden);
-	this->SetVisibility(ESlateVisibility::Hidden);
-	YJPC->SetInputMode(FInputModeGameOnly());
-	YJPC->SetShowMouseCursor(false);
 }
 
 void UNPCWidget::OnClickNoBtn()
 {
 	YesNoBox->SetVisibility(ESlateVisibility::Hidden);
 	this->SetVisibility(ESlateVisibility::Hidden);
+	YJPC->SetInputMode(FInputModeGameAndUI());
+	AAJH_Player* player =YJPC->GetPawn<AAJH_Player>();
+	if (player)
+	{
+		player->EnableInput(YJPC);
+	}
 }

@@ -70,4 +70,7 @@ public:
 
 	UFUNCTION()
 	void ReadEachLinesNum(int32 num);
+
+	UPROPERTY(VisibleAnywhere)
+	bool bisEndOverlap =true;
 };

@@ -79,12 +79,18 @@ void UHttpWidget::SetHttpActor(class AHttpActor* actor)
 void UHttpWidget::SetWeatherImage(FString str)
 {
 	UTexture2D** FoundValue = WeatherData.Find(str);
-	if(FoundValue==nullptr){return;}
+	if(FoundValue==nullptr)
+	{
+		Img_WeatherImage->SetVisibility(ESlateVisibility::Hidden);
+		return;
+	}
 	UTexture2D* img = WeatherData[str];
 	if (img)
 	{
+		Img_WeatherImage->SetVisibility(ESlateVisibility::Visible);
 		Img_WeatherImage->SetBrushFromTexture(img);
 	}
+	
 	//WeatherData.Contains()
 	
 	

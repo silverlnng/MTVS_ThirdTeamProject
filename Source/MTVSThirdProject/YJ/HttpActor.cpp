@@ -25,7 +25,7 @@ void AHttpActor::BeginPlay()
 	HttpUI = Cast<UHttpWidget>(CreateWidget(GetWorld(), HttpUIFactory));
 	if (HttpUI)
 	{
-		HttpUI->AddToViewport();
+		HttpUI->AddToViewport(5);
 		HttpUI->SetHttpActor(this);
 	}
 
