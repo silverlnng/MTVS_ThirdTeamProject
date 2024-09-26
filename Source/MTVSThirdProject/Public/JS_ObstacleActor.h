@@ -38,6 +38,48 @@ public:
 	TSubclassOf<class AJS_ObstacleActor> GressFactory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actors")
 	TSubclassOf<class AJS_ObstacleActor> RockFactory;
+
+	// Sound
+	// tree------------------------------------------------
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* treeDistroySound1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* treeDistroySound2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* treeDistroySound3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* treeDistroySound4;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* treeGetDamageSound;
+
+	// tree------------------------------------------------
+
+	// rock------------------------------------------------
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* rockDistroySound1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* rockDistroySound2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* rockDistroySound3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* rockDistroySound4;
+	// rock------------------------------------------------
+
+	// gress------------------------------------------------
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* gressDistroySound1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* gressDistroySound2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* gressDistroySound3;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* gressDistroySound4;
+	// gress------------------------------------------------
+	
 	//농기구 태그 확인용
 	AJS_FramEquipment* framEquipment;
 
@@ -74,5 +116,15 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_Death();
 
+	//Sound
+	void PlayObstacleSound();
+
+	UFUNCTION(Server, Reliable)
+	void Server_PlayObstacleSound();
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_PlayObstacleSound();
+
+	UFUNCTION()
+	void SetSoundfile();
 
 };

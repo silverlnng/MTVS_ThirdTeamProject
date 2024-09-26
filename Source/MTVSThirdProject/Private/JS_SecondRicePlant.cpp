@@ -9,6 +9,8 @@
 #include "JS_Watermelon.h"
 #include "JS_Carrot.h"
 #include "Net/UnrealNetwork.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundBase.h"
 
 
 // Sets default values
@@ -30,6 +32,10 @@ AJS_SecondRicePlant::AJS_SecondRicePlant()
 	if (sphereMeshTemp.Succeeded()) {
 		sphereMeshComp->SetStaticMesh(sphereMeshTemp.Object);
 	}
+
+	ConstructorHelpers::FObjectFinder<USoundBase> getActorSoundTemp(TEXT("/Script/Engine.SoundWave'/Game/JS/Sound/InteractSound/GetSound.GetSound'"));
+	if ( getActorSoundTemp.Succeeded() ) getActorSound = getActorSoundTemp.Object;
+
 	bReplicates = true;
 }
 
@@ -178,6 +184,7 @@ void AJS_SecondRicePlant::Multicast_SpawnNextPlantRPC_Implementation(int32 index
 			//선택된 블루프린트 클래스로 액터 스폰
 			AJS_Rice* SpawnPlant = GetWorld()->SpawnActor<AJS_Rice>(PlantClassToSpawn , GetActorLocation() , FRotator::ZeroRotator);
 			if ( SpawnPlant ) {
+				UGameplayStatics::PlaySoundAtLocation(this, getActorSound, GetActorLocation());
 				SpawnPlant;
 			}
 			else UE_LOG(LogTemp , Warning , TEXT("Failed to spawn SpawnPlant"));
