@@ -54,7 +54,7 @@ void AJS_SeedActor::BeginPlay()
 	if ( playerController ) {
 		SetOwner(playerController);
 	}
-	UGameplayStatics::PlaySoundAtLocation(this , plantASeedSound , GetActorLocation());
+	if(HasAuthority()) UGameplayStatics::PlaySoundAtLocation(this , plantASeedSound , GetActorLocation());
 }
 
 // Called every frame

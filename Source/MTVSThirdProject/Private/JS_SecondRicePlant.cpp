@@ -196,8 +196,8 @@ void AJS_SecondRicePlant::Multicast_SpawnNextPlantRPC_Implementation(int32 index
 		if ( PlantClassToSpawn && this->ActorHasTag(TEXT("Watermelon")) ) {
 			//선택된 블루프린트 클래스로 액터 스폰
 			AJS_Watermelon* SpawnPlant = GetWorld()->SpawnActor<AJS_Watermelon>(PlantClassToSpawn , GetActorLocation() , FRotator::ZeroRotator);
+			UGameplayStatics::PlaySoundAtLocation(this , getActorSound , GetActorLocation());
 			if ( SpawnPlant ) {
-				UGameplayStatics::PlaySoundAtLocation(this , getActorSound , GetActorLocation());
 				SpawnPlant;
 			}
 			else UE_LOG(LogTemp , Warning , TEXT("Failed to spawn SpawnPlant"));
@@ -205,8 +205,8 @@ void AJS_SecondRicePlant::Multicast_SpawnNextPlantRPC_Implementation(int32 index
 		if ( PlantClassToSpawn && this->ActorHasTag(TEXT("Strawberry")) ) {
 			//선택된 블루프린트 클래스로 액터 스폰
 			AJS_Strawberry* SpawnPlant = GetWorld()->SpawnActor<AJS_Strawberry>(PlantClassToSpawn , GetActorLocation() , FRotator::ZeroRotator);
+			UGameplayStatics::PlaySoundAtLocation(this , getActorSound , GetActorLocation());
 			if ( SpawnPlant ) {
-				UGameplayStatics::PlaySoundAtLocation(this , getActorSound , GetActorLocation());
 				SpawnPlant;
 			}
 			else UE_LOG(LogTemp , Warning , TEXT("Failed to spawn SpawnPlant"));
@@ -214,8 +214,8 @@ void AJS_SecondRicePlant::Multicast_SpawnNextPlantRPC_Implementation(int32 index
 		if ( PlantClassToSpawn && this->ActorHasTag(TEXT("Pumpkin")) ) {
 			//선택된 블루프린트 클래스로 액터 스폰
 			AJS_Pumpkin* SpawnPlant = GetWorld()->SpawnActor<AJS_Pumpkin>(PlantClassToSpawn , GetActorLocation() , FRotator::ZeroRotator);
+			UGameplayStatics::PlaySoundAtLocation(this , getActorSound , GetActorLocation());
 			if ( SpawnPlant ) {
-				UGameplayStatics::PlaySoundAtLocation(this , getActorSound , GetActorLocation());
 				SpawnPlant;
 			}
 			else UE_LOG(LogTemp , Warning , TEXT("Failed to spawn SpawnPlant"));
@@ -223,8 +223,8 @@ void AJS_SecondRicePlant::Multicast_SpawnNextPlantRPC_Implementation(int32 index
 		if ( PlantClassToSpawn && this->ActorHasTag(TEXT("Carrot")) ) {
 			//선택된 블루프린트 클래스로 액터 스폰
 			AJS_Carrot* SpawnPlant = GetWorld()->SpawnActor<AJS_Carrot>(PlantClassToSpawn , GetActorLocation() , FRotator::ZeroRotator);
+			UGameplayStatics::PlaySoundAtLocation(this , getActorSound , GetActorLocation());
 			if ( SpawnPlant ) {
-				UGameplayStatics::PlaySoundAtLocation(this , getActorSound , GetActorLocation());
 				SpawnPlant;
 			}
 			else UE_LOG(LogTemp , Warning , TEXT("Failed to spawn SpawnPlant"));
