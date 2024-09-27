@@ -3,3 +3,7 @@
 
 #include "YJPlayerController.h"
 
+void AYJPlayerController::ServerLocationChange_Implementation(const FVector& loc)
+{
+	GetPawn()->SetActorLocation(loc);
+}
