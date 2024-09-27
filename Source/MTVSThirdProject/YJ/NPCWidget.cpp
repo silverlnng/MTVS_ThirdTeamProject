@@ -93,4 +93,5 @@ void UNPCWidget::OnClickNoBtn()
 	{
 		player->EnableInput(YJPC);
 	}
+	curCount=0;
 }

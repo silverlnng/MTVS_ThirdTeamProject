@@ -108,11 +108,16 @@ void AAJH_Player::BeginPlay()
 	UserNameUI = Cast<UUserNameWidget>(UserNameWidgetComp->GetWidget());
 	
 	gi =GetGameInstance<UNetWorkGameInstance>();
-	pc = GetController<AYJPlayerController>();
-	YJhud = pc->GetHUD<AYJHUD>();
+	
+	
 	//로컬플레이어만 ServerChange 실행
 	if(GetController() && GetController()->IsLocalController())
-	{
+	{	
+		pc = GetController<AYJPlayerController>();
+		if (pc)
+		{
+			YJhud = pc->GetHUD<AYJHUD>();
+		}
 		ServerChange(gi->UserNickName,gi->meshNum);
 	}
 	// 모든플레이어가 change 실행
