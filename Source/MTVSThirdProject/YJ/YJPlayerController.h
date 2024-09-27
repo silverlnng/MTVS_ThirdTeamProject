@@ -16,5 +16,8 @@ class MTVSTHIRDPROJECT_API AYJPlayerController : public APlayerController
 public:
 	UPROPERTY(VisibleAnywhere)
 	class ANPCCharacter* CurNPC;
+
+	UFUNCTION(server, reliable)
+	void ServerLocationChange(const FVector& loc);
 	
 };

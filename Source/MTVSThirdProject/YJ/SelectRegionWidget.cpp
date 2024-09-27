@@ -27,12 +27,15 @@ void USelectRegionWidget::OnClickedBtnMove()
 	AYJPlayerController* pc =GetWorld()->GetFirstPlayerController<AYJPlayerController>();
 	if (pc&&pc->IsLocalController())
 	{
-		AAJH_Player* palyer =pc->GetPawn<AAJH_Player>();
-		pc->SetInputMode(FInputModeGameAndUI());
-		if (palyer)
+		AYJPlayerController* YJPC=GetOwningPlayer<AYJPlayerController>();
+		//AAJH_Player* Player =Cast<AAJH_Player>(GetOwningLocalPlayer());
+		//AAJH_Player* Player =YJPC->GetPawn<AAJH_Player>();
+		YJPC->SetInputMode(FInputModeGameAndUI());
+		YJPC->ServerLocationChange(*value);
+		/*if (Player)
 		{
-			palyer->SetActorLocation(*value);
-		}
+			Player->SetActorLocation(*value);
+		}*/
 		
 		AYJHUD* hud = pc->GetHUD<AYJHUD>();
 		if (hud)
