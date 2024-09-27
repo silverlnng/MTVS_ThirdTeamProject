@@ -43,6 +43,8 @@ public:
 	// interact------------------------------------------------
 	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category = "Sound")
 	class USoundBase* getActorSound;
+	UPROPERTY(EditAnywhere , BlueprintReadWrite , Category = "Sound")
+	class USoundBase* grownPlantSound;
 	// interact------------------------------------------------
 	
 	//소환될 녀석을 담는 변수

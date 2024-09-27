@@ -133,10 +133,10 @@ void AJS_LandGridActor::Multicast_SetGridTile_Implementation()
 
 					AActor* spawnedObject = nullptr; //스폰된 오브젝트를 저장할 변수
 
-					if ( randomChoice < 10 && randomChoice > 0 ) {
+					if ( randomChoice < 5 && randomChoice > 0 ) {
 						spawnedObject = GetWorld()->SpawnActor<AJS_ObstacleActor>(TreeFactory , spawnedTile->GetActorLocation() + (GetActorUpVector() * 50) , FRotator::ZeroRotator , spawnParams);
 					}
-					else if ( randomChoice < 20 && randomChoice >= 10 ) {
+					else if ( randomChoice < 10 && randomChoice >= 5 ) {
 						spawnedObject = GetWorld()->SpawnActor<AJS_ObstacleActor>(RockFactory , spawnedTile->GetActorLocation() + (GetActorUpVector() * 50) , FRotator::ZeroRotator , spawnParams);
 						if ( spawnedObject )
 						{
@@ -147,7 +147,7 @@ void AJS_LandGridActor::Multicast_SetGridTile_Implementation()
 							UE_LOG(LogTemp , Warning , TEXT("Failed to spawn Rock"));
 						}
 					}
-					else if ( randomChoice < 40 && randomChoice > 20 ) {
+					else if ( randomChoice < 30 && randomChoice > 10 ) {
 						spawnedObject = GetWorld()->SpawnActor<AJS_ObstacleActor>(GressFactory , spawnedTile->GetActorLocation() + (GetActorUpVector() * 50) , FRotator::ZeroRotator , spawnParams);
 					}
 
