@@ -37,7 +37,7 @@ void ALoginGameMode::BeginPlay()
 			}
 			else
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,"No Steam login");
+				//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,"No Steam login");
 				
 				loginUI->eText_hostName->SetHintText(FText::FromString(TEXT("닉네임을 입력해주세요")));
 			}
